@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.warrior.permissions.dao.PermissionDao" >
+
+    <select id="getResourcesByRole" parameterType="long" resultType="com.warrior.permissions.entity.Resource">
+        select res.* from warrior_resources res
+        left join (select ownId,resId from warrior_permissions where type=0) wp on res.resId = wp.resId
+        left join warrior_user_role wr on wp.ownId = wr.roleId
+        where wr.userId = #{userId} and res.isShow = 0 and res.status = 0 ORDER BY res.sort asc
+    </select>
+
+    <select id="getResourcesByUser" parameterType="long" resultType="com.warrior.permissions.entity.Resource">
+      select res.* from warrior_resources res
+      left join (select ownId,resId from warrior_permissions where type=1) wp on res.resId = wp.resId
+      where wp.ownId = #{userId} and res.isShow = 0 and res.status = 0 ORDER BY res.sort asc
+    </select>
+
+    <select id="getResourcess" parameterType="com.warrior.permissions.entity.Permission" resultType="com.warrior.permissions.entity.Resource">
+      select wr.* from warrior_resources wr
+      left join warrior_permissions wp on wr.resId = wp.resId
+      where wp.type = #{type} and wp.ownId = #{ownId} ORDER BY wr.sort asc
+    </select>
+</mapper>

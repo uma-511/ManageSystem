@@ -1,0 +1,75 @@
+import axios from 'axios';
+import qs from 'qs';
+import env from '../config/env';
+
+let util = {
+  vue:null
+};
+util.title = function(title) {
+    title = title ? title : '';
+    window.document.title = title;
+};
+
+const ajaxUrl = env === 'development' ?
+    'http://127.0.0.1:8083' :
+    env === 'production' ?
+    'http://127.0.0.1:8083' :
+    'https://debug.url.com';
+
+util.ajax = axios.create({
+    baseURL: ajaxUrl,
+    timeout: 30000,
+    headers:{'X-Requested-With':'XMLHttpRequest'},
+    withCredentials:true
+});
+
+util.ajax.interceptors.request.use((config)=>{
+  if(config.method === 'post' || config.method == 'put'){
+    config.data = qs.stringify(config.data);
+  }
+  return config;
+},(error)=>{
+  util.vue.$Modal.error({title:'操作提示',content: '网络错误！'});
+  return Promise.reject(error);
+});
+util.ajax.interceptors.response.use((res)=>{
+  if(!res.data || res.data==""){
+    if(util.vue.logining != undefined){util.vue.logining = false;}
+    util.vue.$Modal.error({title:'操作提示',content: '服务器异常！'});
+    return Promise.reject(res);
+  }
+  if (!res.data.success) {
+    if(res.data.login != undefined && !res.data.login){
+      localStorage.removeItem('currentUser');
+      window.location.href = window.location.protocol+'//'+window.location.host;
+      return Promise.reject(error);
+    }
+    if(util.vue.logining != undefined){util.vue.logining = false;}
+    util.vue.$Modal.error({title:'操作提示',content: res.data.msg});
+    return Promise.reject(res);
+  }
+  return res.data.data ? res.data.data : res.data;
+},(error)=>{
+  util.vue.$Modal.error({title:'操作提示',content: '网络错误！'});
+  return Promise.reject(error);
+});
+util.contains=function(array,value){
+  if(array == undefined || array.length == 0){
+    return false;
+  }
+  if(array[0] instanceof Object){
+    for(let key of Object.keys(array)){
+      if(key == value){
+        return true;
+      }
+    }
+  }else{
+    for(let val of array){
+        if(val == value){
+          return true;
+        }
+    }
+  }
+  return false;
+};
+export default util;

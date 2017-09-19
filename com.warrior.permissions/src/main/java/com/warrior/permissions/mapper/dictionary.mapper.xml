@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.warrior.permissions.dao.DictionaryDao" >
+
+
+    <select id="getListByType" resultType="com.warrior.permissions.entity.Dictionary" parameterType="int">
+        SELECT * FROM warrior.warrior_dictionary
+        WHERE dicType = #{dicType} ORDER BY sort ASC
+    </select>
+
+    <select id="getByAttribute" parameterType="HashMap" resultType="com.warrior.permissions.entity.Dictionary">
+        SELECT * FROM warrior.warrior_dictionary
+        WHERE #{key}=#{value}
+    </select>
+</mapper>
