@@ -1,6 +1,7 @@
 package com.warrior.user.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.warrior.user.dao.UserDao;
 import com.warrior.user.entity.User;
 import com.warrior.user.entity.UserEntity;
@@ -11,6 +12,7 @@ import com.warrior.util.dao.WarriorBaseMapper;
 import com.warrior.util.service.WarriorBaseServiceImpl;
 import com.warrior.util.shiro.MD5;
 import com.warrior.util.web.SessionUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
@@ -100,23 +102,41 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<User> implements Use
      * @param rows rows <= 0 不分页
      * @return
      */
-    public List<User> getUserList(String userName, Integer userType, Integer status, Date startTime,Date endTime,Integer page,Integer rows){
+    public PageInfo<User> getUserList(String userName, Integer userType, Integer status, Date startTime,Date endTime,Integer page,Integer rows){
         QueryParams params = new QueryParams();
-        params.addStrParam("userName","%"+userName+"%")
-                .addNumParam("userType",userType)
-                .addNumParam("status",status)
-                .addDateParam("startTime",startTime)
-                .addDateParam("endTime",endTime);
+        params.addStr("userName",userName)
+                .addNum("userType",userType)
+                .addNum("status",status)
+                .addDate("startTime",startTime)
+                .addDate("endTime",endTime);
         if ((page != null && page > 0) && (rows != null && rows > 0)){
             PageHelper.startPage(page,rows);
         }
-        return userDao.getUserList(params);
+        PageInfo<User> pageInfo = new PageInfo<>(userDao.getUserList(params));
+        return pageInfo;
     }
 
     @Override
     public User insert(User user) {
         user.setSalt(MD5.genSalt());
         user.setPassWord(MD5.genMd5(user.getPassWord(),user.genCredentialsSalt()));
+        user.setUpdateTime(new Date());
         return super.insert(user);
+    }
+
+    @Override
+    public User modified(User user) {
+
+        user.setUpdateTime(new Date());
+        return super.modified(user);
+    }
+
+    @Override
+    public boolean delete(long id) {
+        User user = userDao.selectByPrimaryKey(id);
+        if (StringUtils.equals("admin",user.getUserName())){
+            throw new WarriorException("admin账户不能删除！");
+        }
+        return userDao.delete(user) > 0 ? true : false;
     }
 }

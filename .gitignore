@@ -1,0 +1,6 @@
+/.DS_Store
+/.idea/**
+/ManageSystem.iml
+/**/*.iml
+/**/target/**
+.idea/

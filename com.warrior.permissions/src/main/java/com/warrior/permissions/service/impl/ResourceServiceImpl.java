@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.warrior.permissions.dao.ResourcesDao;
 import com.warrior.permissions.entity.Resource;
 import com.warrior.permissions.service.ResourceService;
-import com.warrior.user.dao.ParamsUtil;
+import com.warrior.util.common.QueryParams;
 import com.warrior.util.dao.WarriorBaseMapper;
 import com.warrior.util.service.WarriorBaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +37,12 @@ public class ResourceServiceImpl extends WarriorBaseServiceImpl<Resource> implem
 
     @Override
     public PageInfo<Resource> getListByPage(String name, String url, int status, int isShow, int type,int page,int rows) {
-        ParamsUtil params = new ParamsUtil();
+        QueryParams params = new QueryParams();
         params.addStr("name",name)
                 .addStr("url",url)
-                .addInt("status",status,-1)
-                .addInt("isShow",isShow,-1)
-                .addInt("type",type,-1);
+                .addNum("status",status,-1)
+                .addNum("isShow",isShow,-1)
+                .addNum("type",type,-1);
         PageHelper.startPage(page,rows);
         PageInfo<Resource> pageInfo = new PageInfo<>(resourcesDao.getListByPage(params));
         return pageInfo;

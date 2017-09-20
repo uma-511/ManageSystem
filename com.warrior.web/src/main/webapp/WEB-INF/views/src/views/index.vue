@@ -55,7 +55,7 @@
 
                 <Menu active-name="1" theme="dark" width="auto" v-if="itemShow">
                     <div class="layout-logo-left">后台管理系统</div>
-                    <Submenu :name="item.resId" v-if="item.child.length>0" v-for="item in menuList" :key="item.resId">
+                    <Submenu :name="item.resId" v-if="item.child !=null && item.child.length>0" v-for="item in menuList" :key="item.resId">
                         <template slot="title">
                             <Icon :type="item.icon" size="14"></Icon>
                             <span class="layout-text" >{{item.resName}}</span>
@@ -127,7 +127,7 @@
           });
         },
         beforeMount() {
-          this.toPage('/welcome',{name:'首页',url:'/welcome'});
+          this.$router.push('/welcome');
         },
         beforeDestroy() {
             window.removeEventListener('resize',this.handleResize);

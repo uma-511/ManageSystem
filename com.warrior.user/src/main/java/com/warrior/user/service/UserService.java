@@ -1,5 +1,6 @@
 package com.warrior.user.service;
 
+import com.github.pagehelper.PageInfo;
 import com.warrior.user.entity.User;
 import com.warrior.user.entity.UserEntity;
 import com.warrior.util.service.WarriorBaseService;
@@ -19,5 +20,5 @@ public interface UserService extends WarriorBaseService<User> {
 
     User getByUserName(String userName);
 
-    List<User> getUserList(String userName, Integer userType, Integer status, Date startTime, Date endTime, Integer page, Integer rows);
+    PageInfo<User> getUserList(String userName, Integer userType, Integer status, Date startTime, Date endTime, Integer page, Integer rows);
 }

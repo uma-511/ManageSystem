@@ -12,7 +12,7 @@
     <select id="getUserList" parameterType="Map" resultType="com.warrior.user.entity.User">
         SELECT * FROM warrior.warrior_user WHERE 1=1
         <if test="userName != null">
-            AND userName LIKE #{userName}
+            AND locate(#{userName},userName) > 0
         </if>
         <if test="userType != null">
             AND userType = #{userType}

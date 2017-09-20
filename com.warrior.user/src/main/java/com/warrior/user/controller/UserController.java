@@ -7,11 +7,13 @@ import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
@@ -99,5 +101,12 @@ public class UserController extends WarriorBaseController {
                                Integer page,
                                Integer rows) {
         return buildMsg(userService.getUserList(userName, userType, status, startTime, endTime, page, rows));
+    }
+
+    @InitBinder
+    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception{
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        CustomDateEditor editor = new CustomDateEditor(df, true);//true表示允许为空，false反之
+        binder.registerCustomEditor(Date.class, editor);
     }
 }
