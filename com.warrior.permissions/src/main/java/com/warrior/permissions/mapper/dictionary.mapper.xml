@@ -5,11 +5,14 @@
 
     <select id="getListByType" resultType="com.warrior.permissions.entity.Dictionary" parameterType="int">
         SELECT * FROM warrior.warrior_dictionary
-        WHERE dicType = #{dicType} ORDER BY sort ASC
+        WHERE dic_type = #{dicType} ORDER BY sort ASC
     </select>
 
-    <select id="getByAttribute" parameterType="HashMap" resultType="com.warrior.permissions.entity.Dictionary">
+    <select id="getByAttribute" resultType="com.warrior.permissions.entity.Dictionary">
         SELECT * FROM warrior.warrior_dictionary
-        WHERE #{key}=#{value}
+        <where>
+            ${ew.sqlSegment}
+        </where>
+
     </select>
 </mapper>

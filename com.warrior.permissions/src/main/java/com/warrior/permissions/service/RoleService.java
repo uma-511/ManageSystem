@@ -1,11 +1,11 @@
 package com.warrior.permissions.service;
 
+import com.baomidou.mybatisplus.service.IService;
 import com.warrior.permissions.entity.Role;
-import com.warrior.util.service.WarriorBaseService;
 
 import java.util.List;
 
-public interface RoleService extends WarriorBaseService<Role> {
+public interface RoleService extends IService<Role>{
 
     List<Role> getRoleList(String roleName, int status);
 

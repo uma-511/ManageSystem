@@ -16,12 +16,4 @@
 
         <setting name="logImpl" value="LOG4J"/>
     </settings>
-    <plugins>
-        <plugin interceptor="com.github.pagehelper.PageInterceptor">
-            <property name="helperDialect" value="mysql"/>
-            <property name="offsetAsPageNum" value="true"/>
-            <property name="rowBoundsWithCount" value="true"/>
-            <property name="reasonable" value="true"/>
-        </plugin>
-    </plugins>
 </configuration>

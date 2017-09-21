@@ -1,18 +1,16 @@
 package com.warrior.permissions.dao;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.warrior.permissions.entity.Permission;
-import com.warrior.permissions.entity.Resource;
-import com.warrior.util.dao.WarriorBaseMapper;
-import org.springframework.stereotype.Repository;
+import com.warrior.permissions.entity.Resources;
 
 import java.util.List;
 
-@Repository
-public interface PermissionDao extends WarriorBaseMapper<Permission> {
+public interface PermissionDao extends BaseMapper<Permission> {
 
-    List<Resource> getResourcesByRole(long userId);
+    List<Resources> getResourcesByRole(long userId);
 
-    List<Resource> getResourcesByUser(long userId);
+    List<Resources> getResourcesByUser(long userId);
 
-    List<Resource> getResourcess(Permission permission);
+    List<Resources> getResourcess(Permission permission);
 }

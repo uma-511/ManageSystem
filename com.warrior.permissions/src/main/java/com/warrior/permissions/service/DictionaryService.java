@@ -1,12 +1,12 @@
 package com.warrior.permissions.service;
 
+import com.baomidou.mybatisplus.service.IService;
 import com.warrior.permissions.entity.Dictionary;
 import com.warrior.permissions.model.DictModel;
-import com.warrior.util.service.WarriorBaseService;
 
 import java.util.List;
 
-public interface DictionaryService extends WarriorBaseService<Dictionary> {
+public interface DictionaryService extends IService<Dictionary>{
 
     List<Dictionary> getListByType(int dicType);
 

@@ -1,5 +1,6 @@
 package com.warrior.permissions.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.warrior.permissions.entity.Dictionary;
 import com.warrior.permissions.service.DictionaryService;
 import com.warrior.util.common.JSONMsg;
@@ -43,7 +44,7 @@ public class DictionaryController extends WarriorBaseController {
      */
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public JSONMsg getList(){
-        return buildMsg(dictionaryService.getList());
+        return buildMsg(dictionaryService.selectList(new EntityWrapper<>()));
     }
     /**
      * 获取单个字典信息
@@ -52,7 +53,7 @@ public class DictionaryController extends WarriorBaseController {
      */
     @RequestMapping(value="/{id}",method = RequestMethod.GET)
     public JSONMsg get(@PathVariable(value="id")long id){
-        return buildMsg(dictionaryService.get(id));
+        return buildMsg(dictionaryService.selectById(id));
     }
 
     /**
@@ -72,7 +73,7 @@ public class DictionaryController extends WarriorBaseController {
      */
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public JSONMsg delete(@PathVariable(value = "id")long id){
-        return buildMsg(dictionaryService.delete(id));
+        return buildMsg(dictionaryService.deleteById(id));
     }
 
     /**
@@ -84,6 +85,6 @@ public class DictionaryController extends WarriorBaseController {
     @RequestMapping(value="/{id}",method = RequestMethod.PUT)
     public JSONMsg modified(@PathVariable(value = "id")long id,Dictionary dictionary){
         dictionary.setId(id);
-        return buildMsg(dictionaryService.modified(dictionary));
+        return buildMsg(dictionaryService.insertOrUpdate(dictionary));
     }
 }

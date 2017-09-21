@@ -1,16 +1,17 @@
 package com.warrior.permissions.dao;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.warrior.permissions.entity.Dictionary;
-import com.warrior.util.dao.WarriorBaseMapper;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import java.util.Map;
 
-@Repository
-public interface DictionaryDao extends WarriorBaseMapper<Dictionary> {
+public interface DictionaryDao extends BaseMapper<Dictionary> {
 
-    public List<Dictionary> getListByType(int dicType);
+    List<Dictionary> getListByType(int dicType);
 
-    public Dictionary getByAttribute(Map params);
+    Dictionary getByAttribute(@Param("ew")Wrapper<Dictionary> wrapper);
 
 }

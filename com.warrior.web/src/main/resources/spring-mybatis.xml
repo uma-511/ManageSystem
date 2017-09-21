@@ -25,8 +25,6 @@
         <property name="initialSize" value="0"/>
         <!-- 连接池最大使用连接数量 -->
         <property name="maxActive" value="20"/>
-        <!-- 连接池最大空闲 -->
-        <property name="maxIdle" value="20"/>
         <!-- 连接池最小空闲 -->
         <property name="minIdle" value="0"/>
         <!-- 获取连接最大等待时间 -->
@@ -54,22 +52,31 @@
 
     <!-- ========================================针对myBatis的配置项============================== -->
     <!-- 配置sqlSessionFactory -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
         <!-- 实例化sqlSessionFactory时需要使用上述配置好的数据源以及SQL映射文件 -->
         <property name="dataSource" ref="dataSource"/>
         <!-- 配置MyBaties全局配置文件:mybatis-config.xml -->
         <property name="configLocation" value="classpath:mybatis-config.xml" />
         <property name="mapperLocations" value="classpath*:com/warrior/**/mapper/*.mapper.xml"/>
-    </bean>
-    <!-- 配置扫描器 -->
-    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
-        <!-- 扫描me.gacl.dao这个包以及它的子包下的所有映射接口类 -->
-        <property name="basePackage" value="com.warrior"/>
-        <property name="markerInterface" value="com.warrior.util.dao.WarriorBaseMapper"/>
+        <property name="typeAliasesPackage" value="com.warrior.**.entity"/>
+        <property name="globalConfig" ref="globalConfig"/>
+        <property name="plugins">
+        <array>
+            <!-- 分页插件配置 -->
+            <bean id="paginationInterceptor" class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+                <property name="dialectType" value="mysql" />
+            </bean>
+        </array>
+        </property>
     </bean>
 
-    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
-        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    <bean id="globalConfig" class="com.baomidou.mybatisplus.entity.GlobalConfiguration">
+        <property name="idType" value="0" />
+        <property name="dbType" value="mysql"/>
+    </bean>
+
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.warrior.**.dao" />
     </bean>
     <!-- ========================================分隔线========================================= -->
     <!-- 配置事务管理器 -->

@@ -1,29 +1,29 @@
 package com.warrior.permissions.entity;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 
-@Table(name="warrior_permissions")
+@TableName(value="warrior_permissions")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Permission implements Serializable {
 
+    @TableId
     @Getter @Setter
-    @Id
     private long id;
+
     @Getter @Setter
-    @Column(name="ownId")
     private long ownId;
+
     @Getter @Setter
-    @Column(name="resId")
     private long resId;
+
     @Getter @Setter
     private int type;
 

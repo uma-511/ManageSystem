@@ -34,7 +34,7 @@ public class RoleController extends WarriorBaseController {
      */
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     public JSONMsg get(@PathVariable(value="id") long id){
-        return buildMsg(roleService.get(id));
+        return buildMsg(roleService.selectById(id));
     }
 
     /**
@@ -46,7 +46,7 @@ public class RoleController extends WarriorBaseController {
     @RequestMapping(value="/{id}",method = RequestMethod.PUT)
     public JSONMsg modified(@PathVariable(value="id") long id,Role role){
         role.setRid(id);
-        return buildMsg(roleService.modified(role));
+        return buildMsg(roleService.insertOrUpdate(role));
     }
 
     /**
@@ -56,7 +56,7 @@ public class RoleController extends WarriorBaseController {
      */
     @RequestMapping(value="/{id}",method = RequestMethod.DELETE)
     public JSONMsg delete(@PathVariable(value="id") long id){
-        return buildMsg(roleService.delete(id));
+        return buildMsg(roleService.deleteById(id));
     }
 
     /**

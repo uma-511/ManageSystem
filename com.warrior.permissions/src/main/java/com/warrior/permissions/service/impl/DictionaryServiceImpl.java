@@ -1,34 +1,22 @@
 package com.warrior.permissions.service.impl;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.common.collect.Lists;
 import com.warrior.permissions.dao.DictionaryDao;
 import com.warrior.permissions.entity.Dictionary;
 import com.warrior.permissions.model.DictModel;
 import com.warrior.permissions.service.DictionaryService;
-import com.warrior.util.common.QueryParams;
-import com.warrior.util.dao.WarriorBaseMapper;
 import com.warrior.util.exception.WarriorException;
 import com.warrior.util.service.WarriorBaseServiceImpl;
 import org.apache.commons.beanutils.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Service
-public class DictionaryServiceImpl extends WarriorBaseServiceImpl<Dictionary> implements DictionaryService {
-
-    @Autowired
-    @Qualifier("dictionaryDao")
-    private DictionaryDao dictionaryDao;
-
-    @Override
-    public WarriorBaseMapper<Dictionary> getBaseMapper() {
-        return (WarriorBaseMapper<Dictionary>)dictionaryDao;
-    }
+public class DictionaryServiceImpl extends WarriorBaseServiceImpl<DictionaryDao,Dictionary> implements DictionaryService {
 
     /**
      * 根据字典类型查找
@@ -36,7 +24,7 @@ public class DictionaryServiceImpl extends WarriorBaseServiceImpl<Dictionary> im
      * @return
      */
     public List<Dictionary> getListByType(int dicType){
-        return dictionaryDao.getListByType(dicType);
+        return baseMapper.getListByType(dicType);
     }
 
     /**
@@ -67,7 +55,8 @@ public class DictionaryServiceImpl extends WarriorBaseServiceImpl<Dictionary> im
      * @return
      */
     public Dictionary getByAttribute(String key,Object value){
-        return dictionaryDao.getByAttribute(new QueryParams().addStr("key",key)
-        .addObject("value",value));
+        EntityWrapper<Dictionary> entity = new EntityWrapper<>();
+        entity.eq(key,value);
+        return baseMapper.getByAttribute(entity);
     }
 }

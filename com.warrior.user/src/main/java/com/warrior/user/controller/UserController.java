@@ -1,7 +1,7 @@
 package com.warrior.user.controller;
 
 import com.warrior.user.entity.User;
-import com.warrior.user.entity.UserEntity;
+import com.warrior.user.model.UserModel;
 import com.warrior.user.service.UserService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
@@ -25,11 +25,12 @@ public class UserController extends WarriorBaseController {
 
     /**
      * 获取当前用户信息
+     *
      * @return
      */
-    @RequestMapping(value="/getCurrentUser",method = {RequestMethod.GET})
-    public JSONMsg getCurrentUser(){
-        UserEntity entity = userService.getCurrentUser();
+    @RequestMapping(value = "/getCurrentUser", method = {RequestMethod.GET})
+    public JSONMsg getCurrentUser() {
+        UserModel entity = userService.getCurrentUser();
         return buildMsg(entity);
     }
 
@@ -42,7 +43,7 @@ public class UserController extends WarriorBaseController {
     @RequiresPermissions("admin:user:view")
     @RequestMapping(value = "/{id}", method = {RequestMethod.GET})
     public JSONMsg queryUser(@PathVariable(value = "id") long id) {
-        return buildMsg(userService.getById(id));
+        return buildMsg(userService.selectById(id));
     }
 
     /**
@@ -93,18 +94,19 @@ public class UserController extends WarriorBaseController {
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public JSONMsg getUserList(String userName,
-                               Integer userType,
-                               Integer status,
-                               Date startTime,
-                               Date endTime,
-                               Integer page,
-                               Integer rows) {
+    public JSONMsg getUserList(
+            @RequestParam(name = "userName", defaultValue = "") String userName,
+            @RequestParam(name = "userType", defaultValue = "-1") int userType,
+            @RequestParam(name = "status", defaultValue = "-1") int status,
+            @RequestParam(name="startTime")Date startTime,
+            @RequestParam(name="endTime")Date endTime,
+            @RequestParam(name="page",defaultValue = "1")int page,
+            @RequestParam(name="rows",defaultValue = "10")int rows) {
         return buildMsg(userService.getUserList(userName, userType, status, startTime, endTime, page, rows));
     }
 
     @InitBinder
-    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception{
+    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         CustomDateEditor editor = new CustomDateEditor(df, true);//true表示允许为空，false反之
         binder.registerCustomEditor(Date.class, editor);

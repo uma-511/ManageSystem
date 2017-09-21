@@ -1,6 +1,6 @@
 package com.warrior.permissions.controller;
 
-import com.warrior.permissions.entity.Resource;
+import com.warrior.permissions.entity.Resources;
 import com.warrior.permissions.service.ResourceService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
@@ -26,7 +26,7 @@ public class ResourceController extends WarriorBaseController {
      */
     @RequestMapping(value="/{id}",method = RequestMethod.GET)
     public JSONMsg get(@PathVariable(value = "id")long resId){
-        return buildMsg(resourceService.get(resId));
+        return buildMsg(resourceService.selectById(resId));
     }
 
     /**
@@ -50,7 +50,7 @@ public class ResourceController extends WarriorBaseController {
      * @return
      */
     @RequestMapping(value={"/",""},method = RequestMethod.POST)
-    public JSONMsg addResource(Resource resource){
+    public JSONMsg addResource(Resources resource){
         return buildMsg(resourceService.insert(resource));
     }
 
@@ -61,7 +61,8 @@ public class ResourceController extends WarriorBaseController {
      * @return
      */
     @RequestMapping(value="/{id}",method = RequestMethod.PUT)
-    public JSONMsg modified(@PathVariable(value = "id")long resId,Resource resource){
+    public JSONMsg modified(@PathVariable(value = "id")long resId,Resources resource){
+        resource.setResId(resId);
         return buildMsg(resourceService.modified(resource));
     }
 
@@ -72,6 +73,6 @@ public class ResourceController extends WarriorBaseController {
      */
     @RequestMapping(value="/{id}",method = RequestMethod.DELETE)
     public JSONMsg delete(@PathVariable(value = "id")long resId){
-        return buildMsg(resourceService.delete(resId));
+        return buildMsg(resourceService.deleteById(resId));
     }
 }

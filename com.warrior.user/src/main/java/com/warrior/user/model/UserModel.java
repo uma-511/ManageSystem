@@ -1,13 +1,12 @@
-package com.warrior.user.entity;
+package com.warrior.user.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UserEntity implements Serializable {
+public class UserModel implements Serializable {
 
     @Getter
     @Setter
@@ -26,9 +25,8 @@ public class UserEntity implements Serializable {
     private int age;
 
     @Getter @Setter
-    @Column(name="createTime")
     private Date createTime;
+
     @Getter @Setter
-    @Column(name="updateTime")
     private Date updateTime;
 }

@@ -23,30 +23,31 @@
           <div class="layout-tools">
             <Row>
               <Col span="4">
-                <Input size="small" v-model="name">
-                  <span slot="prepend">名称：</span>
-                </Input>
+                <span>名称：</span>
+                <Input size="small" v-model="name" style="width:120px;"></Input>
               </Col>
               <Col span="4" class="layout-col-padding">
-                <Input size="small" v-model="url">
-                  <span slot="prepend">URL：</span>
-                </Input>
+                <span>URL：</span>
+                <Input size="small" v-model="url" style="width:120px;"></Input>
               </Col>
               <Col span="4" class="layout-col-padding">
-                <Select size="small" placeholder="状态" v-model="status">
-                    <Option value="-1">全部</Option>
+                <span>状态：</span>
+                <Select size="small" placeholder="状态" v-model="status" style="width:120px;">
+                    <Option :value="-1">全部</Option>
                     <Option v-for="item in sel_status" :key="item.dicKey" :value="item.dicKey">{{item.dicValue}}</Option>
                 </Select>
               </Col>
               <Col span="4" class="layout-col-padding">
-                <Select size="small" placeholder="是否显示" v-model="isShow">
-                    <Option value="-1">全部</Option>
+                <span>是否显示：</span>
+                <Select size="small" placeholder="是否显示" v-model="isShow" style="width:100px;">
+                    <Option :value="-1">全部</Option>
                     <Option v-for="item in sel_isShow" :value="item.dicKey" :key="item.dicKey">{{item.dicValue}}</Option>
                 </Select>
               </Col>
               <Col span="4" class="layout-col-padding">
-                <Select size="small" placeholder="类型" v-model="type">
-                    <Option value="-1">全部</Option>
+                <span>类型：</span>
+                <Select size="small" placeholder="类型" v-model="type" style="width:120px;">
+                    <Option :value="-1">全部</Option>
                     <Option v-for="item in sel_type" :value="item.dicKey" :key="item.dicKey">{{item.dicValue}}</Option>
                 </Select>
               </Col>
@@ -86,7 +87,7 @@
             <Col span="12">
               <FormItem prop="parentId" label="父级：" :label-width="80">
                 <Select size="small" placeholder="请选择" v-model="formInline.parentId" style="width:120px;">
-                    <Option value="">无</Option>
+                    <Option :value="0">无</Option>
                     <Option v-for="item in data" :key="item.resId" :value="item.resId">{{item.resName}}</Option>
                 </Select>
               </FormItem>
@@ -183,9 +184,6 @@
           resName:[
             { required: true, message: '请填写名称', trigger: 'blur' },
             { type: 'string', max:30, message: '名称长度不能超过30个字符', trigger: 'blur' }
-          ],
-          url:[
-            { required: true, message: '请填写URL', trigger: 'blur' }
           ]
         },
         columns:[
@@ -265,7 +263,7 @@
         let params = '?name='+this.name+'&url='+this.url+'&status='+this.status+'&isShow='+this.isShow+'&type='+this.type+'&page='+this.page+'&rows='+this.pageSize;
         util.ajax.get('/resource/list'+params)
         .then(rep => {
-          this.data = rep.list;
+          this.data = rep.records;
           this.total = rep.total;
         });
       },

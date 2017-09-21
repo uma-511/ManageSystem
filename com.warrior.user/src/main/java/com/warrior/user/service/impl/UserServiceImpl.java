@@ -1,45 +1,37 @@
 package com.warrior.user.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.enums.SqlLike;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.warrior.user.dao.UserDao;
 import com.warrior.user.entity.User;
-import com.warrior.user.entity.UserEntity;
+import com.warrior.user.model.UserModel;
 import com.warrior.user.service.UserService;
-import com.warrior.util.common.*;
+import com.warrior.util.common.Contacts;
 import com.warrior.util.exception.WarriorException;
-import com.warrior.util.dao.WarriorBaseMapper;
 import com.warrior.util.service.WarriorBaseServiceImpl;
 import com.warrior.util.shiro.MD5;
 import com.warrior.util.web.SessionUtil;
+import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
+@Log4j
 @Service
-public class UserServiceImpl extends WarriorBaseServiceImpl<User> implements UserService{
-
-    @Autowired
-    private UserDao userDao;
-
-    @Override
-    protected WarriorBaseMapper<User> getBaseMapper() {
-        return (WarriorBaseMapper<User>)userDao;
-    }
+public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implements UserService{
 
     /**
      * 获取当前用户
      * @return
      */
-    public UserEntity getCurrentUser(){
-        UserEntity entity = SessionUtil.getValue(Contacts.SESSION_USER);
+    public UserModel getCurrentUser(){
+        UserModel entity = SessionUtil.getValue(Contacts.SESSION_USER);
         return entity;
     }
 
@@ -48,7 +40,7 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<User> implements Use
      * @param userName
      * @param pwd
      */
-    public UserEntity login(String userName,String pwd){
+    public UserModel login(String userName, String pwd){
         Subject subject = SecurityUtils.getSubject();
         try {
             UsernamePasswordToken token = new UsernamePasswordToken(userName,pwd);
@@ -65,7 +57,7 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<User> implements Use
             throw new WarriorException("登录认证失败！",e);
         }
         User user = getByUserName(userName);
-        UserEntity entity = new UserEntity();
+        UserModel entity = new UserModel();
         BeanUtils.copyProperties(user,entity);
         SessionUtil.setAttr(Contacts.SESSION_USER,entity);
         return entity;
@@ -79,16 +71,13 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<User> implements Use
         subject.logout();
     }
 
-    public User getById(long id){
-        return userDao.selectByPrimaryKey(id);
-    }
     /**
      * 根据属性查找
      * @param userName
      * @return
      */
     public User getByUserName(String userName){
-        return userDao.getByUserName(userName);
+        return baseMapper.getByUserName(userName);
     }
 
     /**
@@ -102,41 +91,46 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<User> implements Use
      * @param rows rows <= 0 不分页
      * @return
      */
-    public PageInfo<User> getUserList(String userName, Integer userType, Integer status, Date startTime,Date endTime,Integer page,Integer rows){
-        QueryParams params = new QueryParams();
-        params.addStr("userName",userName)
-                .addNum("userType",userType)
-                .addNum("status",status)
-                .addDate("startTime",startTime)
-                .addDate("endTime",endTime);
-        if ((page != null && page > 0) && (rows != null && rows > 0)){
-            PageHelper.startPage(page,rows);
+    public Page<User> getUserList(String userName, int userType, int status, Date startTime, Date endTime, int page, int rows){
+        EntityWrapper<User> wrapper = new EntityWrapper<>();
+        if(!StringUtils.isBlank(userName)){
+            wrapper.like("user_name",userName, SqlLike.DEFAULT);
         }
-        PageInfo<User> pageInfo = new PageInfo<>(userDao.getUserList(params));
-        return pageInfo;
+        if (userType != -1){
+            wrapper.eq("user_type",userType);
+        }
+        if (status != -1){
+            wrapper.eq("status",status);
+        }
+        if (startTime != null){
+            wrapper.ge("start_time",startTime);
+        }
+        if (endTime != null){
+            wrapper.le("end_time",endTime);
+        }
+        Page<User> paging = new Page((page-1)*rows,rows);
+        paging.setRecords(baseMapper.getUserList(paging,wrapper));
+        return paging;
     }
 
     @Override
-    public User insert(User user) {
+    public boolean insert(User user) {
         user.setSalt(MD5.genSalt());
         user.setPassWord(MD5.genMd5(user.getPassWord(),user.genCredentialsSalt()));
         user.setUpdateTime(new Date());
         return super.insert(user);
     }
 
-    @Override
-    public User modified(User user) {
-
+    public boolean modified(User user) {
         user.setUpdateTime(new Date());
-        return super.modified(user);
+        return super.insertOrUpdate(user);
     }
 
-    @Override
     public boolean delete(long id) {
-        User user = userDao.selectByPrimaryKey(id);
+        User user = baseMapper.selectById(id);
         if (StringUtils.equals("admin",user.getUserName())){
             throw new WarriorException("admin账户不能删除！");
         }
-        return userDao.delete(user) > 0 ? true : false;
+        return baseMapper.deleteById(id) > 0 ? true : false;
     }
 }

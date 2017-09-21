@@ -1,6 +1,8 @@
 package com.warrior.permissions.controller;
 
+import com.warrior.permissions.entity.UserRole;
 import com.warrior.permissions.service.PermissionService;
+import com.warrior.permissions.service.UserRoleService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
 import lombok.extern.log4j.Log4j;
@@ -17,16 +19,16 @@ public class PermissionController extends WarriorBaseController {
 
     @Autowired
     private PermissionService permissionService;
+    @Autowired
+    private UserRoleService userRoleService;
 
     /**
      * 新增用户角色关系
-     * @param userId
-     * @param roleId
      * @return
      */
     @RequestMapping(value = "/userRole",method = RequestMethod.POST)
-    public JSONMsg addUserRole(long userId,long roleId){
-        return buildMsg(permissionService.addUserRole(userId, roleId));
+    public JSONMsg addUserRole(UserRole userRole){
+        return buildMsg(userRoleService.insert(userRole));
     }
 
     /**
@@ -36,7 +38,7 @@ public class PermissionController extends WarriorBaseController {
      */
     @RequestMapping(value="/userRole/{id}",method = RequestMethod.DELETE)
     public JSONMsg delUserRole(@PathVariable(value = "id") long id){
-        return buildMsg(permissionService.delUserRole(id));
+        return buildMsg(userRoleService.deleteById(id));
     }
 
     /**
@@ -57,7 +59,7 @@ public class PermissionController extends WarriorBaseController {
      */
     @RequestMapping(value = "/userPermission/{id}",method = RequestMethod.DELETE)
     public JSONMsg delUserPermission(@PathVariable(value = "id") long id){
-        return buildMsg(permissionService.delUserPermission(id));
+        return buildMsg(permissionService.delPermission(id));
     }
 
     /**
@@ -78,7 +80,7 @@ public class PermissionController extends WarriorBaseController {
      */
     @RequestMapping(value="/rolePermission/{id}",method = RequestMethod.DELETE)
     public JSONMsg delRolePermission(long id){
-        return buildMsg(permissionService.delRolePermission(id));
+        return buildMsg(permissionService.delPermission(id));
     }
 
     /**

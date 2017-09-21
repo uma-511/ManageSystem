@@ -1,15 +1,16 @@
 package com.warrior.permissions.dao;
 
-import com.warrior.permissions.entity.Resource;
-import com.warrior.util.dao.WarriorBaseMapper;
-import org.springframework.stereotype.Repository;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.warrior.permissions.entity.Resources;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
-import java.util.Map;
 
-@Repository
-public interface ResourcesDao extends WarriorBaseMapper<Resource> {
+public interface ResourcesDao extends BaseMapper<Resources> {
 
-    public List<Resource> getListByParentId(int parentId);
+    List<Resources> getListByParentId(int parentId);
 
-    public List<Resource> getListByPage(Map params);
+    List<Resources> getListByPage(Pagination page, @Param("ew")Wrapper<Resources> wrapper);
 }

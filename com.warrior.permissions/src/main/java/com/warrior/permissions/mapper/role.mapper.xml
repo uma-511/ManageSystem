@@ -4,13 +4,14 @@
 
     <select id="getRoleListByUser" parameterType="long" resultType="com.warrior.permissions.entity.Role">
         select wr.* from warrior_role wr
-        left join warrior_user_role ur on ur.roleId = wr.rid
-        where ur.userId = #{uid}
+        left join warrior_user_role ur on ur.role_id = wr.rid
+        where ur.user_id = #{uid}
     </select>
 
-    <select id="getRoleList" parameterType="HashMap" resultType="com.warrior.permissions.entity.Role">
+    <select id="getRoleList" resultType="com.warrior.permissions.entity.Role">
         SELECT * from warrior.warrior_role
-        WHERE roleName = #{roleName}
-        AND status = #{status}
+        <where>
+            ${ew.sqlSegment}
+        </where>
     </select>
 </mapper>

@@ -1,6 +1,6 @@
 package com.warrior.web.shiro;
 
-import com.warrior.permissions.entity.Resource;
+import com.warrior.permissions.entity.Resources;
 import com.warrior.permissions.entity.Role;
 import com.warrior.permissions.service.PermissionService;
 import com.warrior.permissions.service.RoleService;
@@ -42,7 +42,7 @@ public class CustomSecurityRealm extends AuthorizingRealm {
         User user = userService.getByUserName(userName);
         for (Role role : roleService.getRoleListByUser(user.getUid())) {
             roles.add(role.getRoleName());
-            for (Iterator<Resource> iterator = permissionService.getPermission(role.getRid(), 0).iterator();
+            for (Iterator<Resources> iterator = permissionService.getPermission(role.getRid(), 0).iterator();
                  iterator.hasNext(); ) {
                 permissions.add(new WildcardPermission(iterator.next().getPermission()));
             }

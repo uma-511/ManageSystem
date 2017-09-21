@@ -1,6 +1,6 @@
 package com.warrior.user.controller;
 
-import com.warrior.user.entity.UserEntity;
+import com.warrior.user.model.UserModel;
 import com.warrior.user.service.UserService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
@@ -19,7 +19,7 @@ public class LoginController extends WarriorBaseController{
 
     @RequestMapping(value = "/doLogin",method = RequestMethod.POST)
     public JSONMsg doLogin(String userName, String passWord, HttpServletRequest request){
-        UserEntity entity = userService.login(userName,passWord);
+        UserModel entity = userService.login(userName,passWord);
         return buildMsg(entity,"登录成功！");
     }
 

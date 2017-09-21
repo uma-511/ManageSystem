@@ -29,13 +29,13 @@ util.ajax.interceptors.request.use((config)=>{
   }
   return config;
 },(error)=>{
-  util.vue.$Modal.error({title:'操作提示',content: '网络错误！'});
+  util.vue.$Message.error({content:'<span style="color:red;">网络错误！</span>',duration:5,closable:true});
   return Promise.reject(error);
 });
 util.ajax.interceptors.response.use((res)=>{
   if(!res.data || res.data==""){
     if(util.vue.logining != undefined){util.vue.logining = false;}
-    util.vue.$Modal.error({title:'操作提示',content: '服务器异常！'});
+    util.vue.$Message.error({content:'<span style="color:red;">服务器异常！</span>',duration:5,closable:true});
     return Promise.reject(res);
   }
   if (!res.data.success) {
@@ -45,12 +45,12 @@ util.ajax.interceptors.response.use((res)=>{
       return Promise.reject(error);
     }
     if(util.vue.logining != undefined){util.vue.logining = false;}
-    util.vue.$Modal.error({title:'操作提示',content: res.data.msg});
+    util.vue.$Message.error({content:'<span style="color:red;">'+res.data.msg+'</span>',duration:5,closable:true});
     return Promise.reject(res);
   }
   return res.data.data ? res.data.data : res.data;
 },(error)=>{
-  util.vue.$Modal.error({title:'操作提示',content: '网络错误！'});
+  util.vue.$Message.error({content:'<span style="color:red;">网络错误！</span>',duration:5,closable:true});
   return Promise.reject(error);
 });
 util.contains=function(array,value){

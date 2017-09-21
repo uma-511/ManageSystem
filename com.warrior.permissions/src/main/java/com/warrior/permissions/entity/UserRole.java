@@ -1,32 +1,31 @@
 package com.warrior.permissions.entity;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 
 
 /**
  * The type User role.
  */
-@Table(name="warrior_user_role")
+@TableName("warrior_user_role")
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRole implements Serializable {
 
+    @TableId
     @Getter @Setter
-    @Id
     private long id;
+
     @Getter @Setter
-    @Column(name="userId")
     private long userId;
+
     @Getter @Setter
-    @Column(name="roleId")
     private long roleId;
 
     public UserRole(long userId) {

@@ -1,6 +1,6 @@
 package com.warrior.util.web;
 
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.common.JSONUtils;
 import org.apache.shiro.authz.AuthorizationException;
@@ -40,7 +40,7 @@ public class WarriorBaseController {
         }
     }
 
-    protected JSONMsg buildMsg(PageInfo pageInfo){
+    protected JSONMsg buildMsg(Page pageInfo){
         JSONMsg msg = new JSONMsg();
         msg.setSuccess(JSONMsg.FLAG_SUCCESS);
         msg.setPageInfo(pageInfo);

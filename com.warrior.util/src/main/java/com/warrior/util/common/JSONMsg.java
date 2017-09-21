@@ -1,7 +1,7 @@
 package com.warrior.util.common;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.github.pagehelper.PageInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,13 +40,13 @@ public class JSONMsg implements Serializable{
         this.msg = msg;
     }
 
-    public JSONMsg(boolean success, PageInfo pageInfo, String msg) {
+    public JSONMsg(boolean success, Page pageInfo, String msg) {
         this.success = success;
         this.data = pageInfo;
         this.msg = msg;
     }
 
-    public void setPageInfo(PageInfo pageInfo){
+    public void setPageInfo(Page pageInfo){
         this.data = pageInfo;
     }
 }

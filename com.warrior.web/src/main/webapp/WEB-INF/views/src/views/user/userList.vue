@@ -13,7 +13,7 @@
   padding-bottom:5px;
 }
 .layout-col-padding{
-  padding-left:5px;
+  padding-left:2px;
 }
 </style>
 <template>
@@ -23,27 +23,28 @@
           <div class="layout-tools">
             <Row>
               <Col span="4">
-                <Input size="small" v-model="userName">
-                  <span slot="prepend">用户名：</span>
-                </Input>
+                <span>用户名：</span>
+                <Input size="small" v-model="userName" style="width:120px;"></Input>
               </Col>
               <Col span="4" class="layout-col-padding">
-                <Select size="small" placeholder="类型" v-model="type">
-                    <Option value="-1">全部</Option>
+                <span>类型：</span>
+                <Select size="small" placeholder="类型" v-model="type" style="width:120px;">
+                    <Option :value="-1">全部</Option>
                     <Option v-for="item in sel_type" :value="item.dicKey" :key="item.dicKey">{{item.dicValue}}</Option>
                 </Select>
               </Col>
               <Col span="4" class="layout-col-padding">
-                <Select size="small" placeholder="状态" v-model="status">
-                    <Option value="-1">全部</Option>
+                <span>状态：</span>
+                <Select size="small" placeholder="状态" v-model="status" style="width:120px;">
+                    <Option :value="-1">全部</Option>
                     <Option v-for="item in sel_status" :key="item.dicKey" :value="item.dicKey">{{item.dicValue}}</Option>
                 </Select>
               </Col>
-              <Col span="4" class="layout-col-padding">
-                <DatePicker size="small" type="datetime" format="yyyy-MM-dd HH:mm" v-model="startTime" placeholder="选择开始日期"></DatePicker>
-              </Col>
-              <Col span="4" class="layout-col-padding">
-                <DatePicker size="small" type="datetime" format="yyyy-MM-dd HH:mm" v-model="endTime" placeholder="选择结束日期"></DatePicker>
+              <Col span="8" class="layout-col-padding">
+                <span>注册时间：</span>
+                <DatePicker size="small" type="datetime" format="yyyy-MM-dd HH:mm" v-model="startTime" placeholder="选择开始日期" style="width:136px;"></DatePicker>
+
+                <DatePicker size="small" type="datetime" format="yyyy-MM-dd HH:mm" v-model="endTime" placeholder="选择结束日期" style="width:136px;"></DatePicker>
               </Col>
               <Col span="4" class="layout-col-padding">
                   <Button type="primary" size="small" icon="ios-search" @click="query">查询</Button>
@@ -221,7 +222,7 @@
         util.formatDate(this.startTime,'yyyy-MM-dd hh:mm')+'&endTime='+util.formatDate(this.endTime,'yyyy-MM-dd hh:mm')+'&page='+this.page+'&rows='+this.pageSize;
         util.ajax.get('/user/list'+params)
         .then(rep => {
-          this.data = rep.list;
+          this.data = rep.records;
           this.total = rep.total;
         });
       },

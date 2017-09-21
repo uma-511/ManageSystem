@@ -1,16 +1,17 @@
 package com.warrior.user.dao;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.warrior.user.entity.User;
-import com.warrior.util.dao.WarriorBaseMapper;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
 
-@Repository
-public interface UserDao extends WarriorBaseMapper<User> {
+public interface UserDao extends BaseMapper<User> {
 
-    List<User> getUserList(Map<String,Object> params);
+    List<User> getUserList(Pagination page, @Param("ew")Wrapper<User> wrapper);
 
     User getByUserName(String userName);
 

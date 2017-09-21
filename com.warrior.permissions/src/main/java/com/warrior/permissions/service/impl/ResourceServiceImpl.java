@@ -1,63 +1,62 @@
 package com.warrior.permissions.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.warrior.permissions.dao.ResourcesDao;
-import com.warrior.permissions.entity.Resource;
+import com.warrior.permissions.entity.Resources;
 import com.warrior.permissions.service.ResourceService;
-import com.warrior.util.common.QueryParams;
-import com.warrior.util.dao.WarriorBaseMapper;
 import com.warrior.util.service.WarriorBaseServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.log4j.Log4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
+@Log4j
 @Service
-public class ResourceServiceImpl extends WarriorBaseServiceImpl<Resource> implements ResourceService {
-
-    @Autowired
-    private ResourcesDao resourcesDao;
-
-    @Override
-    public WarriorBaseMapper<Resource> getBaseMapper() {
-        return (WarriorBaseMapper<Resource>)resourcesDao;
-    }
+public class ResourceServiceImpl extends WarriorBaseServiceImpl<ResourcesDao,Resources> implements ResourceService {
 
     /**
      * 根据资源父ID查找信息
      * @param parentId
      * @return
      */
-    public List<Resource> getListByParentId(int parentId){
-        return resourcesDao.getListByParentId(parentId);
+    public List<Resources> getListByParentId(int parentId){
+        return baseMapper.getListByParentId(parentId);
     }
 
 
-    @Override
-    public PageInfo<Resource> getListByPage(String name, String url, int status, int isShow, int type,int page,int rows) {
-        QueryParams params = new QueryParams();
-        params.addStr("name",name)
-                .addStr("url",url)
-                .addNum("status",status,-1)
-                .addNum("isShow",isShow,-1)
-                .addNum("type",type,-1);
-        PageHelper.startPage(page,rows);
-        PageInfo<Resource> pageInfo = new PageInfo<>(resourcesDao.getListByPage(params));
-        return pageInfo;
+    public Page<Resources> getListByPage(String name, String url, int status, int isShow, int type, int page, int rows) {
+        EntityWrapper<Resources> ew = new EntityWrapper<>();
+        if (!StringUtils.isBlank(name)){
+            ew.eq("name",name);
+        }
+        if (!StringUtils.isBlank(url)){
+            ew.eq("url",url);
+        }
+        if (status != -1){
+            ew.eq("status",status);
+        }
+        if (isShow != -1){
+            ew.eq("is_show",isShow);
+        }
+        if (type != -1){
+            ew.eq("type",type);
+        }
+        Page<Resources> paging = new Page<>((page-1)*rows,rows);
+        paging.setRecords(baseMapper.getListByPage(paging,ew));
+        return paging;
     }
 
-    @Override
-    public Resource insert(Resource resource) {
+    public boolean insert(Resources resource) {
         resource.setCreateTime(new Date());
         resource.setUpdateTime(new Date());
         return super.insert(resource);
     }
 
-    @Override
-    public Resource modified(Resource resource) {
+    public boolean modified(Resources resource) {
         resource.setUpdateTime(new Date());
-        return super.modified(resource);
+        return super.insertOrUpdate(resource);
     }
 }
