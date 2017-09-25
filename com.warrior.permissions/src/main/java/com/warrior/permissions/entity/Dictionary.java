@@ -42,7 +42,7 @@ public class Dictionary implements Serializable {
     private Date createTime;
 
     @Setter @Getter
-    private String remark;
+    private String typeValue;
 
     public Dictionary(int dicType) {
         this.dicType = dicType;

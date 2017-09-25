@@ -5,10 +5,9 @@ import com.warrior.permissions.service.RoleService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/role")
@@ -17,55 +16,71 @@ public class RoleController extends WarriorBaseController {
     @Autowired
     private RoleService roleService;
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public JSONMsg getRoleList(
+            @RequestParam(value = "roleName", defaultValue = "") String roleName,
+            @RequestParam(value = "status", defaultValue = "-1") int status,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "rows", defaultValue = "10") int rows) {
+        return buildMsg(roleService.getRoleList(roleName, status, page, rows));
+    }
+
     /**
      * 新增角色
+     *
      * @param role
      * @return
      */
-    @RequestMapping(value = {"","/"},method = RequestMethod.POST)
-    public JSONMsg addRole(Role role){
+    @RequestMapping(value = {"", "/"}, method = RequestMethod.POST)
+    public JSONMsg addRole(Role role) {
+        role.setUpdateTime(new Date());
+        role.setCreateTime(new Date());
         return buildMsg(roleService.insert(role));
     }
 
     /**
      * 根据ID获取角色
+     *
      * @param id
      * @return
      */
-    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public JSONMsg get(@PathVariable(value="id") long id){
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public JSONMsg get(@PathVariable(value = "id") long id) {
         return buildMsg(roleService.selectById(id));
     }
 
     /**
      * 修改角色
+     *
      * @param id
      * @param role
      * @return
      */
-    @RequestMapping(value="/{id}",method = RequestMethod.PUT)
-    public JSONMsg modified(@PathVariable(value="id") long id,Role role){
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public JSONMsg modified(@PathVariable(value = "id") long id, Role role) {
         role.setRid(id);
+        role.setUpdateTime(new Date());
         return buildMsg(roleService.insertOrUpdate(role));
     }
 
     /**
      * 删除角色
+     *
      * @param id
      * @return
      */
-    @RequestMapping(value="/{id}",method = RequestMethod.DELETE)
-    public JSONMsg delete(@PathVariable(value="id") long id){
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public JSONMsg delete(@PathVariable(value = "id") long id) {
         return buildMsg(roleService.deleteById(id));
     }
 
-    /**
-     * 根据用户ID获取角色
-     * @param uid
-     * @return
-     */
-    @RequestMapping(value = "/list/{uid}",method = RequestMethod.GET)
-    public JSONMsg getRoleByUser(@PathVariable(value = "uid") long uid){
-        return buildMsg(roleService.getRoleListByUser(uid));
+    @RequestMapping(value = "/list/{uid}", method = RequestMethod.GET)
+    public JSONMsg getRoleByUser(@PathVariable(value = "uid") long uid) {
+        return buildMsg(roleService.getRoleByUser(uid));
+    }
+
+    @RequestMapping(value = "/userRole", method = RequestMethod.PUT)
+    public JSONMsg updateUserRole(@RequestParam(value = "uid", defaultValue = "0") long uid, @RequestParam(value = "permissions", defaultValue = "") String permissions) {
+        return buildMsg(roleService.updateUserRole(uid,permissions));
     }
 }

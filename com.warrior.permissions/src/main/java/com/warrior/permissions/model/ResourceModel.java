@@ -4,10 +4,12 @@ import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
+import java.io.Serializable;
 
-public class ResourceModel {
+public class ResourceModel implements Serializable{
 
     @Getter @Setter
     private long resId;
@@ -23,6 +25,8 @@ public class ResourceModel {
     private int sort;
     @Getter @Setter
     private int type;
+    @Getter @Setter
+    private boolean checked;
     @Setter @Getter
     private ResourceChild child = new ResourceChild();
     @Setter @Getter

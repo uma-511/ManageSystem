@@ -6,10 +6,9 @@ import com.warrior.permissions.service.DictionaryService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/dictionary")
@@ -18,14 +17,20 @@ public class DictionaryController extends WarriorBaseController {
     @Autowired
     private DictionaryService dictionaryService;
 
+    @RequestMapping(value = "type/list",method = RequestMethod.GET)
+    public JSONMsg getDictType(){
+        return buildMsg(dictionaryService.getDictTypeList());
+    }
     /**
      * 根据字典类型获取列表(全部属性)
-     * @param type
      * @return
      */
-    @RequestMapping(value="/list/{type}",method = RequestMethod.GET)
-    public JSONMsg getListByType(@PathVariable(value = "type") int type){
-        return buildMsg(dictionaryService.getListByType(type));
+    @RequestMapping(value="/list",method = RequestMethod.GET)
+    public JSONMsg getListByType(
+            @RequestParam(value = "dictType",defaultValue = "-1") int type,
+            @RequestParam(value="page",defaultValue = "1") int page,
+            @RequestParam(value="rows",defaultValue = "10") int rows){
+        return buildMsg(dictionaryService.getListByType(type,page,rows));
     }
 
     /**
@@ -38,14 +43,6 @@ public class DictionaryController extends WarriorBaseController {
         return buildMsg(dictionaryService.getModelListByType(dicType));
     }
 
-    /**
-     * 获取字典列表
-     * @return
-     */
-    @RequestMapping(value="/list",method = RequestMethod.GET)
-    public JSONMsg getList(){
-        return buildMsg(dictionaryService.selectList(new EntityWrapper<>()));
-    }
     /**
      * 获取单个字典信息
      * @param id
@@ -63,6 +60,7 @@ public class DictionaryController extends WarriorBaseController {
      */
     @RequestMapping(value={"","/"},method = RequestMethod.POST)
     public JSONMsg addDictionary(Dictionary dictionary){
+        dictionary.setCreateTime(new Date());
         return buildMsg(dictionaryService.insert(dictionary));
     }
 

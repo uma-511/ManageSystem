@@ -22,16 +22,30 @@ const routers = [{
       {
           path:'/user/list',
           meta: {
-              title: '管理后台-用户列表'
+              title: '管理后台-用户管理'
           },
           component:(resolve) => require(['./views/user/userList.vue'],resolve)
       },
       {
           path:'/resource/list',
           meta: {
-              title: '管理后台-资源列表'
+              title: '管理后台-资源管理'
           },
           component:(resolve) => require(['./views/resource/resourceList.vue'],resolve)
+      },
+      {
+          path:'/role/list',
+          meta: {
+              title: '管理后台-角色管理'
+          },
+          component:(resolve) => require(['./views/role/roleList.vue'],resolve)
+      },
+      {
+          path:'/dict/list',
+          meta: {
+              title: '管理后台-字典管理'
+          },
+          component:(resolve) => require(['./views/dict/dictList.vue'],resolve)
       }
     ]
 }

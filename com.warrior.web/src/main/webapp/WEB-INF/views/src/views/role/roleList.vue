@@ -22,16 +22,9 @@
         <div class="layout-content-main">
           <div class="layout-tools">
             <Row>
-              <Col span="4">
-                <span>用户名：</span>
-                <Input size="small" v-model="userName" style="width:120px;"></Input>
-              </Col>
-              <Col span="4" class="layout-col-padding">
-                <span>类型：</span>
-                <Select size="small" placeholder="类型" v-model="type" style="width:120px;">
-                    <Option :value="-1">全部</Option>
-                    <Option v-for="item in sel_type" :value="item.dicKey" :key="item.dicKey">{{item.dicValue}}</Option>
-                </Select>
+              <Col span="5">
+                <span>角色名称：</span>
+                <Input size="small" v-model="roleName" style="width:120px;"></Input>
               </Col>
               <Col span="4" class="layout-col-padding">
                 <span>状态：</span>
@@ -40,13 +33,7 @@
                     <Option v-for="item in sel_status" :key="item.dicKey" :value="item.dicKey">{{item.dicValue}}</Option>
                 </Select>
               </Col>
-              <Col span="8" class="layout-col-padding">
-                <span>注册时间：</span>
-                <DatePicker size="small" type="datetime" format="yyyy-MM-dd HH:mm" v-model="startTime" placeholder="选择开始日期" style="width:136px;"></DatePicker>
-
-                <DatePicker size="small" type="datetime" format="yyyy-MM-dd HH:mm" v-model="endTime" placeholder="选择结束日期" style="width:136px;"></DatePicker>
-              </Col>
-              <Col span="4" class="layout-col-padding">
+              <Col span="15" class="layout-col-padding">
                   <Button type="primary" size="small" icon="ios-search" @click="query">查询</Button>
               </Col>
             </Row>
@@ -68,37 +55,8 @@
         <Form ref="form-res" :model="formInline" :rules="ruleInline" inline style="padding-right:30px;">
           <Row>
             <Col span="12">
-              <FormItem prop="userName" label="用户名：" :label-width="80">
-                  <Input v-model="formInline.userName" placeholder="请输入"></Input>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem prop="passWord" label="密码：" :label-width="80">
-                  <Input type="password" v-model="formInline.passWord" placeholder="请输入" :disabled="this.addOrUpdate=='update'?true:false"></Input>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-              <FormItem prop="gender" label="性别：" :label-width="80">
-                <RadioGroup v-model="formInline.gender">
-                    <Radio label="男">男</Radio>
-                    <Radio label="女">女</Radio>
-                </RadioGroup>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem prop="age" label="年龄：" :label-width="80">
-                  <InputNumber :min="10" v-model="formInline.age" placeholder="请输入"></InputNumber>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-              <FormItem prop="userType" label="类型：" :label-width="80">
-                <Select size="small" placeholder="类型" v-model="formInline.userType" style="width:150px;">
-                    <Option v-for="item in sel_type" :value="item.dicKey" :key="item.dicKey">{{item.dicValue}}</Option>
-                </Select>
+              <FormItem prop="roleName" label="角色用户名：" :label-width="120">
+                  <Input v-model="formInline.roleName" placeholder="请输入"></Input>
               </FormItem>
             </Col>
             <Col span="12">
@@ -108,6 +66,14 @@
                 </Select>
               </FormItem>
             </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+              <FormItem prop="remark" label="备注：" :label-width="120">
+                  <Input v-model="formInline.remark" placeholder="请输入"></Input>
+              </FormItem>
+            </Col>
+            <Col span="12"></Col>
           </Row>
           <Row>
             <Col span="12" style="text-align:right;">
@@ -127,9 +93,6 @@
     <Modal v-model="permissionModel" title="权限设置" :mask-closable="false" :width="240" @on-ok="okBtn" style="padding-left:15px;">
         <ZTree ref="pers_tree" :treeData="primissData" :options="treeOptions" />
     </Modal>
-    <Modal v-model="roleModel" title="角色设置" :mask-closable="false" :width="240" @on-ok="saveRoleBtn" style="padding-left:15px;">
-        <ZTree ref="role_tree" :treeData="roleData" :options="treeOptions" />
-    </Modal>
   </div>
 </template>
 <script>
@@ -143,11 +106,9 @@
     },
     data(){
       return {
-        currentUid:0,
+        currentRid:0,
         permissionModel:false,
         primissData:[],
-        roleModel:false,
-        roleData:[],
         treeOptions:{
           showCheckbox: true,
           halfCheck: true,
@@ -163,64 +124,42 @@
         showModel:false,
         isSaveing:false,
         addOrUpdate:'add',
-        modelTitle:'新增用户',
+        modelTitle:'新增角色',
         formInline:{
-          uid:0,
-          userName:'',
-          passWord:'',
-          gender:'男',
-          age:0,
-          userType:1,
+          rid:0,
+          roleName:'',
+          remark:'',
           status:0
         },
         ruleInline:{
-          userName:[
-            { required: true, message: '请填写名称', trigger: 'blur' },
+          roleName:[
+            { required: true, message: '请填写角色名称', trigger: 'blur' },
             { type: 'string', max:30, message: '名称长度不能超过30个字符', trigger: 'blur' }
-          ],
-          passWord:[
-            { required: true, message: '请填写URL', trigger: 'blur' }
           ]
         },
         columns:[
           { title:'编号',key:'index',type:'index',align:'center'},
-          { title:'用户名',key:'userName',align:'center' },
-          { title:'性别',key:'gender',align:'center' },
-          { title:'年龄',key:'age',align:'center'},
-          { title:'类型',key:'userType',align:'center',render:(h,params)=>{
-            return h('Span',{},this.sel_type[params.row.userType-1].dicValue);
-          }},
+          { title:'角色名称',key:'roleName',align:'center' },
           { title:'状态',key:'status',align:'center',render:(h,params)=>{
             return h('Span',{},this.sel_status[params.row.status].dicValue);
           }},
-          { title:'注册时间',key:'createTime',align:'center',width:150,render:(h,params)=>{
-            return h('Span',{},util.formatDate(new Date(params.row.createTime),'yyyy-MM-dd hh:mm'));
-          }},
-          { title:'操作',key:'uid',align:'center',width:220,render:(h,params)=>{
+          { title:'备注',key:'remark',align:'center' },
+          { title:'操作',key:'rid',align:'center',width:180,render:(h,params)=>{
             return h('div',[
               h('Button',{
                 props:{type:'primary',size:'small'},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
-                  this.currentUid = params.row.uid;
-                  this.roleModel = true;
-                  this.loadRole(params.row.uid);
-                }}
-              },'角色'),
-              h('Button',{
-                props:{type:'primary',size:'small'},
-                style:{marginRight:'5px'},
-                on:{click:()=>{
-                  this.currentUid = params.row.uid;
+                  this.currentRid = params.row.rid;
                   this.permissionModel = true;
-                  this.loadPermission(params.row.uid);
+                  this.loadPermission(params.row.rid);
                 }}
               },'权限'),
               h('Button',{
                 props:{type:'primary',size:'small'},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
-                  this.updateItem(params.row.uid);
+                  this.updateItem(params.row.rid);
                 }}
               },'修改'),
               h('Button',{
@@ -230,7 +169,7 @@
                     title:'操作提示',
                     content:'确认删除当前数据？',
                     onOk:()=>{
-                      this.delItem(params.row.uid);
+                      this.delItem(params.row.rid);
                     }
                   });
                 }}
@@ -242,13 +181,9 @@
         page:1,
         total:0,
         pageSize:10,
-        userName:'',
+        roleName:'',
         status:-1,
-        type:-1,
-        startTime:'',
-        endTime:'',
-        sel_status:[],
-        sel_type:[]
+        sel_status:[]
       };
     },
     created() {
@@ -257,24 +192,19 @@
       .then(rep => {
         this.sel_status = rep;
       });
-      util.ajax.get('/dictionary/list/model/4')
-      .then(rep => {
-        this.sel_type = rep;
-      });
       this.query();
     },
     methods: {
       query(){
-        let params = '?userName='+this.userName+'&userType='+this.type+'&status='+this.status+'&startTime='+
-        util.formatDate(this.startTime,'yyyy-MM-dd hh:mm')+'&endTime='+util.formatDate(this.endTime,'yyyy-MM-dd hh:mm')+'&page='+this.page+'&rows='+this.pageSize;
-        util.ajax.get('/user/list'+params)
+        let params = '?roleName='+this.roleName+'&status='+this.status+'&page='+this.page+'&rows='+this.pageSize;
+        util.ajax.get('/role/list'+params)
         .then(rep => {
           this.data = rep.records;
           this.total = rep.total;
         });
       },
       delItem(id){
-        util.ajax.delete('/user/'+id)
+        util.ajax.delete('/role/'+id)
         .then(rep=>{
           this.$Message.info(rep.success ? '删除数据成功！' : '删除数据失败！');
           if(rep.success){
@@ -300,14 +230,11 @@
       },
       updateItem(id){
         this.addOrUpdate = 'update';
-        util.ajax.get('/user/'+id)
+        util.ajax.get('/role/'+id)
         .then(rep => {
-          this.formInline.uid = rep.uid;
-          this.formInline.userName = rep.userName;
-          this.formInline.passWord = rep.passWord;
-          this.formInline.gender = rep.gender;
-          this.formInline.age = rep.age;
-          this.formInline.userType = rep.userType;
+          this.formInline.rid = rep.rid;
+          this.formInline.roleName = rep.roleName;
+          this.formInline.remark = rep.remark;
           this.formInline.status = rep.status;
         });
         this.showModel = true;
@@ -318,7 +245,7 @@
           if(valid){
               this.isSaveing = true;
               if(this.addOrUpdate === 'add'){
-                util.ajax.post('/user',this.formInline)
+                util.ajax.post('/role',this.formInline)
                 .then(rep=>{
                   this.$Message.info('保存数据成功！');
                   if(this.data.length == this.pageSize){
@@ -330,7 +257,7 @@
                   this.showModel=false;
                 });
               }else{
-                util.ajax.put('/user/'+this.formInline.uid,this.formInline).then(rep=>{
+                util.ajax.put('/role/'+this.formInline.rid,this.formInline).then(rep=>{
                   this.$Message.info('保存数据成功！');
                   this.query();
                   this.$refs['form-res'].resetFields();
@@ -345,8 +272,8 @@
         this.showModel=false;
         this.$refs['form-res'].resetFields();
       },
-      loadPermission(uid){
-        util.ajax.get('/permission/userPermission/1/'+uid)
+      loadPermission(rid){
+        util.ajax.get('/permission/userPermission/0/'+rid)
         .then(rep =>{
             this.primissData.splice(0,this.primissData.length);
             for(let item of rep){
@@ -368,27 +295,7 @@
       },
       okBtn(){
         let ids = this.$refs['pers_tree'].getSelectedNodeIds();
-        util.ajax.put('/permission/userPermission',{uid:this.currentUid,permissions:ids.join()})
-        .then(rep => {
-          if(rep.success){
-            this.$Message.info('保存数据成功！');
-          }else{
-            this.$Message.error('保存数据失败！');
-          }
-        });
-      },
-      loadRole(uid){
-        util.ajax.get('/role/list/'+uid)
-        .then(rep => {
-          this.roleData.splice(0,this.roleData.length);
-          for(let item of rep){
-            this.roleData.push({id:item.rid,label:item.roleName,open:true,checked:item.checked,nodeSelectNotAll:false});
-          }
-        });
-      },
-      saveRoleBtn(){
-        let ids = this.$refs['role_tree'].getSelectedNodeIds();
-        util.ajax.put('/role/userRole',{uid:this.currentUid,permissions:ids.join()})
+        util.ajax.put('/permission/rolePermission',{rid:this.currentRid,permissions:ids.join()})
         .then(rep => {
           if(rep.success){
             this.$Message.info('保存数据成功！');

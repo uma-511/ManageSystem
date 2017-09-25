@@ -108,7 +108,7 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
         if (endTime != null){
             wrapper.le("end_time",endTime);
         }
-        Page<User> paging = new Page((page-1)*rows,rows);
+        Page<User> paging = new Page(page,rows);
         paging.setRecords(baseMapper.getUserList(paging,wrapper));
         return paging;
     }

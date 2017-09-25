@@ -1,69 +1,33 @@
 package com.warrior.permissions.service.impl;
 
-import com.google.common.collect.Collections2;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.google.common.collect.Lists;
 import com.warrior.permissions.dao.PermissionDao;
 import com.warrior.permissions.entity.Permission;
 import com.warrior.permissions.entity.Resources;
 import com.warrior.permissions.model.ResourceModel;
-import com.warrior.permissions.model.ResourcePredicate;
 import com.warrior.permissions.service.PermissionService;
+import com.warrior.permissions.service.ResourceService;
 import com.warrior.user.model.UserModel;
 import com.warrior.util.common.Contacts;
 import com.warrior.util.exception.WarriorException;
 import com.warrior.util.service.WarriorBaseServiceImpl;
 import com.warrior.util.web.SessionUtil;
+import lombok.extern.log4j.Log4j;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+@Log4j
 @Service
 public class PermissionServiceImpl extends WarriorBaseServiceImpl<PermissionDao,Permission> implements PermissionService {
 
-    /**
-     * 新增用户权限
-     * @param userId
-     * @param resId
-     * @return
-     */
-    public Permission addUserPermission(long userId,long resId){
-        Permission permission = new Permission(userId,resId,1);
-        int ret = baseMapper.insert(permission);
-        if (ret <= 0){
-            throw new WarriorException("新增用户权限成功！");
-        }
-        return permission;
-    }
-
-    /**
-     * 删除用户权限
-     * @param id
-     * @return
-     */
-    public boolean delPermission(long id){
-        int ret = baseMapper.deleteById(id);
-        if (ret <= 0){
-            throw new WarriorException("删除用户权限失败！");
-        }
-        return true;
-    }
-
-    /**
-     * 新增角色权限
-     * @param roleId
-     * @param resId
-     * @return
-     */
-    public Permission addRolePermission(long roleId,long resId){
-        Permission permission = new Permission(roleId,resId,1);
-        int ret = baseMapper.insert(permission);
-        if (ret <= 0){
-            throw new WarriorException("新增角色权限成功！");
-        }
-        return permission;
-    }
+    @Autowired
+    private ResourceService resourceService;
 
     /**
      * 获取用户或角色的相关权限信息
@@ -71,8 +35,13 @@ public class PermissionServiceImpl extends WarriorBaseServiceImpl<PermissionDao,
      * @param type   0、角色 1、用户
      * @return
      */
-    public List<Resources> getPermission(long ownId, int type){
-        return baseMapper.getResourcess(new Permission(ownId, type));
+    public List<ResourceModel> getPermission(long ownId, int type){
+        List<Integer> list = baseMapper.getPermission(new Permission(ownId, type));
+        String permission = "";
+        for (Integer num: list) {
+            permission += num+"$";
+        }
+        return resourceService.getResourceModelList(resourceService.selectList(new EntityWrapper<>()),permission);
     }
 
     /**
@@ -89,36 +58,20 @@ public class PermissionServiceImpl extends WarriorBaseServiceImpl<PermissionDao,
         //将A集合添加到B集合
         roleResources.addAll(userResources);
 
-        Collection<Resources> parentList = Collections2.filter(roleResources,new ResourcePredicate(0));
-
-        Iterator<Resources> iterator = parentList.iterator();
-
-        LinkedList<ResourceModel> modelList = new LinkedList<>();
-        while (iterator.hasNext()){
-            Resources res = iterator.next();
-            ResourceModel model = new ResourceModel(res.getResId(),res.getResName(),res.getParentId(),res.getUrl(),res.getIcon(),res.getSort(),res.getType());
-            model.getResMap().addPath(model.getResName(),model.getUrl());
-            addChild(model,roleResources);
-            modelList.add(model);
-        }
-        modelList.sort(ResourceModel.sortOrder);
-        return modelList;
+        return resourceService.getResourceModelList(roleResources,null);
     }
 
-    private void addChild(ResourceModel model,List<Resources> roleResources){
-        Collection<Resources> subList = Collections2.filter(roleResources,new ResourcePredicate((int)model.getResId())); //过滤数据
-        if (subList != null && subList.size() > 0){
-            Iterator<Resources> iterator = subList.iterator();
-            while (iterator.hasNext()){
-                Resources rs = iterator.next();
-                ResourceModel subModel = new ResourceModel(rs.getResId(),rs.getResName(),rs.getParentId(),rs.getUrl(),rs.getIcon(),rs.getSort(),rs.getType());
-                subModel.getResMap().addAll(model.getResMap());
-                subModel.getResMap().addPath(rs.getResName(),rs.getUrl());
-                model.getChild().add(subModel);
-                addChild(subModel,roleResources);
+
+    @Transactional
+    public boolean updatePermission(long ownId,int type,String permission) {
+        int ret = baseMapper.delPermission(ownId,type);
+        if (ret >= 0 && !StringUtils.isBlank(permission)){
+            String [] ids = permission.split(",");
+            for (String id:ids) {
+                baseMapper.insert(new Permission(ownId,Integer.parseInt(id),type));
             }
-            model.getChild().sort(ResourceModel.sortOrder);
+            return true;
         }
+        return false;
     }
-
 }

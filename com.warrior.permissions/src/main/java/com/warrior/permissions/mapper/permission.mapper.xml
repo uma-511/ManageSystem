@@ -15,9 +15,11 @@
       where wp.own_id = #{userId} and res.is_show = 0 and res.status = 0 ORDER BY res.sort asc
     </select>
 
-    <select id="getResourcess" parameterType="com.warrior.permissions.entity.Permission" resultType="com.warrior.permissions.entity.Resources">
-      select wr.* from warrior_resources wr
-      left join warrior_permissions wp on wr.res_id = wp.res_id
-      where wp.type = #{type} and wp.own_id = #{ownId} ORDER BY wr.sort asc
+    <select id="getPermission" parameterType="com.warrior.permissions.entity.Permission" resultType="Integer">
+      select wp.res_id from warrior_permissions wp where wp.type = #{type} and wp.own_id = #{ownId}
     </select>
+
+    <delete id="delPermission">
+        DELETE FROM warrior.warrior_permissions WHERE own_id = #{ownId} AND type = #{type}
+    </delete>
 </mapper>

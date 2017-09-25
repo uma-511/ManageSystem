@@ -1,14 +1,15 @@
 package com.warrior.permissions.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.warrior.permissions.entity.Role;
+import com.warrior.permissions.model.RoleModel;
 
 import java.util.List;
 
 public interface RoleService extends IService<Role>{
 
-    List<Role> getRoleList(String roleName, int status);
-
-    List<Role> getRoleListByUser(long uid);
-
+    Page<Role> getRoleList(String roleName, int status, int page, int rows);
+    List<RoleModel> getRoleByUser(long uid);
+    boolean updateUserRole(long uid,String permissions);
 }

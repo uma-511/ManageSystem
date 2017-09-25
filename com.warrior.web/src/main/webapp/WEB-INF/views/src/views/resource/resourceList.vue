@@ -88,7 +88,7 @@
               <FormItem prop="parentId" label="父级：" :label-width="80">
                 <Select size="small" placeholder="请选择" v-model="formInline.parentId" style="width:120px;">
                     <Option :value="0">无</Option>
-                    <Option v-for="item in data" :key="item.resId" :value="item.resId">{{item.resName}}</Option>
+                    <Option v-for="item in data" :key="item.resId" :value="item.resId" v-if="item.type==0">{{item.resName}}</Option>
                 </Select>
               </FormItem>
             </Col>
@@ -271,7 +271,12 @@
         util.ajax.delete('/resource/'+id)
         .then(rep=>{
           this.$Message.info(rep.success ? '删除数据成功！' : '删除数据失败！');
-          if(rep.success){this.query();}
+          if(rep.success){
+            if(this.data.length == 1){
+              this.page = this.page - 1;
+            }
+            this.query();
+          }
         });
       },
       pageChange(page){
@@ -314,6 +319,9 @@
                 util.ajax.post('/resource',this.formInline)
                 .then(rep=>{
                   this.$Message.info('保存数据成功！');
+                  if(this.data.length == this.pageSize){
+                    this.page = this.page + 1;
+                  }
                   this.query();
                   this.$refs['form-res'].resetFields();
                   this.isSaveing = false;

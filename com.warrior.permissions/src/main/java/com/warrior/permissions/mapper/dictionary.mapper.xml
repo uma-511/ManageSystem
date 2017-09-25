@@ -13,6 +13,17 @@
         <where>
             ${ew.sqlSegment}
         </where>
+    </select>
 
+    <select id="getList" resultType="com.warrior.permissions.entity.Dictionary">
+        SELECT * FROM warrior.warrior_dictionary
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="getTypeList" resultType="com.warrior.permissions.entity.Dictionary">
+        SELECT dic_type,max(type_value) AS type_value FROM warrior.warrior_dictionary
+        GROUP BY dic_type
     </select>
 </mapper>

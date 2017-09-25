@@ -11,13 +11,9 @@ import java.util.List;
 
 public interface PermissionService extends IService<Permission>{
 
-    Permission addUserPermission(long userId,long resId);
+    boolean updatePermission(long userId,int type,String permission);
 
-    boolean delPermission(long id);
-
-    Permission addRolePermission(long roleId,long resId);
-
-    List<Resources> getPermission(long ownId, int type);
+    List<ResourceModel> getPermission(long ownId, int type);
 
     LinkedList<ResourceModel> getUserPermission();
 

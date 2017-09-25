@@ -42,10 +42,10 @@ util.ajax.interceptors.response.use((res)=>{
     if(res.data.login != undefined && !res.data.login){
       localStorage.removeItem('currentUser');
       window.location.href = window.location.protocol+'//'+window.location.host;
-      return Promise.reject(error);
+      return Promise.reject(res);
     }
     if(util.vue.logining != undefined){util.vue.logining = false;}
-    util.vue.$Message.error({content:'<span style="color:red;">'+res.data.msg+'</span>',duration:5,closable:true});
+    util.vue.$Message.error({content:'<span style="color:red;">'+(res.data.msg == undefined ? '服务端错误！' : res.data.msg)+'</span>',duration:5,closable:true});
     return Promise.reject(res);
   }
   return res.data.data ? res.data.data : res.data;

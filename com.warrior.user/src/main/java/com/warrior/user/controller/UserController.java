@@ -1,7 +1,6 @@
 package com.warrior.user.controller;
 
 import com.warrior.user.entity.User;
-import com.warrior.user.model.UserModel;
 import com.warrior.user.service.UserService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
@@ -24,17 +23,6 @@ public class UserController extends WarriorBaseController {
     private UserService userService;
 
     /**
-     * 获取当前用户信息
-     *
-     * @return
-     */
-    @RequestMapping(value = "/getCurrentUser", method = {RequestMethod.GET})
-    public JSONMsg getCurrentUser() {
-        UserModel entity = userService.getCurrentUser();
-        return buildMsg(entity);
-    }
-
-    /**
      * 根据id获取用户信息
      *
      * @param id
@@ -52,6 +40,7 @@ public class UserController extends WarriorBaseController {
      * @param user
      * @return
      */
+    @RequiresPermissions("admin:user:add")
     @RequestMapping(value = {"", "/"}, method = {RequestMethod.POST})
     public JSONMsg addUser(User user) {
         return buildMsg(userService.insert(user));
@@ -63,6 +52,7 @@ public class UserController extends WarriorBaseController {
      * @param id
      * @return
      */
+    @RequiresPermissions("admin:user:del")
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     public JSONMsg delUser(@PathVariable(value = "id") long id) {
         return buildMsg(userService.delete(id));
@@ -75,6 +65,7 @@ public class UserController extends WarriorBaseController {
      * @param user
      * @return
      */
+    @RequiresPermissions("admin:user:update")
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     public JSONMsg modifiedUser(@PathVariable(value = "id") long id, User user) {
         user.setUid(id);
@@ -93,6 +84,7 @@ public class UserController extends WarriorBaseController {
      * @param rows
      * @return
      */
+    @RequiresPermissions("admin:user:view")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public JSONMsg getUserList(
             @RequestParam(name = "userName", defaultValue = "") String userName,
