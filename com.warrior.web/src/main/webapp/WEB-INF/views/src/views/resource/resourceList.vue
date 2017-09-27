@@ -57,7 +57,7 @@
             </Row>
             <Row style="margin-top: 10px;">
               <Col span="24">
-                <Button type="primary" size="small" icon="plus" @click="addItem()">新增</Button>
+                <Button type="primary" size="small" icon="plus" @click="addItem()" v-if="checkPermission('admin:resource:add')">新增</Button>
               </Col>
             </Row>
           </div>
@@ -88,7 +88,7 @@
               <FormItem prop="parentId" label="父级：" :label-width="80">
                 <Select size="small" placeholder="请选择" v-model="formInline.parentId" style="width:120px;">
                     <Option :value="0">无</Option>
-                    <Option v-for="item in data" :key="item.resId" :value="item.resId" v-if="item.type==0">{{item.resName}}</Option>
+                    <Option v-for="item in parentList" :key="item.resId" :value="item.resId" v-if="item.type==0">{{item.resName}}</Option>
                 </Select>
               </FormItem>
             </Col>
@@ -207,14 +207,15 @@
           { title:'操作',key:'resId',align:'center',width:125,render:(h,params)=>{
             return h('div',[
               h('Button',{
-                props:{type:'primary',size:'small'},
+                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:resource:update')},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
+                  this.loadParent();
                   this.updateItem(params.row.resId);
                 }}
               },'修改'),
               h('Button',{
-                props:{type:'error',size:'small'},
+                props:{type:'error',size:'small',disabled:!this.checkPermission('admin:resource:del')},
                 on:{click:()=>{
                   this.$Modal.confirm({
                     title:'操作提示',
@@ -239,7 +240,8 @@
         type:-1,
         sel_status:[],
         sel_isShow:[],
-        sel_type:[]
+        sel_type:[],
+        parentList:[]
       };
     },
     created() {
@@ -291,6 +293,7 @@
         this.addOrUpdate = 'add';
         this.showModel = true;
         this.modelTitle = '新增资源';
+        this.loadParent();
       },
       updateItem(id){
         this.addOrUpdate = 'update';
@@ -342,6 +345,21 @@
       modelCancel(){
         this.showModel=false;
         this.$refs['form-res'].resetFields();
+      },
+      loadParent(){
+        if(!this.parentList || this.parentList.length==0){
+          util.ajax.get('/resource/parent/list')
+          .then(rep =>{
+            this.parentList = rep;
+          });
+        }
+      },
+      checkPermission(perStr){
+        let str = this.$store.getters.getPerStr.perStr;
+        if (str == undefined || str==='') {
+          return false;
+        }
+        return str.indexOf(perStr) >= 0 ? true : false;
       }
     }
   }

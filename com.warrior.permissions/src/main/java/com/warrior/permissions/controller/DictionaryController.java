@@ -5,6 +5,7 @@ import com.warrior.permissions.entity.Dictionary;
 import com.warrior.permissions.service.DictionaryService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ public class DictionaryController extends WarriorBaseController {
     @Autowired
     private DictionaryService dictionaryService;
 
+    @RequiresPermissions("admin:dict:view")
     @RequestMapping(value = "type/list",method = RequestMethod.GET)
     public JSONMsg getDictType(){
         return buildMsg(dictionaryService.getDictTypeList());
@@ -25,6 +27,7 @@ public class DictionaryController extends WarriorBaseController {
      * 根据字典类型获取列表(全部属性)
      * @return
      */
+    @RequiresPermissions("admin:dict:view")
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public JSONMsg getListByType(
             @RequestParam(value = "dictType",defaultValue = "-1") int type,
@@ -38,6 +41,7 @@ public class DictionaryController extends WarriorBaseController {
      * @param dicType
      * @return
      */
+    @RequiresPermissions("admin:dict:view")
     @RequestMapping(value = "/list/model/{type}",method = RequestMethod.GET)
     public JSONMsg getModelListByType(@PathVariable(value="type") int dicType){
         return buildMsg(dictionaryService.getModelListByType(dicType));
@@ -48,6 +52,7 @@ public class DictionaryController extends WarriorBaseController {
      * @param id
      * @return
      */
+    @RequiresPermissions("admin:dict:view")
     @RequestMapping(value="/{id}",method = RequestMethod.GET)
     public JSONMsg get(@PathVariable(value="id")long id){
         return buildMsg(dictionaryService.selectById(id));
@@ -58,6 +63,7 @@ public class DictionaryController extends WarriorBaseController {
      * @param dictionary
      * @return
      */
+    @RequiresPermissions("admin:dict:add")
     @RequestMapping(value={"","/"},method = RequestMethod.POST)
     public JSONMsg addDictionary(Dictionary dictionary){
         dictionary.setCreateTime(new Date());
@@ -69,6 +75,7 @@ public class DictionaryController extends WarriorBaseController {
      * @param id
      * @return
      */
+    @RequiresPermissions("admin:dict:del")
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public JSONMsg delete(@PathVariable(value = "id")long id){
         return buildMsg(dictionaryService.deleteById(id));
@@ -80,6 +87,7 @@ public class DictionaryController extends WarriorBaseController {
      * @param dictionary
      * @return
      */
+    @RequiresPermissions("admin:dict:update")
     @RequestMapping(value="/{id}",method = RequestMethod.PUT)
     public JSONMsg modified(@PathVariable(value = "id")long id,Dictionary dictionary){
         dictionary.setId(id);

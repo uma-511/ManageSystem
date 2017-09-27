@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 
@@ -64,13 +65,25 @@ public class RoleServiceImpl extends WarriorBaseServiceImpl<RoleDao,Role> implem
 
     @Transactional
     public boolean updateUserRole(long uid, String permissions) {
-        if (!StringUtils.isBlank(permissions)){
-            String ids [] = permissions.split(",");
-            for (String id:ids) {
-                userRoleService.insert(new UserRole(uid,Long.parseLong(id)));
+        EntityWrapper<UserRole> ew = new EntityWrapper<>();
+        ew.eq("user_id",uid);
+        boolean ret = userRoleService.delete(ew);
+        if (ret){
+            if (!StringUtils.isBlank(permissions)){
+                String ids [] = permissions.split(",");
+                for (String id:ids) {
+                    userRoleService.insert(new UserRole(uid,Long.parseLong(id)));
+                }
             }
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Role> getRoleListByUser(long uid) {
+        EntityWrapper<Role> ew = new EntityWrapper<>();
+        ew.eq("status",0);
+        return baseMapper.selectList(ew);
     }
 }

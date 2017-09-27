@@ -36,7 +36,7 @@ public class PermissionServiceImpl extends WarriorBaseServiceImpl<PermissionDao,
      * @return
      */
     public List<ResourceModel> getPermission(long ownId, int type){
-        List<Integer> list = baseMapper.getPermission(new Permission(ownId, type));
+        List<Integer> list = baseMapper.getPermission(ownId, type);
         String permission = "";
         for (Integer num: list) {
             permission += num+"$";
@@ -44,14 +44,24 @@ public class PermissionServiceImpl extends WarriorBaseServiceImpl<PermissionDao,
         return resourceService.getResourceModelList(resourceService.selectList(new EntityWrapper<>()),permission);
     }
 
+    public List<Resources> getPermissionByType(long ownId,int type){
+        if (type == 0){
+            return baseMapper.getResourcesByRole(ownId,-1);
+        }else{
+            return baseMapper.getResourcesByUser(ownId,-1);
+        }
+    }
+
+    public String getPermissionStr(long uid){
+        return baseMapper.getPermissionStr(uid);
+    }
     /**
      * 根据用户ID获取用户权限集合
      * @return
      */
-    public LinkedList<ResourceModel> getUserPermission(){
-        UserModel entity = SessionUtil.getValue(Contacts.SESSION_USER);
-        List<Resources> roleResources = baseMapper.getResourcesByRole(entity.getUid());
-        List<Resources> userResources = baseMapper.getResourcesByUser(entity.getUid());
+    public LinkedList<ResourceModel> getUserPermission(long uid){
+        List<Resources> roleResources = baseMapper.getResourcesByRole(uid,0);
+        List<Resources> userResources = baseMapper.getResourcesByUser(uid,0);
 
         //删除A集合中存在的B集合元素
         roleResources.removeAll(userResources);
@@ -65,10 +75,12 @@ public class PermissionServiceImpl extends WarriorBaseServiceImpl<PermissionDao,
     @Transactional
     public boolean updatePermission(long ownId,int type,String permission) {
         int ret = baseMapper.delPermission(ownId,type);
-        if (ret >= 0 && !StringUtils.isBlank(permission)){
-            String [] ids = permission.split(",");
-            for (String id:ids) {
-                baseMapper.insert(new Permission(ownId,Integer.parseInt(id),type));
+        if (ret >= 0){
+            if(!StringUtils.isBlank(permission)){
+                String [] ids = permission.split(",");
+                for (String id:ids) {
+                    baseMapper.insert(new Permission(ownId,Integer.parseInt(id),type));
+                }
             }
             return true;
         }

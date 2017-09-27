@@ -4,6 +4,7 @@ import com.warrior.permissions.entity.Resources;
 import com.warrior.permissions.service.ResourceService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +20,17 @@ public class ResourceController extends WarriorBaseController {
     private ResourceService resourceService;
 
 
+    @RequiresPermissions("admin:resource:view")
+    @RequestMapping(value = "/parent/list",method = RequestMethod.GET)
+    public JSONMsg getParentList(){
+        return buildMsg(resourceService.getListByParentId(0));
+    }
     /**
      * 获取单个资源信息
      * @param resId
      * @return
      */
+    @RequiresPermissions("admin:resource:view")
     @RequestMapping(value="/{id}",method = RequestMethod.GET)
     public JSONMsg get(@PathVariable(value = "id")long resId){
         return buildMsg(resourceService.selectById(resId));
@@ -33,6 +40,7 @@ public class ResourceController extends WarriorBaseController {
      * 获取资源列表
      * @return
      */
+    @RequiresPermissions("admin:resource:view")
     @RequestMapping(value="/list",method = RequestMethod.GET)
     public JSONMsg getList(@RequestParam(value = "name",defaultValue = "") String name,
                            @RequestParam(value = "url",defaultValue = "") String url,
@@ -49,6 +57,7 @@ public class ResourceController extends WarriorBaseController {
      * @param resource
      * @return
      */
+    @RequiresPermissions("admin:resource:add")
     @RequestMapping(value={"/",""},method = RequestMethod.POST)
     public JSONMsg addResource(Resources resource){
         return buildMsg(resourceService.insert(resource));
@@ -60,6 +69,7 @@ public class ResourceController extends WarriorBaseController {
      * @param resource
      * @return
      */
+    @RequiresPermissions("admin:resource:update")
     @RequestMapping(value="/{id}",method = RequestMethod.PUT)
     public JSONMsg modified(@PathVariable(value = "id")long resId,Resources resource){
         resource.setResId(resId);
@@ -71,6 +81,7 @@ public class ResourceController extends WarriorBaseController {
      * @param resId
      * @return
      */
+    @RequiresPermissions("admin:resource:del")
     @RequestMapping(value="/{id}",method = RequestMethod.DELETE)
     public JSONMsg delete(@PathVariable(value = "id")long resId){
         return buildMsg(resourceService.deleteById(resId));

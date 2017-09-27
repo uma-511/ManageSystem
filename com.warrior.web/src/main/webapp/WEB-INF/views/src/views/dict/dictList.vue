@@ -34,7 +34,7 @@
           </Row>
           <Row style="margin-top: 10px;">
             <Col span="24">
-              <Button type="primary" size="small" icon="plus" @click="addItem()">新增</Button>
+              <Button type="primary" size="small" icon="plus" @click="addItem()" v-if="checkPermission('admin:dict:add')">新增</Button>
             </Col>
           </Row>
         </div>
@@ -142,7 +142,7 @@
           { title:'操作',key:'id',align:'center',width:180,render:(h,params)=>{
             return h('div',[
               h('Button',{
-                props:{type:'primary',size:'small'},
+                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:dict:update')},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.showModel = true;
@@ -161,7 +161,7 @@
                 }}
               },'修改'),
               h('Button',{
-                props:{type:'error',size:'small'},
+                props:{type:'error',size:'small',disabled:!this.checkPermission('admin:dict:del')},
                 on:{click:()=>{
                   this.delItem(params.row.id);
                 }}
@@ -256,6 +256,13 @@
               }
           }
         });
+      },
+      checkPermission(perStr){
+        let str = this.$store.getters.getPerStr.perStr;
+        if (str == undefined || str==='') {
+          return false;
+        }
+        return str.indexOf(perStr) >= 0 ? true : false;
       }
     }
   }

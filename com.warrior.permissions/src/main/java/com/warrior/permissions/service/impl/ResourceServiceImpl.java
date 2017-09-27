@@ -25,7 +25,11 @@ public class ResourceServiceImpl extends WarriorBaseServiceImpl<ResourcesDao,Res
      * @return
      */
     public List<Resources> getListByParentId(int parentId){
-        return baseMapper.getListByParentId(parentId);
+        EntityWrapper<Resources> ew = new EntityWrapper<>();
+        ew.eq("type",0);
+        ew.eq("is_show",0);
+        ew.setSqlSelect("res_id","res_name");
+        return baseMapper.selectList(ew);
     }
 
 
@@ -75,7 +79,7 @@ public class ResourceServiceImpl extends WarriorBaseServiceImpl<ResourcesDao,Res
         LinkedList<ResourceModel> modelList = new LinkedList<>();
         while (iterator.hasNext()){
             Resources res = iterator.next();
-            ResourceModel model = new ResourceModel(res.getResId(),res.getResName(),res.getParentId(),res.getUrl(),res.getIcon(),res.getSort(),res.getType());
+            ResourceModel model = new ResourceModel(res.getResId(),res.getResName(),res.getParentId(),res.getUrl(),res.getIcon(),res.getSort(),res.getType(),res.getPermission());
             if (!StringUtils.isBlank(permission) && StringUtils.contains(permission,res.getResId()+"$")){
                 model.setChecked(true);
             }
@@ -93,7 +97,7 @@ public class ResourceServiceImpl extends WarriorBaseServiceImpl<ResourcesDao,Res
             Iterator<Resources> iterator = subList.iterator();
             while (iterator.hasNext()){
                 Resources rs = iterator.next();
-                ResourceModel subModel = new ResourceModel(rs.getResId(),rs.getResName(),rs.getParentId(),rs.getUrl(),rs.getIcon(),rs.getSort(),rs.getType());
+                ResourceModel subModel = new ResourceModel(rs.getResId(),rs.getResName(),rs.getParentId(),rs.getUrl(),rs.getIcon(),rs.getSort(),rs.getType(),rs.getPermission());
                 if (!StringUtils.isBlank(permission) && StringUtils.contains(permission,rs.getResId()+"$")){
                     subModel.setChecked(true);
                 }

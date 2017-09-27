@@ -1,11 +1,15 @@
 package com.warrior.web.shiro;
 
+import com.google.common.collect.Sets;
 import com.warrior.permissions.entity.Resources;
 import com.warrior.permissions.entity.Role;
+import com.warrior.permissions.model.ResourceModel;
 import com.warrior.permissions.service.PermissionService;
 import com.warrior.permissions.service.RoleService;
 import com.warrior.user.entity.User;
 import com.warrior.user.service.UserService;
+import lombok.extern.log4j.Log4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -20,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@Log4j
 public class CustomSecurityRealm extends AuthorizingRealm {
 
     @Autowired
@@ -36,20 +41,33 @@ public class CustomSecurityRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         Set roles = new HashSet<>();
-        Set permissions = new HashSet<>();
+        Set permissions = Sets.newHashSet();
 
         String userName = principalCollection.getPrimaryPrincipal().toString();
         User user = userService.getByUserName(userName);
         for (Role role : roleService.getRoleListByUser(user.getUid())) {
             roles.add(role.getRoleName());
-            for (Iterator<Resources> iterator = permissionService.getPermission(role.getRid(), 0).iterator();
+            for (Iterator<Resources> iterator = permissionService.getPermissionByType(role.getRid(), 0).iterator();
                  iterator.hasNext(); ) {
-                permissions.add(new WildcardPermission(iterator.next().getPermission()));
+                Resources res = iterator.next();
+                if (!StringUtils.isBlank(res.getPermission())){
+                    permissions.add(new WildcardPermission(res.getPermission()));
+                }
+            }
+        }
+        Iterator<Resources> iterator = permissionService.getPermissionByType(user.getUid(), 1).iterator();
+        Set<String> stringSet = Sets.newTreeSet();
+
+        while (iterator.hasNext()){
+            Resources res = iterator.next();
+            if (!StringUtils.isBlank(res.getPermission())){
+                stringSet.add(res.getPermission());
             }
         }
 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
         info.setObjectPermissions(permissions);
+        info.setStringPermissions(stringSet);
         return info;
     }
 

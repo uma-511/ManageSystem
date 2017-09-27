@@ -31,16 +31,22 @@ router.afterEach(() => {
 
 const store = new Vuex.Store({
     state: {
-
+      permission:''
     },
     getters: {
-
+      getPerStr:state=>{
+        return state.permission;
+      }
     },
     mutations: {
-
+      setPermission(state,perStr){
+        state.permission = perStr;
+      }
     },
     actions: {
-
+      setPermission({commit},perStr){
+        commit('setPermission',perStr);
+      }
     }
 });
 

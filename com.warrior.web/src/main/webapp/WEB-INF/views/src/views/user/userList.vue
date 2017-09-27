@@ -52,7 +52,7 @@
             </Row>
             <Row style="margin-top: 10px;">
               <Col span="24">
-                <Button type="primary" size="small" icon="plus" @click="addItem()">新增</Button>
+                <Button type="primary" size="small" icon="plus" @click="addItem()" v-if="checkPermission('admin:user:add')">新增</Button>
               </Col>
             </Row>
           </div>
@@ -124,11 +124,19 @@
         </Form>
         <div slot="footer"></div>
     </Modal>
-    <Modal v-model="permissionModel" title="权限设置" :mask-closable="false" :width="240" @on-ok="okBtn" style="padding-left:15px;">
+    <Modal v-model="permissionModel" title="权限设置" :mask-closable="false" :width="240" style="padding-left:15px;">
         <ZTree ref="pers_tree" :treeData="primissData" :options="treeOptions" />
+        <div slot="footer">
+            <Button type="default" size="large" @click="cancelBtn(1)">取消</Button>
+            <Button type="primary" size="large" @click="okBtn" v-if="checkPermission('admin:userperm:update')">确定</Button>
+        </div>
     </Modal>
-    <Modal v-model="roleModel" title="角色设置" :mask-closable="false" :width="240" @on-ok="saveRoleBtn" style="padding-left:15px;">
+    <Modal v-model="roleModel" title="角色设置" :mask-closable="false" :width="240" style="padding-left:15px;">
         <ZTree ref="role_tree" :treeData="roleData" :options="treeOptions" />
+        <div slot="footer">
+            <Button type="default" size="large" @click="cancelBtn(2)">取消</Button>
+            <Button type="primary" size="large" @click="saveRoleBtn" v-if="this.checkPermission('admin:userrole:update')">确定</Button>
+        </div>
     </Modal>
   </div>
 </template>
@@ -199,7 +207,7 @@
           { title:'操作',key:'uid',align:'center',width:220,render:(h,params)=>{
             return h('div',[
               h('Button',{
-                props:{type:'primary',size:'small'},
+                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:userrole:view')},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.currentUid = params.row.uid;
@@ -208,7 +216,7 @@
                 }}
               },'角色'),
               h('Button',{
-                props:{type:'primary',size:'small'},
+                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:userperm:view')},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.currentUid = params.row.uid;
@@ -217,14 +225,14 @@
                 }}
               },'权限'),
               h('Button',{
-                props:{type:'primary',size:'small'},
+                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:user:update')},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.updateItem(params.row.uid);
                 }}
               },'修改'),
               h('Button',{
-                props:{type:'error',size:'small'},
+                props:{type:'error',size:'small',disabled:!this.checkPermission('admin:user:del')},
                 on:{click:()=>{
                   this.$Modal.confirm({
                     title:'操作提示',
@@ -346,7 +354,7 @@
         this.$refs['form-res'].resetFields();
       },
       loadPermission(uid){
-        util.ajax.get('/permission/userPermission/1/'+uid)
+        util.ajax.get('/permission/user/'+uid)
         .then(rep =>{
             this.primissData.splice(0,this.primissData.length);
             for(let item of rep){
@@ -364,6 +372,13 @@
           let child = {id:item.resId,label:item.resName,open:true,checked:item.checked,nodeSelectNotAll:false,children:[]};
           this.addChild(child,item.child);
           node.children.push(child);
+        }
+      },
+      cancelBtn(type){
+        if(type==1){ //权限
+          this.permissionModel = false;
+        }else{   //角色
+          this.roleModel = false;
         }
       },
       okBtn(){
@@ -396,6 +411,13 @@
             this.$Message.error('保存数据失败！');
           }
         });
+      },
+      checkPermission(perStr){
+        let str = this.$store.getters.getPerStr.perStr;
+        if (str == undefined || str==='') {
+          return false;
+        }
+        return str.indexOf(perStr) >= 0 ? true : false;
       }
     }
   }

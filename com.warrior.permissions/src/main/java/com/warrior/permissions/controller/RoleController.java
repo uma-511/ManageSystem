@@ -4,6 +4,7 @@ import com.warrior.permissions.entity.Role;
 import com.warrior.permissions.service.RoleService;
 import com.warrior.util.common.JSONMsg;
 import com.warrior.util.web.WarriorBaseController;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public class RoleController extends WarriorBaseController {
     @Autowired
     private RoleService roleService;
 
+    @RequiresPermissions("admin:role:view")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public JSONMsg getRoleList(
             @RequestParam(value = "roleName", defaultValue = "") String roleName,
@@ -31,6 +33,7 @@ public class RoleController extends WarriorBaseController {
      * @param role
      * @return
      */
+    @RequiresPermissions("admin:role:add")
     @RequestMapping(value = {"", "/"}, method = RequestMethod.POST)
     public JSONMsg addRole(Role role) {
         role.setUpdateTime(new Date());
@@ -44,6 +47,7 @@ public class RoleController extends WarriorBaseController {
      * @param id
      * @return
      */
+    @RequiresPermissions("admin:role:view")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public JSONMsg get(@PathVariable(value = "id") long id) {
         return buildMsg(roleService.selectById(id));
@@ -56,6 +60,7 @@ public class RoleController extends WarriorBaseController {
      * @param role
      * @return
      */
+    @RequiresPermissions("admin:role:update")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public JSONMsg modified(@PathVariable(value = "id") long id, Role role) {
         role.setRid(id);
@@ -69,16 +74,19 @@ public class RoleController extends WarriorBaseController {
      * @param id
      * @return
      */
+    @RequiresPermissions("admin:role:del")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public JSONMsg delete(@PathVariable(value = "id") long id) {
         return buildMsg(roleService.deleteById(id));
     }
 
+    @RequiresPermissions("admin:userrole:view")
     @RequestMapping(value = "/list/{uid}", method = RequestMethod.GET)
     public JSONMsg getRoleByUser(@PathVariable(value = "uid") long uid) {
         return buildMsg(roleService.getRoleByUser(uid));
     }
 
+    @RequiresPermissions("admin:userrole:update")
     @RequestMapping(value = "/userRole", method = RequestMethod.PUT)
     public JSONMsg updateUserRole(@RequestParam(value = "uid", defaultValue = "0") long uid, @RequestParam(value = "permissions", defaultValue = "") String permissions) {
         return buildMsg(roleService.updateUserRole(uid,permissions));

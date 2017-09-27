@@ -45,7 +45,8 @@ util.ajax.interceptors.response.use((res)=>{
       return Promise.reject(res);
     }
     if(util.vue.logining != undefined){util.vue.logining = false;}
-    util.vue.$Message.error({content:'<span style="color:red;">'+(res.data.msg == undefined ? '服务端错误！' : res.data.msg)+'</span>',duration:5,closable:true});
+    let data = res.data instanceof Object ? res.data : JSON.parse(res.data);
+    util.vue.$Message.error({content:'<span style="color:red;">'+(data.msg == undefined ? '服务端错误！' : data.msg)+'</span>',duration:5,closable:true});
     return Promise.reject(res);
   }
   return res.data.data ? res.data.data : res.data;

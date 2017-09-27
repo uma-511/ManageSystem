@@ -39,7 +39,7 @@
             </Row>
             <Row style="margin-top: 10px;">
               <Col span="24">
-                <Button type="primary" size="small" icon="plus" @click="addItem()">新增</Button>
+                <Button type="primary" size="small" icon="plus" @click="addItem()" v-if="checkPermission('admin:role:add')">新增</Button>
               </Col>
             </Row>
           </div>
@@ -90,8 +90,12 @@
         </Form>
         <div slot="footer"></div>
     </Modal>
-    <Modal v-model="permissionModel" title="权限设置" :mask-closable="false" :width="240" @on-ok="okBtn" style="padding-left:15px;">
+    <Modal v-model="permissionModel" title="权限设置" :mask-closable="false" :width="240" style="padding-left:15px;">
         <ZTree ref="pers_tree" :treeData="primissData" :options="treeOptions" />
+        <div slot="footer">
+            <Button type="default" size="large" @click="cancelBtn()">取消</Button>
+            <Button type="primary" size="large" @click="okBtn" v-if="checkPermission('admin:roleperm:update')">确定</Button>
+        </div>
     </Modal>
   </div>
 </template>
@@ -147,7 +151,7 @@
           { title:'操作',key:'rid',align:'center',width:180,render:(h,params)=>{
             return h('div',[
               h('Button',{
-                props:{type:'primary',size:'small'},
+                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:roleperm:view')},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.currentRid = params.row.rid;
@@ -156,14 +160,14 @@
                 }}
               },'权限'),
               h('Button',{
-                props:{type:'primary',size:'small'},
+                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:role:update')},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.updateItem(params.row.rid);
                 }}
               },'修改'),
               h('Button',{
-                props:{type:'error',size:'small'},
+                props:{type:'error',size:'small',disabled:!this.checkPermission('admin:role:del')},
                 on:{click:()=>{
                   this.$Modal.confirm({
                     title:'操作提示',
@@ -272,8 +276,11 @@
         this.showModel=false;
         this.$refs['form-res'].resetFields();
       },
+      cancelBtn(){
+        this.permissionModel = false;
+      },
       loadPermission(rid){
-        util.ajax.get('/permission/userPermission/0/'+rid)
+        util.ajax.get('/permission/role/'+rid)
         .then(rep =>{
             this.primissData.splice(0,this.primissData.length);
             for(let item of rep){
@@ -303,6 +310,13 @@
             this.$Message.error('保存数据失败！');
           }
         });
+      },
+      checkPermission(perStr){
+        let str = this.$store.getters.getPerStr.perStr;
+        if (str == undefined || str==='') {
+          return false;
+        }
+        return str.indexOf(perStr) >= 0 ? true : false;
       }
     }
   }

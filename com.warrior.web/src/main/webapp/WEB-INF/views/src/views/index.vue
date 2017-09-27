@@ -102,6 +102,7 @@
 </template>
 <script>
     import util from '../libs/util';
+
     export default {
         data () {
             return {
@@ -123,7 +124,8 @@
           window.addEventListener('resize',this.handleResize);
           util.ajax.get('/permission/userPermission')
           .then(rep=>{
-            this.menuList = rep;
+            this.menuList = rep.list;
+            this.$store.dispatch({type:'setPermission',perStr:rep.permStr});
           });
         },
         beforeMount() {

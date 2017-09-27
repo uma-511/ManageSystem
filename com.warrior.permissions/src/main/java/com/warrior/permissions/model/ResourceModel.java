@@ -27,6 +27,8 @@ public class ResourceModel implements Serializable{
     private int type;
     @Getter @Setter
     private boolean checked;
+    @Getter @Setter
+    private String permission;
     @Setter @Getter
     private ResourceChild child = new ResourceChild();
     @Setter @Getter
@@ -34,7 +36,7 @@ public class ResourceModel implements Serializable{
 
     public ResourceModel(){}
 
-    public ResourceModel(long resId,String resName,int parentId,String url,String icon,int sort,int type){
+    public ResourceModel(long resId,String resName,int parentId,String url,String icon,int sort,int type,String permission){
         this.resId = resId;
         this.resName = resName;
         this.parentId = parentId;
@@ -42,6 +44,7 @@ public class ResourceModel implements Serializable{
         this.icon = icon;
         this.sort = sort;
         this.type = type;
+        this.permission = permission;
     }
 
     public static Ordering<ResourceModel> sortOrder = new Ordering<ResourceModel>() {
