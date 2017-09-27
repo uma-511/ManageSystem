@@ -189,6 +189,9 @@
         columns:[
           { title:'编号',key:'index',type:'index',align:'center'},
           { title:'名称',key:'resName',align:'center' },
+          { title:'父级',key:'parentName',align:'center',render:(h,params)=>{
+            return h('Span',{},params.row.parentName==null?'':params.row.parentName);
+          }},
           { title:'URL',key:'url',align:'center' },
           { title:'图标',key:'icon',align:'center',render:(h,params)=>{
               return h('Icon',{props:{type:params.row.icon,size:28,color:'gray'}},'');
@@ -322,9 +325,6 @@
                 util.ajax.post('/resource',this.formInline)
                 .then(rep=>{
                   this.$Message.info('保存数据成功！');
-                  if(this.data.length == this.pageSize){
-                    this.page = this.page + 1;
-                  }
                   this.query();
                   this.$refs['form-res'].resetFields();
                   this.isSaveing = false;

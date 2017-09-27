@@ -79,7 +79,7 @@ public class ResourceServiceImpl extends WarriorBaseServiceImpl<ResourcesDao,Res
         LinkedList<ResourceModel> modelList = new LinkedList<>();
         while (iterator.hasNext()){
             Resources res = iterator.next();
-            ResourceModel model = new ResourceModel(res.getResId(),res.getResName(),res.getParentId(),res.getUrl(),res.getIcon(),res.getSort(),res.getType(),res.getPermission());
+            ResourceModel model = new ResourceModel(res.getResId(),res.getResName(),res.getParentId(),res.getUrl(),res.getIcon(),res.getSort(),res.getType());
             if (!StringUtils.isBlank(permission) && StringUtils.contains(permission,res.getResId()+"$")){
                 model.setChecked(true);
             }
@@ -97,7 +97,7 @@ public class ResourceServiceImpl extends WarriorBaseServiceImpl<ResourcesDao,Res
             Iterator<Resources> iterator = subList.iterator();
             while (iterator.hasNext()){
                 Resources rs = iterator.next();
-                ResourceModel subModel = new ResourceModel(rs.getResId(),rs.getResName(),rs.getParentId(),rs.getUrl(),rs.getIcon(),rs.getSort(),rs.getType(),rs.getPermission());
+                ResourceModel subModel = new ResourceModel(rs.getResId(),rs.getResName(),rs.getParentId(),rs.getUrl(),rs.getIcon(),rs.getSort(),rs.getType());
                 if (!StringUtils.isBlank(permission) && StringUtils.contains(permission,rs.getResId()+"$")){
                     subModel.setChecked(true);
                 }

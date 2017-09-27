@@ -329,9 +329,6 @@
                 util.ajax.post('/user',this.formInline)
                 .then(rep=>{
                   this.$Message.info('保存数据成功！');
-                  if(this.data.length == this.pageSize){
-                    this.page = this.page + 1;
-                  }
                   this.query();
                   this.$refs['form-res'].resetFields();
                   this.isSaveing = false;

@@ -1,5 +1,6 @@
 package com.warrior.permissions.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.AllArgsConstructor;
@@ -54,6 +55,10 @@ public class Resources implements Serializable {
 
     @Getter @Setter
     private int type;
+
+    @TableField(exist=false)
+    @Getter @Setter
+    private String parentName;
 
     public Resources(int parentId) {
         this.parentId = parentId;

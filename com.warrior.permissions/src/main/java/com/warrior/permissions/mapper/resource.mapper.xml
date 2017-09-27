@@ -8,7 +8,7 @@
     </select>
 
     <select id="getListByPage" resultType="com.warrior.permissions.entity.Resources">
-        SELECT * FROM warrior.warrior_resources
+        SELECT wr.*,(SELECT res_name FROM warrior_resources where res_id = wr.parent_id) as parentName FROM warrior.warrior_resources wr
         <where>
             ${ew.sqlSegment}
         </where>
