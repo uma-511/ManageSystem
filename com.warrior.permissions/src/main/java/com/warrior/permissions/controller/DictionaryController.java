@@ -1,6 +1,5 @@
 package com.warrior.permissions.controller;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.warrior.permissions.entity.Dictionary;
 import com.warrior.permissions.service.DictionaryService;
 import com.warrior.util.common.JSONMsg;

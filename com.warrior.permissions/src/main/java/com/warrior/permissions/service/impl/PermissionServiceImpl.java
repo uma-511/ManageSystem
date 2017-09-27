@@ -37,7 +37,7 @@ public class PermissionServiceImpl extends WarriorBaseServiceImpl<PermissionDao,
      */
     public List<ResourceModel> getPermission(long ownId, int type){
         List<Integer> list = baseMapper.getPermission(ownId, type);
-        String permission = "";
+        String permission = "$";
         for (Integer num: list) {
             permission += num+"$";
         }

@@ -303,6 +303,7 @@
         .then(rep => {
           if(rep.success){
             this.$Message.info('保存数据成功！');
+            this.permissionModel = false;
           }else{
             this.$Message.error('保存数据失败！');
           }

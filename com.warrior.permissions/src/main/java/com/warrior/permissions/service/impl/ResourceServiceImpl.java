@@ -80,7 +80,7 @@ public class ResourceServiceImpl extends WarriorBaseServiceImpl<ResourcesDao,Res
         while (iterator.hasNext()){
             Resources res = iterator.next();
             ResourceModel model = new ResourceModel(res.getResId(),res.getResName(),res.getParentId(),res.getUrl(),res.getIcon(),res.getSort(),res.getType());
-            if (!StringUtils.isBlank(permission) && StringUtils.contains(permission,res.getResId()+"$")){
+            if (!StringUtils.isBlank(permission) && StringUtils.contains(permission,String.format("$%s$",res.getResId()))){
                 model.setChecked(true);
             }
             model.getResMap().addPath(model.getResName(),model.getUrl());
@@ -98,7 +98,7 @@ public class ResourceServiceImpl extends WarriorBaseServiceImpl<ResourcesDao,Res
             while (iterator.hasNext()){
                 Resources rs = iterator.next();
                 ResourceModel subModel = new ResourceModel(rs.getResId(),rs.getResName(),rs.getParentId(),rs.getUrl(),rs.getIcon(),rs.getSort(),rs.getType());
-                if (!StringUtils.isBlank(permission) && StringUtils.contains(permission,rs.getResId()+"$")){
+                if (!StringUtils.isBlank(permission) && StringUtils.contains(permission,String.format("$%s$",rs.getResId()))){
                     subModel.setChecked(true);
                 }
                 subModel.getResMap().addAll(model.getResMap());
