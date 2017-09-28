@@ -20,12 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.warrior</groupId>
-            <artifactId>com.warrior.user</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.warrior</groupId>
-            <artifactId>com.warrior.permissions</artifactId>
+            <artifactId>com.warrior.base</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

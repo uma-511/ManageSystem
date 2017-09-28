@@ -16,10 +16,10 @@
     </properties>
     <modules>
         <module>starter</module>
-        <module>com.warrior.user</module>
+        <module>com.warrior.base</module>
         <module>com.warrior.web</module>
         <module>com.warrior.util</module>
-        <module>com.warrior.permissions</module>
+        <module>com.warrior.common</module>
     </modules>
 
     <dependencies>

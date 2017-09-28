@@ -46,6 +46,13 @@ const routers = [{
               title: '管理后台-字典管理'
           },
           component:(resolve) => require(['./views/dict/dictList.vue'],resolve)
+      },
+      {
+          path:'/log/list',
+          meta: {
+              title: '管理后台-系统日志'
+          },
+          component:(resolve) => require(['./views/log/syslog.vue'],resolve)
       }
     ]
 }

@@ -69,6 +69,11 @@
                         <Icon :type="item.icon" size="14"></Icon>
                         <span class="layout-text">{{item.resName}}</span>
                     </MenuItem>
+
+                    <MenuItem :name="100000" v-on:click.native="showModel = true">
+                        <Icon type="compose" size="14"></Icon>
+                        <span class="layout-text">修改密码</span>
+                    </MenuItem>
                 </Menu>
             </Col>
             <Col :span="spanRight" :style="{'min-height':minHeight}">
@@ -98,6 +103,16 @@
                 </div>
             </Col>
         </Row>
+        <Modal v-model="showModel" title="密码修改" :mask-closable="false" :width="350" @on-ok="okBtn">
+          <Form ref="form" :model="formInline" :rules="ruleInline" inline style="padding-right:30px;">
+            <FormItem prop="oldPw" label="旧密码：" :label-width="120">
+                <Input type="password" v-model="formInline.oldPw" placeholder="请输入"></Input>
+            </FormItem>
+            <FormItem prop="newPw" label="新密码：" :label-width="120">
+                <Input type="password" v-model="formInline.newPw" placeholder="请输入"></Input>
+            </FormItem>
+          </Form>
+        </Modal>
     </div>
 </template>
 <script>
@@ -113,7 +128,20 @@
                 menuList:[],
                 loading:false,
                 crumb:[],
-                crumbList:new Array()
+                crumbList:new Array(),
+                showModel:false,
+                formInline:{
+                  oldPw:'',
+                  newPw:''
+                },
+                ruleInline:{
+                    oldPw:[
+                      { required: true, message: '请填写旧密码', trigger: 'blur' }
+                    ],
+                    newPw:[
+                      { required: true, message: '请填写新密码', trigger: 'blur' }
+                    ]
+                }
             }
         },
         created() {
@@ -177,6 +205,21 @@
               }
               this.crumb = map;
               this.$router.push(url);
+            },
+            okBtn(){
+              this.$refs['form'].validate((vali)=>{
+                if(vali){
+                  util.ajax.put('/user/password/new',this.formInline)
+                  .then(rep => {
+                    if(rep.success){
+                      this.$Message.info('密码修改成功！');
+                    }else{
+                      this.$Message.error('密码修改失败！');
+                    }
+                    this.$refs['form'].resetFields();
+                  });
+                }
+              });
             }
         }
     }

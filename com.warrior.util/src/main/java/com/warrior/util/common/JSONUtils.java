@@ -2,9 +2,8 @@ package com.warrior.util.common;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.warrior.util.exception.WarriorException;
+import com.warrior.util.exception.UtilException;
 import org.apache.commons.lang.StringUtils;
-
 import java.io.IOException;
 
 /***
@@ -19,20 +18,20 @@ public class JSONUtils {
         try {
             json = mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            throw new WarriorException("JSON转换错误！",e);
+            throw new UtilException("JSON转换错误！",e);
         }
         return json;
     }
 
     public static <T> T parseJson(String json,Class<T> t){
         if (StringUtils.isBlank(json)){
-            throw new WarriorException("JSON字符串不能为空！");
+            throw new UtilException("JSON字符串不能为空！");
         }
         T obj;
         try {
             obj = mapper.readValue(json,t);
         } catch (IOException e) {
-            throw new WarriorException("JSON转换错误！",e);
+            throw new UtilException("JSON转换错误！",e);
         }
         return obj;
     }

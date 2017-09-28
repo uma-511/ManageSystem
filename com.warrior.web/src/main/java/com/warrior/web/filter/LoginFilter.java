@@ -1,9 +1,9 @@
 package com.warrior.web.filter;
 
-import com.warrior.util.common.Contacts;
-import com.warrior.util.common.JSONMsg;
-import com.warrior.util.web.SessionUtil;
-import com.warrior.util.web.WebUtils;
+import com.warrior.common.Contacts;
+import com.warrior.common.JSONMsg;
+import com.warrior.common.web.SessionUtil;
+import com.warrior.common.web.WebUtils;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;

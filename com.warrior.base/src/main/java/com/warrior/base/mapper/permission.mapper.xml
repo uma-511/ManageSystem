@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.warrior.base.dao.PermissionDao" >
+
+    <select id="getResourcesByRole" parameterType="long" resultType="com.warrior.base.entity.Resources">
+        select res.* from warrior_resources res
+        left join (select own_id,res_id from warrior_permissions where type=0) wp on res.res_id = wp.res_id
+        left join warrior_user_role wr on wp.own_id = wr.role_id
+        where wr.user_id = #{roleId} and res.status = 0
+        <if test="type >= 0">
+            and res.type=#{type}
+        </if>
+        ORDER BY res.sort asc
+    </select>
+
+    <select id="getResourcesByUser" parameterType="long" resultType="com.warrior.base.entity.Resources">
+      select res.* from warrior_resources res
+      left join (select own_id,res_id from warrior_permissions where type=1) wp on res.res_id = wp.res_id
+      where wp.own_id = #{userId} and res.status = 0
+        <if test="type >= 0">
+            and res.type=#{type}
+        </if>
+      ORDER BY res.sort asc
+    </select>
+
+    <select id="getPermission" resultType="Integer">
+      select wp.res_id from warrior_permissions wp where wp.type = #{type} and wp.own_id = #{ownId}
+    </select>
+
+    <delete id="delPermission">
+        DELETE FROM warrior.warrior_permissions WHERE own_id = #{ownId} AND type = #{type}
+    </delete>
+
+    <select id="getPermissionStr" resultType="String">
+        SELECT group_concat(permission) from(
+        select res.permission,1 as num from warrior_resources res left join (select own_id,res_id from warrior_permissions) wp
+        on res.res_id = wp.res_id left join warrior_user_role wr on wp.own_id = wr.role_id where wr.user_id = #{userId}
+        and res.permission is not null and res.permission != '' and res.status = 0 GROUP BY permission) t
+        GROUP BY t.num
+    </select>
+</mapper>
