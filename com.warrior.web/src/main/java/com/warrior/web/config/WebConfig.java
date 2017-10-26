@@ -2,9 +2,9 @@ package com.warrior.web.config;
 
 import com.thetransactioncompany.cors.CORSConfiguration;
 import com.thetransactioncompany.cors.CORSConfigurationException;
-import com.warrior.web.filter.CorsSpringFilter;
 import com.warrior.common.spring.CustomDateConverter;
 import com.warrior.common.spring.GlobalExceptionHandler;
+import com.warrior.web.filter.CorsSpringFilter;
 import com.warrior.web.shiro.ShiroConfig;
 import org.springframework.context.annotation.*;
 import org.springframework.core.convert.converter.Converter;
@@ -30,8 +30,8 @@ import java.util.*;
 @EnableWebMvc
 @EnableAspectJAutoProxy
 @ImportResource(value = {"classpath:spring-mybatis.xml"})
+@Import(value = {SwaggerConfig.class,ShiroConfig.class})
 @ComponentScan(basePackages = {"com.warrior"})
-@Import(ShiroConfig.class)
 public class WebConfig extends WebMvcConfigurerAdapter{
 
     @Bean("exceptionHandler")
@@ -79,6 +79,8 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/dist/**").addResourceLocations("/WEB-INF/views/dist/");
+        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("/swagger-ui.html");
+        registry.addResourceHandler("/webjars/springfox-swagger-ui/**").addResourceLocations("/webjars/springfox-swagger-ui/");
     }
 
     @Bean

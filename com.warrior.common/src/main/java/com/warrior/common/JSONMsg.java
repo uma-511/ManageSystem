@@ -2,11 +2,14 @@ package com.warrior.common;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 
+@ApiModel
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class JSONMsg implements Serializable{
 
@@ -15,15 +18,19 @@ public class JSONMsg implements Serializable{
     //失败
     public final static boolean FLAG_FAIL = false;
 
+    @ApiModelProperty(value = "接口状态",required = true)
     @Getter @Setter
     private boolean success;     //是否成功
 
+    @ApiModelProperty(value = "接口返回数据")
     @Getter @Setter
     private Object data;        //返回数据
 
+    @ApiModelProperty(value = "接口错误信息")
     @Getter @Setter
     private String msg;         //错误信息
 
+    @ApiModelProperty(value = "用户当前登录状态")
     @Getter @Setter
     private boolean isLogin = true;
 
