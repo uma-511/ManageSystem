@@ -18,6 +18,7 @@
   "dependencies": {
     "axios": "^0.15.3",
     "chinese-to-pinyin": "^0.1.6",
+    "crypto": "^1.0.1",
     "iview": "^2.3.2",
     "vue": "^2.2.6",
     "vue-router": "^2.3.1",

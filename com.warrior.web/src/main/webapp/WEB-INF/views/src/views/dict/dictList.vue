@@ -160,12 +160,13 @@
                   });
                 }}
               },'修改'),
+              this.checkPermission('admin:dict:del') ?
               h('Button',{
-                props:{type:'error',size:'small',disabled:!this.checkPermission('admin:dict:del')},
+                props:{type:'error',size:'small'},
                 on:{click:()=>{
                   this.delItem(params.row.id);
                 }}
-              },'删除')
+              },'删除') : h('Span',{},'')
             ]);
           }}
         ],
@@ -187,8 +188,13 @@
     },
     methods:{
       query(){
-        let params = '?dictType='+this.dictType+'&page='+this.page+'&rows='+this.pageSize;
-        util.ajax.get('/dictionary/list'+params)
+        util.ajax.get('/dictionary/list',{
+          params:{
+            dictType:this.dictType,
+            page:this.page,
+            rows:this.pageSize
+          }
+        })
         .then(rep=>{
           this.data = rep.records;
           this.total = rep.total;
@@ -243,7 +249,7 @@
                   this.showModel=false;
                 });
               }else{
-                util.ajax.put('/dictionary/'+this.formInline.id,this.formInline).then(rep=>{
+                util.ajax.put('/dictionary',this.formInline).then(rep=>{
                   this.$Message.info('保存数据成功！');
                   this.query();
                   this.$refs['form-dict'].resetFields();

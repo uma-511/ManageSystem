@@ -11,7 +11,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@Api(value="系统日志",tags = {"系统日志管理"},protocols = "http")
+@Api(value="系统日志",tags = {"系统日志管理"},description = "系统日志")
 @RestController
 @RequestMapping("/syslog")
 public class SysLogContrller extends WarriorBaseController {
@@ -19,7 +19,6 @@ public class SysLogContrller extends WarriorBaseController {
     @Autowired
     private SysLogService sysLogService;
 
-    @SysLog("系统日志查询")
     @RequiresPermissions("admin:log:view")
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     @ApiOperation(value = "系统日志查询",httpMethod = "GET",response = JSONMsg.class)

@@ -4,7 +4,9 @@ import com.thetransactioncompany.cors.CORSConfiguration;
 import com.thetransactioncompany.cors.CORSConfigurationException;
 import com.warrior.common.spring.CustomDateConverter;
 import com.warrior.common.spring.GlobalExceptionHandler;
+import com.warrior.util.common.WarriorSession;
 import com.warrior.web.filter.CorsSpringFilter;
+import com.warrior.web.interceptor.SpringInterceptor;
 import com.warrior.web.shiro.ShiroConfig;
 import org.springframework.context.annotation.*;
 import org.springframework.core.convert.converter.Converter;
@@ -118,15 +120,6 @@ public class WebConfig extends WebMvcConfigurerAdapter{
         registry.addInterceptor(new SpringInterceptor());
     }
 
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("*")
-//                .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
-//                .maxAge(3600)
-//                .allowCredentials(true);
-//    }
-
     @Bean("corsFilter")
     public CorsSpringFilter corsSpringFilter(){
         CorsSpringFilter corsFilter = null;
@@ -143,5 +136,10 @@ public class WebConfig extends WebMvcConfigurerAdapter{
             e.printStackTrace();
         }
         return corsFilter;
+    }
+
+    @Bean
+    public WarriorSession warriorSession(){
+        return new WarriorSession();
     }
 }

@@ -2,7 +2,6 @@ package com.warrior.util.shiro;
 
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
 
 public class MD5 {
 

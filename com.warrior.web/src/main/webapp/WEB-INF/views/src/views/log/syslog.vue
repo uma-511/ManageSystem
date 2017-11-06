@@ -82,8 +82,13 @@
     },
     methods:{
       query(){
-        let params = '?keyWord='+this.keyWord+'&page='+this.page+'&rows='+this.pageSize;
-        util.ajax.get('/syslog/list')
+        util.ajax.get('/syslog/list',{
+          params:{
+            keyWord:this.keyWord,
+            page:this.page,
+            rows:this.pageSize
+          }
+        })
         .then(rep=>{
           this.data = rep.records;
           this.total = rep.total;
@@ -91,9 +96,11 @@
       },
       pageChange(page){
         this.page = page;
+        this.query();
       },
       pageSizeChange(pageSize){
         this.pageSize = pageSize;
+        this.query();
       },
       selectionChange(selection){
         this.selection = selection;

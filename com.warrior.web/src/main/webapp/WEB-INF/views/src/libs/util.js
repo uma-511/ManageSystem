@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
+import crypto from 'crypto'
 import env from '../config/env';
 
 let util = {
@@ -24,8 +25,27 @@ util.ajax = axios.create({
 });
 
 util.ajax.interceptors.request.use((config)=>{
+  let isLogin = false;
+  if(config.url === ajaxUrl+'/doLogin'){
+    isLogin = true;
+  }
+  let params = {};
   if(config.method === 'post' || config.method == 'put'){
+    params = !config.data ? {} : config.data;
     config.data = qs.stringify(config.data);
+  }else{
+    params = !config.params ? {} : config.params;
+  }
+  if (!isLogin) {
+    if(!config.params){
+      config.params = {};
+    }
+    let time = new Date().getTime();
+    config.params['token'] = localStorage.getItem('currentUser') ? localStorage.getItem('currentUser') : "";
+    config.params['time']=time;
+    params['token'] = config.params['token'];
+    params['time'] = config.params['time'];
+    config.params['sign'] = util.signStr(params);
   }
   return config;
 },(error)=>{
@@ -97,5 +117,26 @@ util.formatDate = function(date,fmt){
 }
 function padLeftZero(str) {
     return ('00' + str).substr(str.length);
+}
+
+util.signStr=function(array){
+  let keys = Object.keys(array);
+  keys.sort((item1,item2)=>{
+    if(item1 > item2){
+      return 1;
+    }else if(item1 < item2){
+      return -1;
+    }else{
+      return 0;
+    }
+  });
+  let sign = "";
+  for(let item of keys){
+    sign +=item+'='+encodeURIComponent(array[item])+"&";
+  }
+  sign = sign.substr(0,sign.length-1);
+  let md5 = crypto.createHmac('md5','0202040103');
+  md5.update(sign);
+  return md5.digest('hex');
 }
 export default util;

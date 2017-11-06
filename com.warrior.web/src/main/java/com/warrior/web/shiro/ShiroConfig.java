@@ -1,6 +1,6 @@
 package com.warrior.web.shiro;
 
-import com.warrior.util.shiro.*;
+import com.warrior.util.shiro.MD5;
 import com.warrior.web.filter.LoginFilter;
 import com.warrior.web.filter.PermissionsFilter;
 import com.warrior.web.filter.RolesFilter;

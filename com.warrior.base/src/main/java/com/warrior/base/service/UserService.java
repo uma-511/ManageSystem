@@ -8,10 +8,7 @@ import com.warrior.common.model.UserModel;
 import java.util.Date;
 
 public interface UserService extends IService<User> {
-
-    UserModel getCurrentUser();
-
-    UserModel login(String userName, String pwd);
+    String login(String userName, String pwd);
 
     void logOut();
 
@@ -23,5 +20,5 @@ public interface UserService extends IService<User> {
 
     boolean modified(User user);
 
-    boolean updatePassWord(String oldPw,String newPw);
+    boolean updatePassWord(String oldPw,String newPw,String token);
 }

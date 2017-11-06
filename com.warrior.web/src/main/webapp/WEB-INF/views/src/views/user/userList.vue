@@ -196,43 +196,49 @@
           { title:'性别',key:'gender',align:'center' },
           { title:'年龄',key:'age',align:'center'},
           { title:'类型',key:'userType',align:'center',render:(h,params)=>{
-            return h('Span',{},this.sel_type[params.row.userType-1].dicValue);
+            let temp = this.sel_type[params.row.userType-1];
+            return h('Span',{},!temp ? '' : temp.dicValue);
           }},
           { title:'状态',key:'status',align:'center',render:(h,params)=>{
-            return h('Span',{},this.sel_status[params.row.status].dicValue);
+            let temp = this.sel_status[params.row.status];
+            return h('Span',{},!temp ? '' : temp.dicValue);
           }},
           { title:'注册时间',key:'createTime',align:'center',width:150,render:(h,params)=>{
             return h('Span',{},util.formatDate(new Date(params.row.createTime),'yyyy-MM-dd hh:mm'));
           }},
           { title:'操作',key:'uid',align:'center',width:220,render:(h,params)=>{
             return h('div',[
-              h('Button',{
-                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:userrole:view')},
+               this.checkPermission('admin:userrole:view') ?
+               h('Button',{
+                props:{type:'primary',size:'small'},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.currentUid = params.row.uid;
                   this.roleModel = true;
                   this.loadRole(params.row.uid);
                 }}
-              },'角色'),
+              },'角色') : h('Span',{},''),
+              this.checkPermission('admin:userperm:view') ?
               h('Button',{
-                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:userperm:view')},
+                props:{type:'primary',size:'small'},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.currentUid = params.row.uid;
                   this.permissionModel = true;
                   this.loadPermission(params.row.uid);
                 }}
-              },'权限'),
+              },'权限') : h('Span',{},''),
+              this.checkPermission('admin:user:update') ?
               h('Button',{
-                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:user:update')},
+                props:{type:'primary',size:'small'},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.updateItem(params.row.uid);
                 }}
-              },'修改'),
+              },'修改') : h('Span',{},''),
+              this.checkPermission('admin:user:del') ?
               h('Button',{
-                props:{type:'error',size:'small',disabled:!this.checkPermission('admin:user:del')},
+                props:{type:'error',size:'small'},
                 on:{click:()=>{
                   this.$Modal.confirm({
                     title:'操作提示',
@@ -242,7 +248,7 @@
                     }
                   });
                 }}
-              },'删除')
+              },'删除') : h('Span',{},'')
             ]);
           }}
         ],
@@ -273,9 +279,17 @@
     },
     methods: {
       query(){
-        let params = '?userName='+this.userName+'&userType='+this.type+'&status='+this.status+'&startTime='+
-        util.formatDate(this.startTime,'yyyy-MM-dd hh:mm')+'&endTime='+util.formatDate(this.endTime,'yyyy-MM-dd hh:mm')+'&page='+this.page+'&rows='+this.pageSize;
-        util.ajax.get('/user/list'+params)
+        util.ajax.get('/user/list',{
+          params:{
+            userNane:this.userName,
+            userType:this.type,
+            status:this.status,
+            startTime:util.formatDate(this.startTime,'yyyy-MM-dd hh:mm'),
+            endTime:util.formatDate(this.endTime,'yyyy-MM-dd hh:mm'),
+            page:this.page,
+            rows:this.pageSize
+          }
+        })
         .then(rep => {
           this.data = rep.records;
           this.total = rep.total;
@@ -335,7 +349,7 @@
                   this.showModel=false;
                 });
               }else{
-                util.ajax.put('/user/'+this.formInline.uid,this.formInline).then(rep=>{
+                util.ajax.put('/user',this.formInline).then(rep=>{
                   this.$Message.info('保存数据成功！');
                   this.query();
                   this.$refs['form-res'].resetFields();
@@ -387,6 +401,7 @@
           }else{
             this.$Message.error('保存数据失败！');
           }
+          this.permissionModel = false;
         });
       },
       loadRole(uid){
@@ -407,6 +422,7 @@
           }else{
             this.$Message.error('保存数据失败！');
           }
+          this.roleModel = false;
         });
       },
       checkPermission(perStr){

@@ -1,10 +1,8 @@
 package com.warrior.web.filter;
 
-import com.warrior.common.Contacts;
 import com.warrior.common.JSONMsg;
-import com.warrior.common.web.SessionUtil;
 import com.warrior.common.web.WebUtils;
-import lombok.extern.log4j.Log4j;
+import com.warrior.util.common.WarriorSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
@@ -13,8 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Log4j
-public class LoginFilter extends AccessControlFilter {
+public class LoginFilter extends AccessControlFilter{
 
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) throws Exception {
@@ -28,8 +25,8 @@ public class LoginFilter extends AccessControlFilter {
             return true;
         }
 
-        Object entity = SessionUtil.getValue(Contacts.SESSION_USER);
-        if (null == entity && !StringUtils.contains(request.getRequestURI(),"/doLogin")){
+        Long uid = WarriorSession.getItem(request.getParameter("token"));
+        if (null == uid && !StringUtils.contains(request.getRequestURI(),"/doLogin")){
             if (WebUtils.isAjaxRequest(request)){
                 JSONMsg msg = new JSONMsg();
                 msg.setSuccess(JSONMsg.FLAG_FAIL);

@@ -5,19 +5,19 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.warrior.base.dao.UserDao;
 import com.warrior.base.entity.User;
-import com.warrior.common.Contacts;
-import com.warrior.common.model.UserModel;
 import com.warrior.base.service.UserService;
+import com.warrior.common.Contacts;
 import com.warrior.common.exception.WarriorException;
+import com.warrior.common.model.UserModel;
 import com.warrior.common.service.impl.WarriorBaseServiceImpl;
+import com.warrior.util.common.TokenUtil;
+import com.warrior.util.common.WarriorSession;
 import com.warrior.util.shiro.MD5;
-import com.warrior.common.web.SessionUtil;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -27,20 +27,11 @@ import java.util.Date;
 public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implements UserService{
 
     /**
-     * 获取当前用户
-     * @return
-     */
-    public UserModel getCurrentUser(){
-        UserModel entity = SessionUtil.getValue(Contacts.SESSION_USER);
-        return entity;
-    }
-
-    /**
      * 用户登录
      * @param userName
      * @param pwd
      */
-    public UserModel login(String userName, String pwd){
+    public String login(String userName, String pwd){
         Subject subject = SecurityUtils.getSubject();
         try {
             UsernamePasswordToken token = new UsernamePasswordToken(userName,pwd);
@@ -57,10 +48,9 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
             throw new WarriorException("登录认证失败！",e);
         }
         User user = getByUserName(userName);
-        UserModel entity = new UserModel();
-        BeanUtils.copyProperties(user,entity);
-        SessionUtil.setAttr(Contacts.SESSION_USER,entity);
-        return entity;
+        String token = TokenUtil.getToken();
+        WarriorSession.setItem(token,user.getUid());
+        return token;
     }
 
     /**
@@ -134,9 +124,8 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
         return baseMapper.deleteById(id) > 0 ? true : false;
     }
 
-    public boolean updatePassWord(String oldPw,String newPw){
-        UserModel entity = SessionUtil.getValue(Contacts.SESSION_USER);
-        User user = baseMapper.selectById(entity.getUid());
+    public boolean updatePassWord(String oldPw,String newPw,String token){
+        User user = baseMapper.selectById(WarriorSession.getItem(token).toString());
         if (!StringUtils.equals(MD5.genMd5(oldPw,user.genCredentialsSalt()),user.getPassWord())){
             throw new WarriorException("原密码不正确！");
         }

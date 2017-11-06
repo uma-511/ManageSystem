@@ -150,24 +150,27 @@
           { title:'备注',key:'remark',align:'center' },
           { title:'操作',key:'rid',align:'center',width:180,render:(h,params)=>{
             return h('div',[
+              this.checkPermission('admin:roleperm:view') ?
               h('Button',{
-                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:roleperm:view')},
+                props:{type:'primary',size:'small'},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.currentRid = params.row.rid;
                   this.permissionModel = true;
                   this.loadPermission(params.row.rid);
                 }}
-              },'权限'),
+              },'权限') : h('Span',{},''),
+              this.checkPermission('admin:role:update') ?
               h('Button',{
-                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:role:update')},
+                props:{type:'primary',size:'small'},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.updateItem(params.row.rid);
                 }}
-              },'修改'),
+              },'修改') : h('Span',{},''),
+              this.checkPermission('admin:role:del') ?
               h('Button',{
-                props:{type:'error',size:'small',disabled:!this.checkPermission('admin:role:del')},
+                props:{type:'error',size:'small'},
                 on:{click:()=>{
                   this.$Modal.confirm({
                     title:'操作提示',
@@ -177,7 +180,7 @@
                     }
                   });
                 }}
-              },'删除')
+              },'删除') : h('Span',{},'')
             ]);
           }}
         ],
@@ -200,8 +203,14 @@
     },
     methods: {
       query(){
-        let params = '?roleName='+this.roleName+'&status='+this.status+'&page='+this.page+'&rows='+this.pageSize;
-        util.ajax.get('/role/list'+params)
+        util.ajax.get('/role/list',{
+          params:{
+            roleName:this.roleName,
+            status:this.status,
+            page:this.page,
+            rows:this.pageSize
+          }
+        })
         .then(rep => {
           this.data = rep.records;
           this.total = rep.total;
@@ -258,7 +267,7 @@
                   this.showModel=false;
                 });
               }else{
-                util.ajax.put('/role/'+this.formInline.rid,this.formInline).then(rep=>{
+                util.ajax.put('/role',this.formInline).then(rep=>{
                   this.$Message.info('保存数据成功！');
                   this.query();
                   this.$refs['form-res'].resetFields();

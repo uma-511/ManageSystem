@@ -209,16 +209,18 @@
           { title:'备注',key:'remark',align:'center' },
           { title:'操作',key:'resId',align:'center',width:125,render:(h,params)=>{
             return h('div',[
+              this.checkPermission('admin:resource:update') ?
               h('Button',{
-                props:{type:'primary',size:'small',disabled:!this.checkPermission('admin:resource:update')},
+                props:{type:'primary',size:'small'},
                 style:{marginRight:'5px'},
                 on:{click:()=>{
                   this.loadParent();
                   this.updateItem(params.row.resId);
                 }}
-              },'修改'),
+              },'修改') : h('Span',{},''),
+              this.checkPermission('admin:resource:del') ?
               h('Button',{
-                props:{type:'error',size:'small',disabled:!this.checkPermission('admin:resource:del')},
+                props:{type:'error',size:'small'},
                 on:{click:()=>{
                   this.$Modal.confirm({
                     title:'操作提示',
@@ -228,7 +230,7 @@
                     }
                   });
                 }}
-              },'删除')
+              },'删除') : h('Span',{},'')
             ]);
           }}
         ],
@@ -265,8 +267,17 @@
     },
     methods: {
       query(){
-        let params = '?name='+this.name+'&url='+this.url+'&status='+this.status+'&isShow='+this.isShow+'&type='+this.type+'&page='+this.page+'&rows='+this.pageSize;
-        util.ajax.get('/resource/list'+params)
+        util.ajax.get('/resource/list',{
+          params:{
+            name:this.name,
+            url:this.url,
+            status:this.status,
+            isShow:this.isShow,
+            type:this.type,
+            page:this.page,
+            rows:this.pageSize
+          }
+        })
         .then(rep => {
           this.data = rep.records;
           this.total = rep.total;
@@ -331,7 +342,7 @@
                   this.showModel=false;
                 });
               }else{
-                util.ajax.put('/resource/'+this.formInline.resId,this.formInline).then(rep=>{
+                util.ajax.put('/resource',this.formInline).then(rep=>{
                   this.$Message.info('保存数据成功！');
                   this.query();
                   this.$refs['form-res'].resetFields();
