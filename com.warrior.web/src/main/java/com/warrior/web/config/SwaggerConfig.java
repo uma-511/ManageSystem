@@ -27,7 +27,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("用户权限系统API")
                 .description("用户权限系统API")
-                .termsOfServiceUrl("http://127.0.0.1:8083")
+                .termsOfServiceUrl("http://127.0.0.1:8083/admin")
                 .contact(new Contact("","",""))
                 .license("")
                 .licenseUrl("")

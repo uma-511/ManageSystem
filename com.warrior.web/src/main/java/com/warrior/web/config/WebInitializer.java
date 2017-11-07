@@ -19,6 +19,6 @@ public class WebInitializer extends AbstractHttpSessionApplicationInitializer im
         ServletRegistration.Dynamic servlet = servletContext.addServlet(
                 "dispatcher", new DispatcherServlet(ctx));
         servlet.setLoadOnStartup(1);
-        servlet.addMapping("/");
+        servlet.addMapping("/admin/*","/swagger-resources/*","/v2/api-docs/*");
     }
 }

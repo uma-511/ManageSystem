@@ -3,6 +3,7 @@ package com.warrior.web.interceptor;
 import com.google.common.collect.Maps;
 import com.warrior.common.Contacts;
 import com.warrior.common.exception.WarriorException;
+import com.warrior.common.web.WebUtils;
 import com.warrior.util.common.TokenUtil;
 import com.warrior.util.common.WarriorSession;
 import lombok.extern.log4j.Log4j;
@@ -21,11 +22,9 @@ import java.util.Map;
 @Component
 public class SpringInterceptor extends HandlerInterceptorAdapter {
 
-    private final String dotLogin [] = {"/","/doLogin","/doLogOut","/dist"};
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!StringUtils.equals(request.getMethod(),"OPTIONS")  && !checkUrl(request.getRequestURI())){
+        if (!StringUtils.equals(request.getMethod(),"OPTIONS")  && !WebUtils.checkUrl(request.getRequestURI())){
             Long uid = WarriorSession.getItem(request.getParameter("token"));
             if(uid == null || uid <= 0){
                 throw new WarriorException("用户未登录，请登录！");
@@ -48,14 +47,5 @@ public class SpringInterceptor extends HandlerInterceptorAdapter {
             }
         }
         return super.preHandle(request, response, handler);
-    }
-
-    private boolean checkUrl(String url){
-        for (String str : dotLogin) {
-            if (StringUtils.equals(url,str)){
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -1,5 +1,6 @@
 package com.warrior.common.web;
 
+import com.warrior.common.Contacts;
 import com.warrior.util.common.JSONUtils;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
@@ -75,5 +76,14 @@ public class WebUtils {
             }
         }
         return ip;
+    }
+
+    public static boolean checkUrl(String url){
+        for (String str : Contacts.URL_NO_CHECK) {
+            if (StringUtils.equals(url,str) || StringUtils.contains(url,str)){
+                return true;
+            }
+        }
+        return false;
     }
 }

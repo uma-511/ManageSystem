@@ -1,10 +1,9 @@
 package com.warrior.base.controller;
 
+import com.warrior.base.service.UserService;
 import com.warrior.common.JSONMsg;
 import com.warrior.common.annotation.SysLog;
 import com.warrior.common.web.WarriorBaseController;
-import com.warrior.common.model.UserModel;
-import com.warrior.base.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

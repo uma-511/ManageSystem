@@ -16,6 +16,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
@@ -43,11 +44,11 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-//        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//        viewResolver.setSuffix(".jsp");
-//        viewResolver.setPrefix("/WEB-INF/views/");
-//        registry.viewResolver(viewResolver);
-        registry.viewResolver(freeMarkerViewResolver());
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setSuffix(".jsp");
+        viewResolver.setPrefix("/WEB-INF/");
+        registry.viewResolver(viewResolver);
+//        registry.viewResolver(freeMarkerViewResolver());
     }
 
     @Bean("viewResolver")
@@ -66,9 +67,8 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     @Bean
     public FreeMarkerConfigurer freeMarkerConfigurer(){
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
-        configurer.setTemplateLoaderPath("/WEB-INF/views/");
+        configurer.setTemplateLoaderPath("/");
         configurer.setDefaultEncoding("UTF-8");
-
         Map<String,Object> setting = new HashMap<>();
         setting.put("template_update_delay",10);
         setting.put("locale","zh_CN");
@@ -80,9 +80,9 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/dist/**").addResourceLocations("/WEB-INF/views/dist/");
-        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("/swagger-ui.html");
-        registry.addResourceHandler("/webjars/springfox-swagger-ui/**").addResourceLocations("/webjars/springfox-swagger-ui/");
+//        registry.addResourceHandler("/dist/**").addResourceLocations("/dist/");
+//        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("/swagger-ui.html");
+//        registry.addResourceHandler("/webjars/springfox-swagger-ui/**").addResourceLocations("/webjars/springfox-swagger-ui/");
     }
 
     @Bean

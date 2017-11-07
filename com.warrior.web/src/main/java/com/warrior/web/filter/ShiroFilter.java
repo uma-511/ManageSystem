@@ -6,7 +6,7 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 
-@WebFilter(filterName = "shiroFilter",urlPatterns = {"/*"},initParams = {@WebInitParam(name = "targetFilterLifecycle",value = "true"),@WebInitParam(name="staticSecurityManagerEnabled",value = "true")})
+@WebFilter(filterName = "shiroFilter",urlPatterns = {"/admin/*"},initParams = {@WebInitParam(name = "targetFilterLifecycle",value = "true"),@WebInitParam(name="staticSecurityManagerEnabled",value = "true")})
 @Log4j
 public class ShiroFilter extends DelegatingFilterProxy {
 }

@@ -19,9 +19,7 @@ public class LoginFilter extends AccessControlFilter{
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
         String url = request.getRequestURI();
-        if (StringUtils.equals("/",url) || StringUtils.contains(url,"/doLogin")
-                || StringUtils.contains(url,"/doLogOut")
-                || StringUtils.contains(url,"/dist")){
+        if (WebUtils.checkUrl(url)){
             return true;
         }
 

@@ -12,9 +12,9 @@ util.title = function(title) {
 };
 
 const ajaxUrl = env === 'development' ?
-    'http://127.0.0.1:8083' :
+    'http://127.0.0.1:8083/admin' :
     env === 'production' ?
-    'http://127.0.0.1:8083' :
+    'http://127.0.0.1:8083/admin' :
     'https://debug.url.com';
 
 util.ajax = axios.create({
