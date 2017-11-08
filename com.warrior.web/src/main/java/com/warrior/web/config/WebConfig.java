@@ -4,7 +4,7 @@ import com.thetransactioncompany.cors.CORSConfiguration;
 import com.thetransactioncompany.cors.CORSConfigurationException;
 import com.warrior.common.spring.CustomDateConverter;
 import com.warrior.common.spring.GlobalExceptionHandler;
-import com.warrior.util.common.WarriorSession;
+import com.warrior.common.web.WarriorSession;
 import com.warrior.web.filter.CorsSpringFilter;
 import com.warrior.web.interceptor.SpringInterceptor;
 import com.warrior.web.shiro.ShiroConfig;

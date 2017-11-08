@@ -2,10 +2,11 @@ package com.warrior.common.aspect;
 
 import com.warrior.common.JSONMsg;
 import com.warrior.common.entity.SysLog;
+import com.warrior.common.entity.User;
 import com.warrior.common.service.SysLogService;
 import com.warrior.common.web.WebUtils;
 import com.warrior.util.common.JSONUtils;
-import com.warrior.util.common.WarriorSession;
+import com.warrior.common.web.WarriorSession;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -75,10 +76,11 @@ public class SysLogAspect {
             JSONMsg msg = (JSONMsg)result;
             token = msg.getData().toString();
         }
-        Long uid = WarriorSession.getItem(token);
+        User user = WarriorSession.getItem(token);
 
-        if (uid != null){
-            log.setUserId(uid);
+        if (user != null){
+            log.setUserId(user.getUid());
+            log.setUserName(user.getUserName());
         }else{
             log.setUserId(-1L);
         }

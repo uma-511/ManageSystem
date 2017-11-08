@@ -1,22 +1,18 @@
-package com.warrior.base.controller;
+package com.warrior.common.controller;
 
 import com.warrior.common.JSONMsg;
-import com.warrior.base.entity.User;
-import com.warrior.base.service.UserService;
 import com.warrior.common.annotation.SysLog;
+import com.warrior.common.entity.User;
+import com.warrior.common.service.UserService;
 import com.warrior.common.web.WarriorBaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Api(value="UserController",tags = "用户管理",description = "用户管理")

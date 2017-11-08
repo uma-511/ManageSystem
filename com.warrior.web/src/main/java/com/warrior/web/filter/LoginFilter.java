@@ -1,8 +1,10 @@
 package com.warrior.web.filter;
 
+import com.warrior.common.entity.User;
 import com.warrior.common.JSONMsg;
 import com.warrior.common.web.WebUtils;
-import com.warrior.util.common.WarriorSession;
+import com.warrior.common.web.WarriorSession;
+import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
@@ -11,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Log4j
 public class LoginFilter extends AccessControlFilter{
 
     @Override
@@ -23,18 +26,14 @@ public class LoginFilter extends AccessControlFilter{
             return true;
         }
 
-        Long uid = WarriorSession.getItem(request.getParameter("token"));
-        if (null == uid && !StringUtils.contains(request.getRequestURI(),"/doLogin")){
-            if (WebUtils.isAjaxRequest(request)){
-                JSONMsg msg = new JSONMsg();
-                msg.setSuccess(JSONMsg.FLAG_FAIL);
-                msg.setMsg("未登录！");
-                msg.setLogin(false);
-                WebUtils.responseWrite(response,msg);
-                return false;
-            }else{
-                response.sendRedirect("/");
-            }
+        User user = WarriorSession.getItem(request.getParameter("token"));
+        if (null == user && !StringUtils.contains(request.getRequestURI(),"/doLogin")){
+            JSONMsg msg = new JSONMsg();
+            msg.setSuccess(JSONMsg.FLAG_FAIL);
+            msg.setMsg("未登录！");
+            msg.setLogin(false);
+            WebUtils.responseWrite(response,msg);
+            return false;
         }
         return true;
     }

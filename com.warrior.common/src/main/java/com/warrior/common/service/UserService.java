@@ -1,9 +1,8 @@
-package com.warrior.base.service;
+package com.warrior.common.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
-import com.warrior.base.entity.User;
-import com.warrior.common.model.UserModel;
+import com.warrior.common.entity.User;
 
 import java.util.Date;
 

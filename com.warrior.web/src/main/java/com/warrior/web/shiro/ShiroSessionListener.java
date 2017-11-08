@@ -1,5 +1,6 @@
 package com.warrior.web.shiro;
 
+import com.warrior.common.web.WarriorSession;
 import lombok.extern.log4j.Log4j;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.SessionListener;
@@ -19,6 +20,7 @@ public class ShiroSessionListener implements SessionListener {
 
     @Override
     public void onExpiration(Session session) {
+        WarriorSession.removeUser(Long.parseLong(session.getAttribute("uid").toString()));
         log.info("session 过期");
     }
 }

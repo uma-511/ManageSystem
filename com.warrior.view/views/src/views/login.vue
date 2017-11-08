@@ -1,33 +1,40 @@
 <style scoped>
+  .bg{
+    background-image:url(http://127.0.0.1:8083/images/bg.jpg);
+    background-position: center;
+    background-size: cover;
+  }
 </style>
 <template>
-  <Row :style="styleObject">
-      <Col span="8" >&nbsp;</Col>
-      <Col span="8">
-          <Card shadow>
-              <p slot="title" style="text-align:center;">用户登录</p>
-              <Form ref="formInline" :model="formInline" :rules="ruleInline" inline style="height:150px;">
-                <FormItem prop="user" style="width:100%;">
-                    <Input type="text" v-model="formInline.user" placeholder="Username" :disabled="logining">
-                        <Icon type="ios-person-outline" slot="prepend"></Icon>
-                    </Input>
-                </FormItem>
-                <FormItem prop="password" style="width:100%;">
-                    <Input type="password" v-model="formInline.password" placeholder="Password" :disabled="logining">
-                        <Icon type="ios-locked-outline" slot="prepend"></Icon>
-                    </Input>
-                </FormItem>
-                <FormItem style="width:100%;text-align:center;">
-                    <Button type="primary" @click="handleSubmit('formInline')" :loading="logining">
-                      <span v-if="!logining">登录</span>
-                      <span v-else>系统登录中...</span>
-                    </Button>
-                </FormItem>
-            </Form>
-          </Card>
-      </Col>
-      <Col span="8" >&nbsp;</Col>
-  </Row>
+    <div class="bg">
+      <Row :style="styleObject">
+          <Col span="8" >&nbsp;</Col>
+          <Col span="8">
+              <Card shadow>
+                  <p slot="title" style="text-align:center;">用户登录</p>
+                  <Form ref="formInline" :model="formInline" :rules="ruleInline" inline style="height:150px;">
+                    <FormItem prop="user" style="width:100%;">
+                        <Input type="text" v-model="formInline.user" placeholder="Username" :disabled="logining">
+                            <Icon type="ios-person-outline" slot="prepend"></Icon>
+                        </Input>
+                    </FormItem>
+                    <FormItem prop="password" style="width:100%;">
+                        <Input type="password" v-model="formInline.password" placeholder="Password" :disabled="logining">
+                            <Icon type="ios-locked-outline" slot="prepend"></Icon>
+                        </Input>
+                    </FormItem>
+                    <FormItem style="width:100%;text-align:center;">
+                        <Button type="primary" @click="handleSubmit('formInline')" :loading="logining">
+                          <span v-if="!logining">登录</span>
+                          <span v-else>系统登录中...</span>
+                        </Button>
+                    </FormItem>
+                </Form>
+              </Card>
+          </Col>
+          <Col span="8" >&nbsp;</Col>
+      </Row>
+    </div>
 </template>
 <script>
   import util from '../libs/util';
@@ -51,7 +58,7 @@
               ]
             },
             styleObject:{
-              background:'#eee',
+              background:'transparent',
               height:document.documentElement.clientHeight+'px',
               paddingTop:(document.documentElement.clientHeight/3)+'px'
             }

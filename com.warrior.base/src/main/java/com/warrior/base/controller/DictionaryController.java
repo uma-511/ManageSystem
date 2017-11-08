@@ -50,7 +50,6 @@ public class DictionaryController extends WarriorBaseController {
      * @param dicType
      * @return
      */
-    @RequiresPermissions("admin:dict:view")
     @RequestMapping(value = "/list/model/{type}",method = RequestMethod.GET)
     @ApiOperation(value = "根据字典类型获取字典列表",httpMethod = "GET",response = JSONMsg.class)
     public JSONMsg getModelListByType(

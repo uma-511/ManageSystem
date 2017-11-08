@@ -3,7 +3,7 @@
 <mapper namespace="com.warrior.common.dao.SysLogDao" >
 
     <select id="getListByPage" resultType="com.warrior.common.entity.SysLog">
-        SELECT id,user_id,operation,method,params,time,ip,create_time,(select user_name FROM warrior_user WHERE uid = user_id) as user_name FROM warrior_sys_log
+        SELECT id,user_id,operation,method,params,time,ip,create_time,user_name FROM warrior_sys_log
         <where>
             ${ew.sqlSegment}
         </where>

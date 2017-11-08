@@ -1,6 +1,6 @@
 package com.warrior.base.controller;
 
-import com.warrior.base.service.UserService;
+import com.warrior.common.service.UserService;
 import com.warrior.common.JSONMsg;
 import com.warrior.common.annotation.SysLog;
 import com.warrior.common.web.WarriorBaseController;

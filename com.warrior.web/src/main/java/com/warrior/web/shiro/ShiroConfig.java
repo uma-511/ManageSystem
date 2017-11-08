@@ -79,11 +79,11 @@ public class ShiroConfig {
     @Bean
     public DefaultWebSessionManager sessionManager(){
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        sessionManager.setGlobalSessionTimeout(1000 * 60 * 30);
-        sessionManager.setSessionValidationInterval(1000*60*30);
+        sessionManager.setGlobalSessionTimeout(1000 * 60 * 5);
+        sessionManager.setSessionValidationInterval(1000*60*5);
         sessionManager.setSessionValidationSchedulerEnabled(true);
         sessionManager.setSessionIdCookieEnabled(true);
-        sessionManager.setSessionIdCookie(simpleCookie());
+//        sessionManager.setSessionIdCookie(simpleCookie());
         sessionManager.setSessionIdUrlRewritingEnabled(false);
         sessionManager.setSessionDAO(enterpriseCacheSessionDAO());
         sessionManager.getSessionListeners().add(new ShiroSessionListener());
@@ -94,7 +94,7 @@ public class ShiroConfig {
     public SimpleCookie simpleCookie(){
         SimpleCookie cookie = new SimpleCookie();
         cookie.setName("warrior.session.id");
-        cookie.setMaxAge(1000*60*30);
+        cookie.setMaxAge(1000*60*5);
         return cookie;
     }
 

@@ -4,9 +4,11 @@ import com.google.common.collect.Sets;
 import com.warrior.base.entity.Role;
 import com.warrior.base.service.PermissionService;
 import com.warrior.base.service.RoleService;
-import com.warrior.base.entity.User;
-import com.warrior.base.service.UserService;
+import com.warrior.common.entity.User;
+import com.warrior.common.service.UserService;
+import com.warrior.common.web.WarriorSession;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -43,6 +45,7 @@ public class CustomSecurityRealm extends AuthorizingRealm {
             roles.add(role.getRoleName());
         }
         String permissionStr = permissionService.getPermissionStr(user.getUid());
+        permissionStr = StringUtils.isEmpty(permissionStr) ? "" : permissionStr;
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
         info.setStringPermissions(Sets.newHashSet(permissionStr.split(",")));
 
@@ -53,6 +56,8 @@ public class CustomSecurityRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken upat = (UsernamePasswordToken) token;
         User user = userService.getByUserName(upat.getUsername());
+        WarriorSession.removeSession(user);
+
         if (user == null) {
             throw new UnknownAccountException();
         }

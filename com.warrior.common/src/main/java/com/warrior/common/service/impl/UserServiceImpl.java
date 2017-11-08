@@ -1,17 +1,14 @@
-package com.warrior.base.service.impl;
+package com.warrior.common.service.impl;
 
 import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.warrior.base.dao.UserDao;
-import com.warrior.base.entity.User;
-import com.warrior.base.service.UserService;
-import com.warrior.common.Contacts;
+import com.warrior.common.dao.UserDao;
+import com.warrior.common.entity.User;
 import com.warrior.common.exception.WarriorException;
-import com.warrior.common.model.UserModel;
-import com.warrior.common.service.impl.WarriorBaseServiceImpl;
+import com.warrior.common.service.UserService;
+import com.warrior.common.web.WarriorSession;
 import com.warrior.util.common.TokenUtil;
-import com.warrior.util.common.WarriorSession;
 import com.warrior.util.shiro.MD5;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +46,8 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
         }
         User user = getByUserName(userName);
         String token = TokenUtil.getToken();
-        WarriorSession.setItem(token,user.getUid());
+        WarriorSession.setItem(token,user);
+        subject.getSession().setAttribute("uid",user.getUid());
         return token;
     }
 
