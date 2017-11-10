@@ -45,7 +45,7 @@ public class RoleController extends WarriorBaseController {
      */
     @SysLog("新增角色")
     @RequiresPermissions("admin:role:add")
-    @RequestMapping(value = {"", "/"}, method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     @ApiOperation(value = "新增角色",httpMethod = "POST",response = JSONMsg.class)
     public JSONMsg addRole(@ModelAttribute Role role) {
         role.setUpdateTime(new Date());

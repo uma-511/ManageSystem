@@ -28,7 +28,7 @@
     </select>
 
     <delete id="delPermission">
-        DELETE FROM warrior.warrior_permissions WHERE own_id = #{ownId} AND type = #{type}
+        DELETE FROM warrior_permissions WHERE own_id = #{ownId} AND type = #{type}
     </delete>
 
     <select id="getPermissionStr" resultType="String">

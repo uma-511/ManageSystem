@@ -1,0 +1,16 @@
+{
+  "driverClass":"com.mysql.jdbc.Driver",
+  "url":"jdbc:mysql://10.211.55.5:3306/warrior?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull",
+  "userName":"root",
+  "passWord":"123456",
+  "prefix":"warrior_",
+  "tableList":[
+    {
+      "tableName":"warrior_user",
+      "modulePath":"com.warrior.gen",
+      "packageName":"com.warrior.gen",
+      "remark":"用户信息",
+      "swagger":true
+    }
+  ]
+}

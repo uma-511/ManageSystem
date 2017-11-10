@@ -9,7 +9,7 @@
     </select>
 
     <select id="getRoleList" resultType="com.warrior.base.entity.Role">
-        SELECT * from warrior.warrior_role
+        SELECT * from warrior_role
         <where>
             ${ew.sqlSegment}
         </where>

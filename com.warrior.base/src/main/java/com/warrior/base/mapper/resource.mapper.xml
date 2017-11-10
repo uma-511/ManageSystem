@@ -3,12 +3,12 @@
 <mapper namespace="com.warrior.base.dao.ResourcesDao" >
 
     <select id="getListByParentId" parameterType="int" resultType="com.warrior.base.entity.Resources">
-        SELECT * FROM warrior.warrior_resources
+        SELECT * FROM warrior_resources
         WHERE parent_id = #{parentId}
     </select>
 
     <select id="getListByPage" resultType="com.warrior.base.entity.Resources">
-        SELECT wr.*,(SELECT res_name FROM warrior_resources where res_id = wr.parent_id) as parentName FROM warrior.warrior_resources wr
+        SELECT wr.*,(SELECT res_name FROM warrior_resources where res_id = wr.parent_id) as parentName FROM warrior_resources wr
         <where>
             ${ew.sqlSegment}
         </where>

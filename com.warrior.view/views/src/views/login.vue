@@ -10,7 +10,7 @@
       <Row :style="styleObject">
           <Col span="8" >&nbsp;</Col>
           <Col span="8">
-              <Card shadow>
+              <Card shadow style="opacity: 0.8;">
                   <p slot="title" style="text-align:center;">用户登录</p>
                   <Form ref="formInline" :model="formInline" :rules="ruleInline" inline style="height:150px;">
                     <FormItem prop="user" style="width:100%;">

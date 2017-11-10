@@ -3,13 +3,13 @@
 <mapper namespace="com.warrior.common.dao.UserDao" >
 
     <select id="getUserList" resultType="com.warrior.common.entity.User">
-        SELECT * FROM warrior.warrior_user
+        SELECT * FROM warrior_user
         <where>
             ${ew.sqlSegment}
         </where>
     </select>
 
     <select id="getByUserName" parameterType="java.lang.String" resultType="com.warrior.common.entity.User">
-        SELECT * FROM warrior.warrior_user WHERE user_name = #{userName}
+        SELECT * FROM warrior_user WHERE user_name = #{userName}
     </select>
 </mapper>
