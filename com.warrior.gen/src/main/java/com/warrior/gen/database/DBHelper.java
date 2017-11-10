@@ -3,7 +3,6 @@ package com.warrior.gen.database;
 import com.warrior.gen.model.Config;
 import com.warrior.gen.model.TableMeta;
 import org.apache.commons.lang.StringUtils;
-
 import java.sql.*;
 
 public class DBHelper {
@@ -13,9 +12,6 @@ public class DBHelper {
     private Connection connection;
     private DatabaseMetaData metaData;
 
-    private DBHelper() {
-    }
-
     private DBHelper(Config config) {
         try {
             Class.forName(config.getDriverClass());
@@ -24,7 +20,7 @@ public class DBHelper {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
 
     }

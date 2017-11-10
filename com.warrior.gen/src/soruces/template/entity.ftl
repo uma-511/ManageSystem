@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import java.io.Serializable;
-<#list importList as imp>
+<#list imports as imp>
 import ${imp};
 </#list>
 

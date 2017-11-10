@@ -2,10 +2,7 @@ package com.warrior.gen;
 
 import com.warrior.gen.database.DBHelper;
 import com.warrior.gen.exception.GenException;
-import com.warrior.gen.model.Attribute;
-import com.warrior.gen.model.Config;
-import com.warrior.gen.model.TableInfo;
-import com.warrior.gen.model.TableMeta;
+import com.warrior.gen.model.*;
 import com.warrior.gen.util.NameUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -47,6 +44,7 @@ public class CodeGen {
                     genMapper(table);
                     genService(table);
                     genServiceImpl(table);
+                    genController(table);
                 }
             }
         } catch (IOException e) {
@@ -57,14 +55,51 @@ public class CodeGen {
             e.printStackTrace();
         }
     }
+
+    private void genController(TableInfo table) throws IOException,TemplateException{
+        String packagePath = (table.getPackageName() + ".controller").replace(".","/");
+        String classPath = getPath() + File.separator + table.getModulePath() + File.separator +"src/main/java/"+packagePath;
+        String className = table.getEntityName()+"Controller";
+        Map<String,Object> root = new HashMap<>();
+        table.getImportList().clear();
+        for(Attribute attr : table.getAttrs()){
+            if(StringUtils.equals("Date",attr.getType())){
+                table.getImportList().add("java.util.Date");
+            }
+        }
+        root.put("packageName",table.getPackageName());
+        root.put("entityName",table.getEntityName());
+        root.put("className",className);
+        root.put("name",NameUtil.getCamelCaseName(table.getEntityName(),true));
+        root.put("swagger",table.getSwagger());
+        root.put("remark",table.getRemark());
+        root.put("args",table.getAttrs());
+        root.put("imports",table.getImportList());
+        File dir = new File(classPath);
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+        genFile("controller.ftl",new File(dir,className+".java"),root);
+    }
+
     private void genServiceImpl(TableInfo table) throws IOException,TemplateException{
         String packagePath = (table.getPackageName() + ".service.impl").replace(".","/");
         String classPath = getPath() + File.separator + table.getModulePath() + File.separator +"src/main/java/"+packagePath;
         String className = table.getEntityName()+"ServiceImpl";
         Map<String,Object> root = new HashMap<>();
+        table.getImportList().clear();
+        for(Attribute attr : table.getAttrs()){
+            if(StringUtils.equals("Date",attr.getType())){
+                table.getImportList().add("java.util.Date");
+            }else if(StringUtils.equals("String",attr.getType())){
+                table.getImportList().add("org.apache.commons.lang.StringUtils");
+            }
+        }
         root.put("packageName",table.getPackageName());
         root.put("entityName",table.getEntityName());
         root.put("className",className);
+        root.put("args",table.getAttrs());
+        root.put("imports",table.getImportList());
 
         File dir = new File(classPath);
         if (!dir.exists()){
@@ -78,9 +113,18 @@ public class CodeGen {
         String classPath = getPath() + File.separator + table.getModulePath() + File.separator +"src/main/java/"+packagePath;
         String className = table.getEntityName()+"Service";
         Map<String,Object> root = new HashMap<>();
+        table.getImportList().clear();
+        for(Attribute attr : table.getAttrs()){
+            if(StringUtils.equals("Date",attr.getType())){
+                table.getImportList().add("java.util.Date");
+            }
+        }
+
         root.put("packageName",table.getPackageName());
         root.put("entityName",table.getEntityName());
         root.put("className",className);
+        root.put("args",table.getAttrs());
+        root.put("imports",table.getImportList());
 
         File dir = new File(classPath);
         if (!dir.exists()){
@@ -138,14 +182,20 @@ public class CodeGen {
             meta.getImportList().add("io.swagger.annotations.ApiModel");
             meta.getImportList().add("io.swagger.annotations.ApiModelProperty");
         }
-        root.put("importList",meta.getImportList());
+        root.put("imports",meta.getImportList());
 
         List<Attribute> attrs = meta.getAttributeList();
-
+        String temp = "";
+        QueryParam param = null;
         for (Attribute attr : attrs){
-            attr.setName(hasPerfix ?
+            temp = hasPerfix ?
                     NameUtil.getCamelCaseName(attr.getName().replace(prefix,""),true) :
-                    NameUtil.getCamelCaseName(attr.getName(),true));
+                    NameUtil.getCamelCaseName(attr.getName(),true);
+            param = tableInfo.getParam(attr.getName());
+            if(param != null && StringUtils.equals(attr.getName(),param.getName())){
+                tableInfo.getAttrs().add(new Attribute(attr.getType(),temp,attr.getName(),param.getDefaultValue(),param.getRemark()));
+            }
+            attr.setName(temp);
         }
         root.put("attrs",attrs);
         File dir = new File(classPath);

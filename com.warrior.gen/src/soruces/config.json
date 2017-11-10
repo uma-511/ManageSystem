@@ -10,6 +10,18 @@
       "modulePath":"com.warrior.gen",
       "packageName":"com.warrior.gen",
       "remark":"用户信息",
+      "query":[
+        {
+          "name":"user_name",
+          "remark":"用户名",
+          "defaultValue":""
+        },
+        {
+          "name":"create_time",
+          "remark":"创建时间",
+          "defaultValue":null
+        }
+      ],
       "swagger":true
     }
   ]
