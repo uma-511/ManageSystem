@@ -44,7 +44,7 @@
                 <Page :total="total" size="small" :page-size="pageSize" show-elevator show-sizer @on-change="pageChange" @on-page-size-change="pageSizeChange"></Page>
             </div>
         </div>
-        <Modal v-model="showModel" :title="modelTitle" :mask-closable="false" :width="540">
+        <Modal v-model="showModel" :title="modelTitle" :mask-closable="false" :width="540" :closable="false">
             <Form ref="form-dict" :model="formInline" :rules="ruleInline" inline style="padding-right:30px;">
               <Row>
                 <Col span="12">

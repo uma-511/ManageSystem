@@ -69,7 +69,7 @@
           </div>
         </div>
     </div>
-    <Modal v-model="showModel" :title="modelTitle" :mask-closable="false" :width="540">
+    <Modal v-model="showModel" :title="modelTitle" :mask-closable="false" :width="540" :closable="false">
         <Form ref="form-res" :model="formInline" :rules="ruleInline" inline style="padding-right:30px;">
           <Row>
             <Col span="12">

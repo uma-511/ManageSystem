@@ -21,35 +21,34 @@
     <div class="layout-content">
         <div class="layout-content-main">
           <div class="layout-tools">
-            <Row>
-              <Col span="4">
+
+              <div style="display:inline;">
                 <span>用户名：</span>
                 <Input size="small" v-model="userName" style="width:120px;"></Input>
-              </Col>
-              <Col span="4" class="layout-col-padding">
+              </div>
+              <div style="display:inline;">
                 <span>类型：</span>
                 <Select size="small" placeholder="类型" v-model="type" style="width:120px;">
                     <Option :value="-1">全部</Option>
                     <Option v-for="item in sel_type" :value="item.dicKey" :key="item.dicKey">{{item.dicValue}}</Option>
                 </Select>
-              </Col>
-              <Col span="4" class="layout-col-padding">
+              </div>
+              <div style="display:inline;">
                 <span>状态：</span>
                 <Select size="small" placeholder="状态" v-model="status" style="width:120px;">
                     <Option :value="-1">全部</Option>
                     <Option v-for="item in sel_status" :key="item.dicKey" :value="item.dicKey">{{item.dicValue}}</Option>
                 </Select>
-              </Col>
-              <Col span="8" class="layout-col-padding">
+              </div>
+              <div style="display:inline;">
                 <span>注册时间：</span>
                 <DatePicker size="small" type="datetime" format="yyyy-MM-dd HH:mm" v-model="startTime" placeholder="选择开始日期" style="width:136px;"></DatePicker>
-
                 <DatePicker size="small" type="datetime" format="yyyy-MM-dd HH:mm" v-model="endTime" placeholder="选择结束日期" style="width:136px;"></DatePicker>
-              </Col>
-              <Col span="4" class="layout-col-padding">
-                  <Button type="primary" size="small" icon="ios-search" @click="query">查询</Button>
-              </Col>
-            </Row>
+              </div>
+              <div style="display:inline;">
+                <Button type="primary" size="small" icon="ios-search" @click="query">查询</Button>
+              </div>
+
             <Row style="margin-top: 10px;">
               <Col span="24">
                 <Button type="primary" size="small" icon="plus" @click="addItem()" v-if="checkPermission('admin:user:add')">新增</Button>
@@ -64,7 +63,7 @@
           </div>
         </div>
     </div>
-    <Modal v-model="showModel" :title="modelTitle" :mask-closable="false" :width="540">
+    <Modal v-model="showModel" :title="modelTitle" :mask-closable="false" :width="540" :closable="false">
         <Form ref="form-res" :model="formInline" :rules="ruleInline" inline style="padding-right:30px;">
           <Row>
             <Col span="12">
@@ -124,14 +123,14 @@
         </Form>
         <div slot="footer"></div>
     </Modal>
-    <Modal v-model="permissionModel" title="权限设置" :mask-closable="false" :width="240" style="padding-left:15px;">
+    <Modal v-model="permissionModel" title="权限设置" :mask-closable="false" :width="240" style="padding-left:15px;" :closable="false">
         <ZTree ref="pers_tree" :treeData="primissData" :options="treeOptions" />
         <div slot="footer">
             <Button type="default" size="large" @click="cancelBtn(1)">取消</Button>
             <Button type="primary" size="large" @click="okBtn" v-if="checkPermission('admin:userperm:update')">确定</Button>
         </div>
     </Modal>
-    <Modal v-model="roleModel" title="角色设置" :mask-closable="false" :width="240" style="padding-left:15px;">
+    <Modal v-model="roleModel" title="角色设置" :mask-closable="false" :width="240" style="padding-left:15px;" :closable="false">
         <ZTree ref="role_tree" :treeData="roleData" :options="treeOptions" />
         <div slot="footer">
             <Button type="default" size="large" @click="cancelBtn(2)">取消</Button>

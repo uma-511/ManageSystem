@@ -51,7 +51,7 @@
           </div>
         </div>
     </div>
-    <Modal v-model="showModel" :title="modelTitle" :mask-closable="false" :width="540">
+    <Modal v-model="showModel" :title="modelTitle" :mask-closable="false" :width="540" :closable="false">
         <Form ref="form-res" :model="formInline" :rules="ruleInline" inline style="padding-right:30px;">
           <Row>
             <Col span="12">
@@ -90,7 +90,7 @@
         </Form>
         <div slot="footer"></div>
     </Modal>
-    <Modal v-model="permissionModel" title="权限设置" :mask-closable="false" :width="240" style="padding-left:15px;">
+    <Modal v-model="permissionModel" title="权限设置" :mask-closable="false" :width="240" style="padding-left:15px;" :closable="false">
         <ZTree ref="pers_tree" :treeData="primissData" :options="treeOptions" />
         <div slot="footer">
             <Button type="default" size="large" @click="cancelBtn()">取消</Button>
