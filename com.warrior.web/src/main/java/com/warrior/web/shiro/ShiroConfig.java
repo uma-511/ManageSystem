@@ -83,7 +83,7 @@ public class ShiroConfig {
         sessionManager.setSessionValidationInterval(1000*60*5);
         sessionManager.setSessionValidationSchedulerEnabled(true);
         sessionManager.setSessionIdCookieEnabled(true);
-//        sessionManager.setSessionIdCookie(simpleCookie());
+        sessionManager.setSessionIdCookie(simpleCookie());
         sessionManager.setSessionIdUrlRewritingEnabled(false);
         sessionManager.setSessionDAO(enterpriseCacheSessionDAO());
         sessionManager.getSessionListeners().add(new ShiroSessionListener());

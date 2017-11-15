@@ -53,13 +53,6 @@ const routers = [{
                     title: '管理后台-系统日志'
                 },
                 component: (resolve) => require(['./views/log/syslog.vue'], resolve)
-            },
-            {
-                path: '/test/list',
-                meta: {
-                    title: '管理后台-测试'
-                },
-                component: (resolve) => require(['./views/test/index.vue'], resolve)
             }
         ]
     }

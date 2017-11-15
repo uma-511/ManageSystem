@@ -19,7 +19,7 @@ module.exports = merge(webpackBaseConfig, {
         chunkFilename: '[name].chunk.js'
     },
     plugins: [
-        new CleanWebpackPlugin(['dist']),
+        new CleanWebpackPlugin(['dist/*.*']),
         new ExtractTextPlugin({
             filename: '[name].css',
             allChunks: true
