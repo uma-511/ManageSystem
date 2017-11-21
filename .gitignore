@@ -5,3 +5,4 @@
 /**/target/**
 .idea/
 /com.warrior.test/**
+/npm-debug.log

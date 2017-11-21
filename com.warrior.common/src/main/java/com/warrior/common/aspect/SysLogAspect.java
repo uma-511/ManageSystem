@@ -1,5 +1,6 @@
 package com.warrior.common.aspect;
 
+import com.warrior.common.Contacts;
 import com.warrior.common.JSONMsg;
 import com.warrior.common.entity.SysLog;
 import com.warrior.common.entity.User;
@@ -52,11 +53,12 @@ public class SysLogAspect {
         MethodSignature signature = (MethodSignature)point.getSignature();
         Method method = signature.getMethod();
         SysLog log = new SysLog();
+        JSONMsg msg = (JSONMsg)result;
 
         com.warrior.common.annotation.SysLog sysLog = method.getAnnotation(com.warrior.common.annotation.SysLog.class);
 
         if (sysLog != null){
-            log.setOperation(sysLog.value());
+            log.setOperation(msg.getCode() == Contacts.CODE_SUCCESS ? sysLog.value() : sysLog.value() + "[操作失败]");
         }
 
         String className = point.getTarget().getClass().getName();
@@ -72,12 +74,11 @@ public class SysLogAspect {
         HttpServletRequest request = sra.getRequest();
 
         String token = request.getParameter("token");
-        if (StringUtils.isEmpty(token)){
-            JSONMsg msg = (JSONMsg)result;
+        User user = null;
+        if (StringUtils.isEmpty(token) && (msg.getCode() == Contacts.CODE_SUCCESS)){
             token = msg.getData().toString();
+            user = WarriorSession.getItem(token);
         }
-        User user = WarriorSession.getItem(token);
-
         if (user != null){
             log.setUserId(user.getUid());
             log.setUserName(user.getUserName());

@@ -79,6 +79,9 @@ public class WebUtils {
     }
 
     public static boolean checkUrl(String url){
+        if(StringUtils.equals(url,"/") || StringUtils.equals(url,"")){
+            return false;
+        }
         for (String str : Contacts.URL_NO_CHECK) {
             if (StringUtils.equals(url,str) || StringUtils.contains(url,str)){
                 return true;

@@ -13,7 +13,6 @@ import com.warrior.util.shiro.MD5;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 
@@ -29,34 +28,19 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
      * @param pwd
      */
     public String login(String userName, String pwd){
-        Subject subject = SecurityUtils.getSubject();
-        try {
-            UsernamePasswordToken token = new UsernamePasswordToken(userName,pwd);
-            subject.login(token);
-        } catch (UnknownAccountException e){
-            throw new WarriorException("账号不存在！",e);
-        } catch (LockedAccountException e){
-            throw new WarriorException("账号被锁定或被删除！",e);
-        } catch (IncorrectCredentialsException e){
-            throw new WarriorException("密码错误！");
-        } catch (ExcessiveAttemptsException e){
-            throw new WarriorException("密码错误5次账户锁定10分钟！",e);
-        } catch (AuthenticationException e) {
-            throw new WarriorException("登录认证失败！",e);
-        }
         User user = getByUserName(userName);
         String token = TokenUtil.getToken();
+        user.setToken(token);
+        baseMapper.updateById(user);
         WarriorSession.setItem(token,user);
-        subject.getSession().setAttribute("uid",user.getUid());
-        return token;
+        return user.getToken();
     }
 
     /**
      * 用户登出
      */
     public void logOut(){
-        Subject subject = SecurityUtils.getSubject();
-        subject.logout();
+        WarriorSession.removeItem(getToken());
     }
 
     /**
@@ -122,13 +106,19 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
         return baseMapper.deleteById(id) > 0 ? true : false;
     }
 
-    public boolean updatePassWord(String oldPw,String newPw,String token){
-        User user = baseMapper.selectById(WarriorSession.getItem(token).toString());
+    public boolean updatePassWord(String oldPw,String newPw){
+        User user = WarriorSession.getItem(getToken());
         if (!StringUtils.equals(MD5.genMd5(oldPw,user.genCredentialsSalt()),user.getPassWord())){
             throw new WarriorException("原密码不正确！");
         }
         user.setPassWord(MD5.genMd5(newPw,user.genCredentialsSalt()));
 
         return baseMapper.updateById(user) > 0 ? true : false;
+    }
+
+    @Override
+    public String vailPassword(String password) {
+        User user = WarriorSession.getItem(getToken());
+        return StringUtils.equals(MD5.genMd5(password,user.genCredentialsSalt()),user.getPassWord()) ? user.getToken() : "";
     }
 }

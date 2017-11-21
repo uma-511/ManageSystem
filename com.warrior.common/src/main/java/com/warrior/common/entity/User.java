@@ -19,31 +19,31 @@ public class User implements Serializable{
     @Getter @Setter
     private long uid;
 
-    @ApiModelProperty(value = "用户名",required = true)
+    @ApiModelProperty(value = "用户名")
     @Getter @Setter
     private String userName;
 
-    @ApiModelProperty(value = "用户密码",required = true)
+    @ApiModelProperty(value = "用户密码")
     @Getter @Setter
     private String passWord;
 
-    @ApiModelProperty(value = "盐(加密因子)",required = true)
+    @ApiModelProperty(value = "盐(加密因子)")
     @Getter @Setter
     private String salt;
 
-    @ApiModelProperty(value = "性别",required = true)
+    @ApiModelProperty(value = "性别")
     @Getter @Setter
     private String gender;
 
-    @ApiModelProperty(value = "年龄",required = true)
+    @ApiModelProperty(value = "年龄")
     @Getter @Setter
     private int age;
 
-    @ApiModelProperty(value = "用户类型",required = true)
+    @ApiModelProperty(value = "用户类型")
     @Getter @Setter
     private int userType;
 
-    @ApiModelProperty(value = "用户状态",required = true)
+    @ApiModelProperty(value = "用户状态")
     @Getter @Setter
     private int status;
 
@@ -55,6 +55,8 @@ public class User implements Serializable{
     @Getter @Setter
     private Date updateTime;
 
+    @Getter @Setter
+    private String token;
 
     public User() {
     }

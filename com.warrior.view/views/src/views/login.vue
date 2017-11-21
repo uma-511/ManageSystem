@@ -1,108 +1,96 @@
-<style scoped>
-  .bg{
-    background-image:url(http://127.0.0.1:8083/images/bg.jpg);
-    background-position: center;
-    background-size: cover;
-  }
+<style lang="less">
+@import "./login.less";
 </style>
+
 <template>
-    <div class="bg">
-      <Row :style="styleObject">
-          <Col span="8" >&nbsp;</Col>
-          <Col span="8">
-              <Card shadow style="opacity: 0.8;">
-                  <p slot="title" style="text-align:center;">用户登录</p>
-                  <Form ref="formInline" :model="formInline" :rules="ruleInline" inline style="height:150px;">
-                    <FormItem prop="user" style="width:100%;">
-                        <Input type="text" v-model="formInline.user" placeholder="Username" :disabled="logining">
-                            <Icon type="ios-person-outline" slot="prepend"></Icon>
-                        </Input>
-                    </FormItem>
-                    <FormItem prop="password" style="width:100%;">
-                        <Input type="password" v-model="formInline.password" placeholder="Password" :disabled="logining">
-                            <Icon type="ios-locked-outline" slot="prepend"></Icon>
-                        </Input>
-                    </FormItem>
-                    <FormItem style="width:100%;text-align:center;">
-                        <Button type="primary" @click="handleSubmit('formInline')" :loading="logining">
-                          <span v-if="!logining">登录</span>
-                          <span v-else>系统登录中...</span>
-                        </Button>
-                    </FormItem>
-                </Form>
-              </Card>
-          </Col>
-          <Col span="8" >&nbsp;</Col>
-      </Row>
+    <div class="login" @keydown.enter="handleSubmit">
+        <div class="login-con">
+            <Card :bordered="false">
+                <p slot="title">
+                    <Icon type="log-in"></Icon>
+                    欢迎登录
+                </p>
+                <div class="form-con">
+                    <Form ref="loginForm" :model="form" :rules="rules">
+                        <FormItem prop="userName">
+                            <Input v-model="form.userName" placeholder="请输入用户名" :disabled="logining">
+                                <span slot="prepend">
+                                    <Icon :size="16" type="person"></Icon>
+                                </span>
+                            </Input>
+                        </FormItem>
+                        <FormItem prop="password">
+                            <Input type="password" v-model="form.password" placeholder="请输入密码" :disabled="logining">
+                                <span slot="prepend">
+                                    <Icon :size="14" type="locked"></Icon>
+                                </span>
+                            </Input>
+                        </FormItem>
+                        <FormItem>
+                            <Button @click="handleSubmit" type="primary" long :loading="logining">
+                                <span v-if="!logining">登录</span>
+                                <span v-else>系统登录中...</span>
+                            </Button>
+                        </FormItem>
+                    </Form>
+                </div>
+            </Card>
+        </div>
     </div>
 </template>
-<script>
-  import util from '../libs/util';
 
-  export default{
-      data(){
-        return {
-            logining:false,
-            formHeight: 0,
-            formInline: {
-              user: '',
-              password: ''
-            },
-            ruleInline: {
-              user: [
-                { required: true, message: '请填写用户名', trigger: 'blur' }
-              ],
-              password: [
-                {required: true, message: '请填写密码', trigger: 'blur' },
-                { type: 'string', min: 6, message: '密码长度不能小于6位', trigger: 'blur' }
-              ]
-            },
-            styleObject:{
-              background:'transparent',
-              height:document.documentElement.clientHeight+'px',
-              paddingTop:(document.documentElement.clientHeight/3)+'px'
-            }
-        };
+<script>
+import Cookies from "js-cookie";
+import util from "../libs/util";
+
+export default {
+  data() {
+    return {
+      logining: false,
+      form: {
+        userName: "",
+        password: ""
       },
-      created() {
-        util.vue = this;
-        if(localStorage.getItem('currentUser')){
-           this.$router.push('/index');
-        }
-        window.addEventListener('resize',this.handleResize);
-        window.addEventListener('keydown',this.handleKeyDown);
-      },
-      beforeDestroy() {
-        window.removeEventListener('resize',this.handleResize);
-        window.removeEventListener('keydown',this.handleKeyDown);
-      },
-      methods: {
-        showErrorMsg(msg){
-          this.$Message.error(msg);
-        },
-        handleResize(event) {
-          this.styleObject.height = document.documentElement.clientHeight+'px';
-          this.styleObject.paddingTop = (document.documentElement.clientHeight/3)+'px';
-        },
-        handleKeyDown(event){
-          if((event.keyCode | event.which) == 13){
-            this.handleSubmit('formInline');
-          }
-        },
-        handleSubmit(name) {
-          this.$refs[name].validate((valid) => {
-            if (valid) {
-              this.logining = true;
-              util.ajax.post('/doLogin',{
-                  userName:this.formInline.user,
-                  passWord:this.formInline.password
-              }).then(rep=>{
-                  localStorage.setItem('currentUser',rep);
-                  this.$router.push('/index');
-              });
-            }
-          })
-        }
+      rules: {
+        userName: [{ required: true, message: "账号不能为空", trigger: "blur" }],
+        password: [{ required: true, message: "密码不能为空", trigger: "blur" }]
       }
+    };
+  },
+  created() {
+    util.vue = this;
+  },
+  methods: {
+    handleSubmit() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.logining = true;
+          util.ajax
+            .post("/doLogin", {
+              userName: this.form.userName,
+              passWord: this.form.password
+            })
+            .then(rep => {
+              if (rep.code === 0) {
+                Cookies.set("token", rep.data);
+                Cookies.set("userName",this.form.userName);
+                this.$store.commit(
+                  "setAvator",
+                  "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg"
+                );
+                this.$router.push({
+                  name: "home_index"
+                });
+              }
+              this.logining = false;
+            });
+        }
+      });
+    }
   }
+};
 </script>
+
+<style>
+
+</style>

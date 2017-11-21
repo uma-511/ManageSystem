@@ -19,5 +19,7 @@ public interface UserService extends IService<User> {
 
     boolean modified(User user);
 
-    boolean updatePassWord(String oldPw,String newPw,String token);
+    boolean updatePassWord(String oldPw,String newPw);
+
+    String vailPassword(String password);
 }

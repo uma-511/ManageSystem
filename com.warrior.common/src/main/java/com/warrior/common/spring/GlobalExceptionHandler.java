@@ -1,6 +1,8 @@
 package com.warrior.common.spring;
 
+import com.warrior.common.Contacts;
 import com.warrior.common.JSONMsg;
+import com.warrior.common.exception.WarriorException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -16,13 +18,17 @@ public class GlobalExceptionHandler implements HandlerExceptionResolver{
 
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
-        e.printStackTrace();
         ModelAndView model = new ModelAndView();
         model.setView(new JSONView());
-        model.addObject("success", JSONMsg.FLAG_FAIL);
         if (e instanceof UnauthorizedException){
-            model.addObject("msg","无访问权限！");
-        }else{
+            model.addObject("code", Contacts.CODE_NO_PERMISSION);
+            model.addObject("msg",Contacts.ERROR_MSG.get(Contacts.CODE_NO_PERMISSION));
+        } else if(e instanceof WarriorException){
+            WarriorException waException = (WarriorException)e;
+            model.addObject("code", waException.getCode());
+            model.addObject("msg", waException.getMessage());
+        } else {
+            model.addObject("code", Contacts.CODE_FAIL);
             model.addObject("msg",StringUtils.isBlank(e.getMessage()) ? DEFAULT_ERROR_MESSAGE : e.getMessage());
         }
         return model;
