@@ -1,10 +1,10 @@
-package com.warrior.common.aspect;
+package com.warrior.base.aspect;
 
 import com.warrior.common.Contacts;
 import com.warrior.common.JSONMsg;
-import com.warrior.common.entity.SysLog;
-import com.warrior.common.entity.User;
-import com.warrior.common.service.SysLogService;
+import com.warrior.base.entity.SysLog;
+import com.warrior.base.entity.User;
+import com.warrior.base.service.SysLogService;
 import com.warrior.common.web.WebUtils;
 import com.warrior.util.common.JSONUtils;
 import com.warrior.common.web.WarriorSession;

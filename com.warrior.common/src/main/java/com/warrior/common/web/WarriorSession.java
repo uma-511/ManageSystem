@@ -1,11 +1,11 @@
 package com.warrior.common.web;
 
-import com.warrior.common.entity.User;
-import com.warrior.common.service.UserService;
 import com.warrior.util.spring.SpringUtil;
 import lombok.extern.log4j.Log4j;
 import net.sf.ehcache.*;
 import net.sf.ehcache.event.CacheEventListener;
+import org.apache.commons.lang.StringUtils;
+import org.joor.Reflect;
 
 @Log4j
 public class WarriorSession implements CacheEventListener {
@@ -71,11 +71,11 @@ public class WarriorSession implements CacheEventListener {
     }
 
     private void cleanToken(Element element){
-        if (element.getObjectValue() instanceof User) {
-            User user = (User) element.getObjectValue();
-            user.setToken("");
-            UserService userService = SpringUtil.getBean("userServiceImpl");
-            userService.updateById(user);
+        if (element.getObjectValue() != null && StringUtils.equals(element.getObjectValue().getClass().getSimpleName(),"User")) {
+            Object user = element.getObjectValue();
+            Reflect.on(user).call("setToken","");
+            Object userService = SpringUtil.getBean("userServiceImpl");
+            Reflect.on(userService).call("updateById",user);
         }
     }
 }

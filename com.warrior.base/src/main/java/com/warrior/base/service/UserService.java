@@ -1,10 +1,11 @@
-package com.warrior.common.service;
+package com.warrior.base.service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
-import com.warrior.common.entity.User;
+import com.warrior.base.entity.User;
 
 import java.util.Date;
+import java.util.Map;
 
 public interface UserService extends IService<User> {
     String login(String userName, String pwd);
@@ -22,4 +23,6 @@ public interface UserService extends IService<User> {
     boolean updatePassWord(String oldPw,String newPw);
 
     String vailPassword(String password);
+
+    Map<String,Object> getUserSimpleInfo();
 }

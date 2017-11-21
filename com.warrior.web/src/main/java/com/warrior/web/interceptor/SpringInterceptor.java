@@ -2,7 +2,7 @@ package com.warrior.web.interceptor;
 
 import com.google.common.collect.Maps;
 import com.warrior.common.Contacts;
-import com.warrior.common.entity.User;
+import com.warrior.base.entity.User;
 import com.warrior.common.exception.WarriorException;
 import com.warrior.common.web.WarriorSession;
 import com.warrior.common.web.WebUtils;

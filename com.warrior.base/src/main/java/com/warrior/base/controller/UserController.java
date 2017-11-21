@@ -1,9 +1,9 @@
-package com.warrior.common.controller;
+package com.warrior.base.controller;
 
 import com.warrior.common.JSONMsg;
 import com.warrior.common.annotation.SysLog;
-import com.warrior.common.entity.User;
-import com.warrior.common.service.UserService;
+import com.warrior.base.entity.User;
+import com.warrior.base.service.UserService;
 import com.warrior.common.web.WarriorBaseController;
 import com.warrior.common.web.WarriorSession;
 import io.swagger.annotations.Api;
@@ -39,6 +39,12 @@ public class UserController extends WarriorBaseController {
                     String token) {
         User user = WarriorSession.getItem(token);
         return buildMsg(userService.selectById(user.getUid()));
+    }
+
+    @ApiOperation(value = "获取当前用户的基本信息", httpMethod = "GET", response = JSONMsg.class)
+    @RequestMapping(value = "/getBaseInfo",method = RequestMethod.GET)
+    public JSONMsg getSimpleUserInfo(){
+        return buildMsg(userService.getUserSimpleInfo());
     }
 
     @SysLog(value = "修改用户信息")

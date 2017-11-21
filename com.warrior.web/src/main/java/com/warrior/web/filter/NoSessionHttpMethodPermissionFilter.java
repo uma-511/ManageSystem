@@ -1,8 +1,8 @@
 package com.warrior.web.filter;
 
 import com.warrior.common.Contacts;
-import com.warrior.common.entity.User;
-import com.warrior.common.service.UserService;
+import com.warrior.base.entity.User;
+import com.warrior.base.service.UserService;
 import com.warrior.common.web.WarriorSession;
 import com.warrior.util.spring.SpringUtil;
 import lombok.extern.log4j.Log4j;
@@ -66,6 +66,7 @@ public class NoSessionHttpMethodPermissionFilter extends HttpMethodPermissionFil
             log.error("密码错误5次账户锁定10分钟！");
             request.setAttribute(Contacts.SHIRO_EXCEPTION, Contacts.CODE_PASSWORD_ERROR_5);
         } catch (AuthenticationException e) {
+            e.printStackTrace();
             log.error("登录认证失败！");
             request.setAttribute(Contacts.SHIRO_EXCEPTION, Contacts.CODE_LOGIN_FAIL);
         }

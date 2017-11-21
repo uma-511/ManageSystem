@@ -1,13 +1,15 @@
-package com.warrior.common.service.impl;
+package com.warrior.base.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.google.common.collect.Lists;
-import com.warrior.common.dao.SysLogDao;
-import com.warrior.common.entity.SysLog;
-import com.warrior.common.service.SysLogService;
+import com.warrior.base.dao.SysLogDao;
+import com.warrior.base.entity.SysLog;
+import com.warrior.base.service.SysLogService;
+import com.warrior.common.service.WarriorBaseServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -38,5 +40,15 @@ public class SysLogServiceImpl extends WarriorBaseServiceImpl<SysLogDao,SysLog> 
 
     public boolean delAll(){
         return super.delete(new EntityWrapper<SysLog>());
+    }
+
+    public SysLog getLastLogin(long uid){
+        EntityWrapper<SysLog> ew = new EntityWrapper<>();
+        ew.eq("user_id",uid);
+        ew.eq("operation","用户登录");
+        ew.orderBy("create_time",false);
+        ew.last("limit 0,1");
+        List<SysLog> list = baseMapper.selectList(ew);
+        return list != null && list.size() > 0 ? list.get(0) : null;
     }
 }

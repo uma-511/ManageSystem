@@ -1,4 +1,4 @@
-package com.warrior.common.model;
+package com.warrior.base.model;
 
 import lombok.Getter;
 import lombok.Setter;

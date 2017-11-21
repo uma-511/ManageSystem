@@ -78,6 +78,7 @@ router.afterEach(() => {
 // 状态管理
 const store = new Vuex.Store({
     state: {
+        user: [],
         permission: '', //当前用户权限
         routers: [
             otherRouter,
@@ -107,11 +108,15 @@ const store = new Vuex.Store({
     getters: {
         getPerStr: state => {
             return state.permission;
+        },
+        getUser: state => {
+            return state.user;
         }
     },
     mutations: {
-        setPermission(state, permission) {
-            state.permission = permission;
+        initUserInfo(state, user) {
+            state.user = user;
+            state.permission = user.perStr;
         },
         setTagsList(state, list) {
             state.tagsList.push(...list);

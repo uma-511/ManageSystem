@@ -1,4 +1,4 @@
-package com.warrior.common.model;
+package com.warrior.base.model;
 
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;

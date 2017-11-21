@@ -1,4 +1,4 @@
-package com.warrior.common.entity;
+package com.warrior.base.entity;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;

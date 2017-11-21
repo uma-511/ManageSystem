@@ -1,8 +1,8 @@
-package com.warrior.common.controller;
+package com.warrior.base.controller;
 
 import com.warrior.common.JSONMsg;
 import com.warrior.common.annotation.SysLog;
-import com.warrior.common.service.SysLogService;
+import com.warrior.base.service.SysLogService;
 import com.warrior.common.web.WarriorBaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

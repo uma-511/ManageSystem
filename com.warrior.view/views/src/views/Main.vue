@@ -137,9 +137,11 @@ export default {
   methods: {
     init() {
       util.vue = this;
-      util.ajax.get("/permission/userPermission").then(rep => {
+      util.ajax.get("/user/getBaseInfo").then(rep => {
         if (rep.code === 0) {
-          this.$store.commit("setPermission", rep.data.permStr);
+          let user = rep.data;
+          user.lastTime = util.formatDate(new Date(user.lastTime),'yyyy-MM-dd hh:mm:ss');
+          this.$store.commit('initUserInfo',user);
           // 权限菜单过滤相关
           this.$store.commit("updateMenulist");
         }
@@ -149,7 +151,7 @@ export default {
       if (pathArr.length >= 2) {
         this.$store.commit("addOpenSubmenu", pathArr[1].name);
       }
-      this.userName = Cookies.get("user");
+      this.userName = Cookies.get("userName");
       let messageCount = 3;
       this.messageCount = messageCount.toString();
       this.checkTag(this.$route.name);
@@ -168,7 +170,6 @@ export default {
         util.ajax.get("/doLogOut").then(rep => {
           if (rep.code === 0) {
             Cookies.remove("token");
-            Cookies.remove("userName");
             Cookies.remove("hasGreet");
             this.$Notice.close("greeting");
             this.$store.commit("clearOpenedSubmenu");
@@ -274,7 +275,7 @@ export default {
         title: "",
         words: ""
       };
-      let userName = Cookies.get("user");
+      let userName = Cookies.get("userName");
       if (hour > 5 && hour < 6) {
         greetingWord = { title: "凌晨好~" + userName, words: "早起的鸟儿有虫吃~" };
       } else if (hour >= 6 && hour < 9) {

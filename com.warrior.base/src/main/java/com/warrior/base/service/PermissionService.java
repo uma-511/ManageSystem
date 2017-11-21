@@ -2,7 +2,7 @@ package com.warrior.base.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.warrior.base.entity.Permission;
-import com.warrior.common.model.ResourceModel;
+import com.warrior.base.model.ResourceModel;
 
 import java.util.LinkedList;
 import java.util.List;

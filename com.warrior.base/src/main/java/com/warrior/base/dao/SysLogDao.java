@@ -1,9 +1,9 @@
-package com.warrior.common.dao;
+package com.warrior.base.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
-import com.warrior.common.entity.SysLog;
+import com.warrior.base.entity.SysLog;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

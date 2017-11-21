@@ -1,4 +1,4 @@
-package com.warrior.common.service.impl;
+package com.warrior.common.service;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;

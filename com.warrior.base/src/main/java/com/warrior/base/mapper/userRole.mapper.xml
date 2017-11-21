@@ -6,4 +6,10 @@
         select ur.role_id from warrior_user_role ur where ur.user_id=#{uid}
     </select>
 
+    <select id="getRoleNameByUser" resultType="String">
+        select group_concat(wr.role_name) as roleName FROM warrior_user_role ur
+        LEFT JOIN warrior_role wr ON ur.role_id = wr.rid
+        where ur.user_id = #{uid}
+        GROUP BY ur.user_id
+    </select>
 </mapper>

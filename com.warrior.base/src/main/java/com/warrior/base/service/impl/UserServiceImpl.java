@@ -1,26 +1,41 @@
-package com.warrior.common.service.impl;
+package com.warrior.base.service.impl;
 
 import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.warrior.common.dao.UserDao;
-import com.warrior.common.entity.User;
+import com.google.common.collect.Maps;
+import com.warrior.base.dao.UserDao;
+import com.warrior.base.entity.SysLog;
+import com.warrior.base.entity.User;
+import com.warrior.base.service.PermissionService;
+import com.warrior.base.service.SysLogService;
+import com.warrior.base.service.UserRoleService;
+import com.warrior.base.service.UserService;
 import com.warrior.common.exception.WarriorException;
-import com.warrior.common.service.UserService;
+import com.warrior.common.service.WarriorBaseServiceImpl;
 import com.warrior.common.web.WarriorSession;
 import com.warrior.util.common.TokenUtil;
 import com.warrior.util.shiro.MD5;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Map;
 
 @Log4j
 @Service
 public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implements UserService{
+
+    @Autowired
+    private SysLogService sysLogService;
+
+    @Autowired
+    private PermissionService permissionService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     /**
      * 用户登录
@@ -120,5 +135,19 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
     public String vailPassword(String password) {
         User user = WarriorSession.getItem(getToken());
         return StringUtils.equals(MD5.genMd5(password,user.genCredentialsSalt()),user.getPassWord()) ? user.getToken() : "";
+    }
+
+    public Map<String,Object> getUserSimpleInfo(){
+        User user = WarriorSession.getItem(getToken());
+        Map<String,Object> data = Maps.newHashMap();
+        data.put("userName",user.getUserName());
+        data.put("img",user.getImg());
+        SysLog log = sysLogService.getLastLogin(user.getUid());
+        data.put("lastTime",log==null ? "" : log.getCreateTime());
+        data.put("ip",log == null ? "" : log.getIp());
+        data.put("perStr",permissionService.getPermissionStr(user.getUid()));
+        data.put("roleName",userRoleService.getRoleNameByUser(user.getUid()));
+
+        return data;
     }
 }
