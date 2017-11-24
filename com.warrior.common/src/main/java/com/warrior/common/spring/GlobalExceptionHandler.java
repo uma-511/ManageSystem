@@ -1,8 +1,7 @@
 package com.warrior.common.spring;
 
 import com.warrior.common.Contacts;
-import com.warrior.common.JSONMsg;
-import com.warrior.common.exception.WarriorException;
+import com.warrior.util.exception.BaseException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -23,9 +22,9 @@ public class GlobalExceptionHandler implements HandlerExceptionResolver{
         if (e instanceof UnauthorizedException){
             model.addObject("code", Contacts.CODE_NO_PERMISSION);
             model.addObject("msg",Contacts.ERROR_MSG.get(Contacts.CODE_NO_PERMISSION));
-        } else if(e instanceof WarriorException){
-            WarriorException waException = (WarriorException)e;
-            model.addObject("code", waException.getCode());
+        } else if(e instanceof BaseException){
+            BaseException waException = (BaseException)e;
+            model.addObject("code", waException.getCode() == 0 ? Contacts.CODE_FAIL : waException.getCode());
             model.addObject("msg", waException.getMessage());
         } else {
             model.addObject("code", Contacts.CODE_FAIL);

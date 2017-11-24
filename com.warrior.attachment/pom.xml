@@ -7,11 +7,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.warrior</groupId>
-    <artifactId>com.warrior.base</artifactId>
+    <groupId>com.warrior.attachment</groupId>
+    <artifactId>com.warrior.attachment</artifactId>
     <packaging>jar</packaging>
 
-    <name>com.warrior.base</name>
+    <name>com.warrior.attachment</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -21,21 +21,10 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.warrior</groupId>
-            <artifactId>com.warrior.util</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.warrior.common</groupId>
             <artifactId>com.warrior.common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.warrior.attachment</groupId>
-            <artifactId>com.warrior.attachment</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -44,4 +33,3 @@
         </dependency>
     </dependencies>
 </project>
-

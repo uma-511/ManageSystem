@@ -31,7 +31,7 @@ public class SpringInterceptor extends HandlerInterceptorAdapter {
             }
             long time = Long.parseLong(request.getParameter("time"));
             if((System.currentTimeMillis() - time) > 1000 * 60){
-                throw new WarriorException(Contacts.CODE_REQUEST_TIMEOUT,"非法请求，请求时间过长！");
+                throw new WarriorException(Contacts.CODE_REQUEST_TIMEOUT,"非法请求，请求超时！");
             }
             Enumeration<String> params = request.getParameterNames();
             Map<String,String> data = Maps.newHashMap();

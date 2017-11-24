@@ -42,6 +42,7 @@
 <script>
 import Cookies from "js-cookie";
 import util from "../libs/util";
+import swal from 'sweetalert';
 
 export default {
   data() {
@@ -74,12 +75,16 @@ export default {
               if (rep.code === 0) {
                 Cookies.set("token", rep.data);
                 Cookies.set("userName",this.form.userName);
-                this.$store.commit(
-                  "setAvator",
-                  "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg"
-                );
-                this.$router.push({
-                    name: "home_index"
+                swal({
+                    text: "登录成功!",
+                    icon: "success",
+                    buttons:false,
+                    closeOnClickOutside:false,
+                    timer:2000
+                }).then((value)=>{
+                    this.$router.push({
+                        name: "home_index"
+                    });
                 });
               }
               this.logining = false;

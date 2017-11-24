@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.enums.SqlLike;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.google.common.collect.Maps;
+import com.warrior.attachment.FileTypes;
+import com.warrior.attachment.service.AttachmentService;
 import com.warrior.base.dao.UserDao;
 import com.warrior.base.entity.SysLog;
 import com.warrior.base.entity.User;
@@ -11,6 +13,7 @@ import com.warrior.base.service.PermissionService;
 import com.warrior.base.service.SysLogService;
 import com.warrior.base.service.UserRoleService;
 import com.warrior.base.service.UserService;
+import com.warrior.common.Contacts;
 import com.warrior.common.exception.WarriorException;
 import com.warrior.common.service.WarriorBaseServiceImpl;
 import com.warrior.common.web.WarriorSession;
@@ -20,7 +23,9 @@ import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 
@@ -36,6 +41,9 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private AttachmentService attachmentService;
 
     /**
      * 用户登录
@@ -116,7 +124,7 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
     public boolean delete(long id) {
         User user = baseMapper.selectById(id);
         if (StringUtils.equals("admin",user.getUserName())){
-            throw new WarriorException("admin账户不能删除！");
+            throw new WarriorException(Contacts.CODE_FAIL,"admin账户不能删除！");
         }
         return baseMapper.deleteById(id) > 0 ? true : false;
     }
@@ -149,5 +157,18 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
         data.put("roleName",userRoleService.getRoleNameByUser(user.getUid()));
 
         return data;
+    }
+
+    @Transactional
+    public String uploadImg(HttpServletRequest request){
+        String id = attachmentService.uploadFile(request, FileTypes.IMAGE.getIndex());
+        if(!StringUtils.isEmpty(id)){
+            User user = WarriorSession.getItem(getToken());
+            user.setImg(id);
+           if(baseMapper.updateById(user) > 0){
+               return id;
+           }
+        }
+        return "";
     }
 }

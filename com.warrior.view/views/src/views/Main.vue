@@ -58,7 +58,7 @@
                                     <DropdownItem name="loginout" divided>退出登录</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                            <Avatar :src="avatorPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
+                            <Avatar :src="user.img" style="background: #619fe7;margin-left: 10px;"></Avatar>
                         </Row>
                     </div>
                 </div>
@@ -121,9 +121,6 @@ export default {
     menuIconColor() {
       return this.$store.state.menuTheme === "dark" ? "white" : "#495060";
     },
-    avatorPath() {
-      return localStorage.avatorImgPath;
-    },
     cachePage() {
       return this.$store.state.cachePage;
     },
@@ -132,6 +129,9 @@ export default {
     },
     isFullScreen() {
       return this.$store.state.isFullScreen;
+    },
+    user(){
+      return this.$store.getters.getUser;
     }
   },
   methods: {
@@ -140,8 +140,13 @@ export default {
       util.ajax.get("/user/getBaseInfo").then(rep => {
         if (rep.code === 0) {
           let user = rep.data;
-          user.lastTime = util.formatDate(new Date(user.lastTime),'yyyy-MM-dd hh:mm:ss');
-          this.$store.commit('initUserInfo',user);
+          user.lastTime = util.formatDate(
+            new Date(user.lastTime),
+            "yyyy-MM-dd hh:mm:ss"
+          );
+          user.img = util.ajaxUrl+((user.img && user.img!='' && user.img != null)
+          ? '/admin/attachment/file/'+user.img : '/images/avatar.png');
+          this.$store.commit("initUserInfo", user);
           // 权限菜单过滤相关
           this.$store.commit("updateMenulist");
         }

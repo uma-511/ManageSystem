@@ -271,9 +271,6 @@ const store = new Vuex.Store({
             });
             state.menuList = menuList;
         },
-        setAvator(state, path) {
-            localStorage.avatorImgPath = path;
-        },
         switchLang(state, lang) {
             state.lang = lang;
             Vue.config.lang = lang;

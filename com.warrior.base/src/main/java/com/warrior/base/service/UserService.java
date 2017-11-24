@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.warrior.base.entity.User;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 
@@ -25,4 +26,6 @@ public interface UserService extends IService<User> {
     String vailPassword(String password);
 
     Map<String,Object> getUserSimpleInfo();
+
+    String uploadImg(HttpServletRequest request);
 }

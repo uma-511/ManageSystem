@@ -260,12 +260,9 @@ export default {
                 },
                 on: {
                   increment: () => {
-                    this.$Modal.confirm({
-                      title: "操作提示",
-                      content: "确认删除当前数据？",
-                      onOk: () => {
-                        this.delItem(params.row.resId);
-                      }
+                    const _this = this;
+                    util.confirm("确认删除当前数据？",function(){
+                        _this.delItem(params.row.resId);
                     });
                   }
                 }
@@ -290,7 +287,6 @@ export default {
     };
   },
   created() {
-    util.vue = this;
     util.ajax.get("/dictionary/list/model/1").then(rep => {
       if (rep.code == 0) {
         this.sel_status = rep.data;
@@ -331,12 +327,14 @@ export default {
     },
     delItem(id) {
       util.ajax.delete("/resource/" + id).then(rep => {
-        this.$Message.info(rep.code == 0 ? "删除数据成功！" : "删除数据失败！");
         if (rep.code == 0) {
+          util.success("删除数据成功！");
           if (this.data.length == 1) {
             this.page = this.page - 1;
           }
           this.query();
+        }else{
+          util.error("删除数据失败！");
         }
       });
     },
@@ -381,7 +379,7 @@ export default {
           if (this.addOrUpdate === "add") {
             util.ajax.post("/resource", this.formInline).then(rep => {
               if (rep.code == 0) {
-                this.$Message.info("保存数据成功！");
+                util.success("保存数据成功！");
               }
               this.query();
               this.$refs["form-res"].resetFields();
@@ -391,7 +389,7 @@ export default {
           } else {
             util.ajax.put("/resource", this.formInline).then(rep => {
               if (rep.code == 0) {
-                this.$Message.info("保存数据成功！");
+                util.success("保存数据成功！");
               }
               this.query();
               this.$refs["form-res"].resetFields();
@@ -414,13 +412,6 @@ export default {
           }
         });
       }
-    },
-    checkPermission(perStr) {
-      let str = this.$store.getters.getPerStr;
-      if (str == undefined || str === "") {
-        return false;
-      }
-      return str.indexOf(perStr) >= 0 ? true : false;
     }
   }
 };

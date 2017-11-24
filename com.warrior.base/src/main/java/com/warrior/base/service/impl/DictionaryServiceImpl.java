@@ -8,6 +8,7 @@ import com.warrior.base.dao.DictionaryDao;
 import com.warrior.base.entity.Dictionary;
 import com.warrior.base.model.DictModel;
 import com.warrior.base.service.DictionaryService;
+import com.warrior.common.Contacts;
 import com.warrior.common.exception.WarriorException;
 import com.warrior.common.service.WarriorBaseServiceImpl;
 import lombok.extern.log4j.Log4j;
@@ -65,9 +66,9 @@ public class DictionaryServiceImpl extends WarriorBaseServiceImpl<DictionaryDao,
                modelList.add(model);
             }
         } catch (IllegalAccessException e) {
-            throw new WarriorException("服务端错误！",e);
+            throw new WarriorException(Contacts.CODE_FAIL,"服务端错误！",e);
         } catch (InvocationTargetException e) {
-            throw new WarriorException("服务端错误！",e);
+            throw new WarriorException(Contacts.CODE_FAIL,"服务端错误！",e);
         }
         return modelList;
     }

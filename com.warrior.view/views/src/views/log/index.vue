@@ -86,7 +86,6 @@ export default {
     };
   },
   created() {
-    util.vue = this;
     this.query();
   },
   methods: {
@@ -121,50 +120,41 @@ export default {
       if (this.selection.length == 0) {
         return false;
       }
-      this.$Modal.confirm({
-        title: "操作提示",
-        content: "确认删除当前所选数据？",
-        onOk: () => {
-          let ids = "";
-          this.selection.forEach(function(val) {
+      const _this = this;
+      util.confirm("确认删除当前所选数据？",function(){
+        let ids = "";
+          _this.selection.forEach(function(val) {
             ids += val.id + "-";
           });
           ids = ids.substr(0, ids.length - 1);
           util.ajax.delete("/syslog/" + ids).then(rep => {
-            this.$Message.info(rep.code == 0 ? "删除数据成功！" : "删除数据失败！");
             if (rep.code == 0) {
-              if (this.data.length == 1) {
-                this.page = this.page - 1;
+              util.success("删除数据成功！");
+              if (_this.data.length == 1) {
+                _this.page = _this.page - 1;
               }
-              this.query();
+              _this.query();
+            }else{
+              util.error("删除数据失败！");
             }
           });
-        }
       });
     },
     delAll() {
-      this.$Modal.confirm({
-        title: "操作提示",
-        content: "确认清空数据？",
-        onOk: () => {
-          util.ajax.delete("/syslog/all").then(rep => {
-            this.$Message.info(rep.code == 0 ? "删除数据成功！" : "删除数据失败！");
+      const _this = this;
+      util.confirm("确认清空数据？",function(){
+        util.ajax.delete("/syslog/all").then(rep => {
             if (rep.code == 0) {
-              if (this.data.length == 1) {
-                this.page = this.page - 1;
+              util.success("删除数据成功！");
+              if (_this.data.length == 1) {
+                _this.page = _this.page - 1;
               }
-              this.query();
+              _this.query();
+            }else{
+              util.error("删除数据失败！");
             }
           });
-        }
       });
-    },
-    checkPermission(perStr) {
-      let str = this.$store.getters.getPerStr;
-      if (str == undefined || str === "") {
-        return false;
-      }
-      return str.indexOf(perStr) >= 0 ? true : false;
     }
   }
 };

@@ -2,10 +2,11 @@ import axios from 'axios';
 import qs from 'qs';
 import crypto from 'crypto'
 import env from '../config/env';
+import swal from "sweetalert";
 import Cookies from 'js-cookie';
 
 let util = {
-    vue: null
+    ajaxUrl: ''
 };
 util.title = function(title) {
     title = title || '管理后台';
@@ -13,13 +14,13 @@ util.title = function(title) {
 };
 
 const ajaxUrl = env === 'development' ?
-    'http://127.0.0.1:8083/admin' :
+    'http://127.0.0.1:8083' :
     env === 'production' ?
-    'http://127.0.0.1:8083/admin' :
+    'http://127.0.0.1:8083' :
     'https://debug.url.com';
-
+util.ajaxUrl = ajaxUrl;
 util.ajax = axios.create({
-    baseURL: ajaxUrl,
+    baseURL: ajaxUrl + '/admin',
     timeout: 30000,
     headers: { 'X-Requested-With': 'XMLHttpRequest' },
     withCredentials: true
@@ -45,29 +46,28 @@ util.ajax.interceptors.request.use((config) => {
     }
     return config;
 }, (error) => {
-    util.vue.$Message.error({ content: '<span style="color:red;">网络错误！</span>', duration: 5, closable: true });
+    util.error("网络错误！");
     return Promise.reject(error);
 });
 
 util.ajax.interceptors.response.use((res) => {
     if (!res.data || res.data == "") {
-        util.vue.$Message.error({ content: '<span style="color:red;">服务器异常！</span>', duration: 5, closable: true });
+        util.error("服务器异常！");
         res.data = { 'code': -1 };
     } else {
         if (res.data.code != 0) {
-            if (res.data.code === 6) {
+            if (res.data.code == 6) {
                 Cookies.remove('token');
-                util.vue.$router.push({
-                    name: "login"
-                });
+                util.error('登录已失效，请重新登录！', function() { location.reload(); });
+            } else {
+                let data = res.data instanceof Object ? res.data : JSON.parse(res.data);
+                util.error((data.msg == undefined ? '服务端错误！' : data.msg));
             }
-            let data = res.data instanceof Object ? res.data : JSON.parse(res.data);
-            util.vue.$Message.error({ content: '<span style="color:red;">' + (data.msg == undefined ? '服务端错误！' : data.msg) + '</span>', duration: 5, closable: true });
         }
     }
     return res.data;
 }, (error) => {
-    util.vue.$Message.error({ content: '<span style="color:red;">网络错误！</span>', duration: 5, closable: true });
+    util.error("网络错误！");
     return Promise.reject(error);
 });
 
@@ -355,5 +355,53 @@ util.signStr = function(array) {
     md5.update(sign);
     return md5.digest('hex');
 }
+util.success = function(arg, callback) {
+    alertMsg(arg, "success", callback);
+}
+util.error = function(arg, callback) {
+    alertMsg(arg, "error", callback);
+}
+util.warning = function(arg, callback) {
+    alertMsg(arg, 'warning', callback);
+}
+util.info = function(arg, callback) {
+    alertMsg(arg, 'info', callback);
+}
+util.confirm = function(msg, ok, cancel) {
+    swal({
+        icon: 'warning',
+        text: msg,
+        buttons: {
+            cancel: '取消',
+            ok: { text: '确认', value: 'ok' }
+        },
+        closeOnClickOutside: false
+    }).then((val) => {
+        switch (val) {
+            case 'ok':
+                if (ok) { ok(); }
+                break;
+            default:
+                if (cancel) { cancel(); }
+        }
+    });
+}
 
+function alertMsg(arg, type, callback) {
+    if (arg instanceof Object) {
+        swal(arg).then((val) => {
+            if (callback) { callback(); }
+        });
+    } else {
+        swal({
+            text: arg,
+            icon: type,
+            buttons: false,
+            closeOnClickOutside: false,
+            timer: 2000
+        }).then((val) => {
+            if (callback) { callback(); }
+        });
+    }
+}
 export default util;

@@ -6,7 +6,7 @@
     <transition name="show-unlock">
         <div class="unlock-body-con" v-if="showUnlock" @keydown.enter="handleUnlock">
             <div @click="handleClickAvator" class="unlock-avator-con" :style="{marginLeft: avatorLeft}">
-                <img class="unlock-avator-img" :src="avatorPath">
+                <img class="unlock-avator-img" :src="user.img">
                 <div  class="unlock-avator-cover">
                     <span><Icon type="unlocked" :size="30"></Icon></span>
                     <p>解锁</p>
@@ -46,12 +46,9 @@ export default {
     }
   },
   computed: {
-    avatorPath() {
-      return localStorage.avatorImgPath;
+    user() {
+      return this.$store.getters.getUser;
     }
-  },
-  created() {
-    util.vue = this;
   },
   methods: {
     handleClickAvator() {
@@ -74,7 +71,7 @@ export default {
             Cookies.set('token',rep.data);
             this.$emit("on-unlock");
           } else {
-            this.$Message.error("密码错误,请重新输入。");
+            util.error("密码错误,请重新输入。");
           }
         });
     },

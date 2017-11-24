@@ -32,7 +32,7 @@ public class Contacts {
 
     public final static String SHIRO_EXCEPTION = "shiroException";
 
-    public final static String URL_NO_CHECK [] = {"/admin/doLogin","/admin/doLogOut","/swagger-resources","/v2/api-docs"};
+    public final static String URL_NO_CHECK [] = {"/admin/doLogin","/admin/doLogOut","/admin/attachment/file","/swagger-resources","/v2/api-docs"};
 
     public static Map<Integer,String> ERROR_MSG = new HashMap<>();
 

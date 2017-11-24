@@ -16,6 +16,24 @@
                     :label-width="100" 
                     label-position="right"
                 >
+                    <FormItem prop="img" label="头像：">
+                      <Upload
+                        ref="upload"
+                        :show-upload-list="false"
+                        :before-upload="handleBefore"
+                        :on-success="handleSuccess"
+                        :format="['jpg','jpeg','png']"
+                        :max-size="2048"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        type="drag"
+                        :action="url"
+                        style="display: inline-block;width:58px;">
+                        <div style="width: 58px;height:58px;line-height: 58px;">
+                          <img :src="user.img" v-if="user.img != null && user.img != ''" style="display:block;width:100%;height:auto;">
+                        </div>
+                      </Upload>
+                    </FormItem>
                     <FormItem label="用户名：" prop="userName">
                         <div style="display:inline-block;width:300px;">
                             <span>{{ userForm.userName }}</span>
@@ -73,6 +91,8 @@
 
 <script>
 import util from "../../libs/util";
+import Cookies from "js-cookie";
+
 export default {
   name: "own-space",
   data() {
@@ -84,6 +104,7 @@ export default {
       }
     };
     return {
+      url: "",
       userForm: {
         uid: "",
         userName: "",
@@ -113,7 +134,50 @@ export default {
       }
     };
   },
+  computed: {
+    user() {
+      return this.$store.getters.getUser;
+    }
+  },
   methods: {
+    handleBefore(file) {
+      let params = [];
+      params["token"] = Cookies.get("token");
+      params["time"] = new Date().getTime();
+      params["sign"] = util.signStr(params);
+      this.url =
+        util.ajaxUrl +
+        "/admin/user/updateHeadImage?token=" +
+        params["token"] +
+        "&time=" +
+        params["time"] +
+        "&sign=" +
+        params["sign"];
+      const _this = this;
+      this.$nextTick(() => {
+        _this.$refs.upload.post(file);
+      });
+      return false;
+    },
+    handleSuccess(res, file) {
+      if (res.data && res.data != "") {
+        let user = this.user;
+        user.img = util.ajaxUrl + "/admin/attachment/file/" + res.data;
+        this.$store.commit("initUserInfo", user);
+      }
+    },
+    handleFormatError(file) {
+      this.$Notice.warning({
+        title: "文件格式不正确",
+        desc: "文件 " + file.name + " 格式不正确，请上传 jpg 或 png 格式的图片。"
+      });
+    },
+    handleMaxSize(file) {
+      this.$Notice.warning({
+        title: "超出文件大小限制",
+        desc: "文件 " + file.name + " 太大，不能超过 2M。"
+      });
+    },
     showEditPassword() {
       this.editPasswordModal = true;
     },
@@ -135,7 +199,7 @@ export default {
     saveEdit() {
       util.ajax.put("/user/updateCurrentUser", this.userForm).then(rep => {
         if (rep.code === 0) {
-          this.$Message.info("保存数据成功！");
+          util.success("保存数据成功！");
         }
       });
     },
@@ -153,13 +217,11 @@ export default {
             })
             .then(rep => {
               if (rep.code == 0) {
-                this.$Message.info("密码修改成功！");
-              } else {
-                this.$Message.error("密码修改失败！");
+                util.success("密码修改成功！");
+                this.editPasswordModal = false;
               }
-              this.savePassLoading = false;
-              this.editPasswordModal = false;
               this.$refs["editPasswordForm"].resetFields();
+              this.savePassLoading = false;
             });
         }
       });
@@ -176,7 +238,6 @@ export default {
     }
   },
   mounted() {
-    util.vue = this;
     this.init();
   }
 };

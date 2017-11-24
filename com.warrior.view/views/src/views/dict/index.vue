@@ -182,7 +182,6 @@ export default {
     };
   },
   created() {
-    util.vue = this;
     util.ajax.get("/dictionary/type/list").then(rep => {
       if (rep.code == 0) {
         this.sel_type = rep.data;
@@ -213,20 +212,19 @@ export default {
       this.addOrUpdate = "add";
     },
     delItem(id) {
-      this.$Modal.confirm({
-        title: "操作提示",
-        content: "确认删除当前数据？",
-        onOk: () => {
-          util.ajax.delete("/dictionary/" + id).then(rep => {
-            this.$Message.info(rep.code == 0 ? "删除数据成功！" : "删除数据失败！");
+      const _this = this;
+      util.confirm("确认删除当前数据？",function(){
+        util.ajax.delete("/dictionary/" + id).then(rep => {
             if (rep.code == 0) {
-              if (this.data.length == 1) {
-                this.page = this.page - 1;
+              util.success("删除数据成功！");
+              if (_this.data.length == 1) {
+                _this.page = _this.page - 1;
               }
-              this.query();
+              _this.query();
+            }else{
+              util.error("删除数据失败！");
             }
           });
-        }
       });
     },
     pageChange(page) {
@@ -248,7 +246,7 @@ export default {
           if (this.addOrUpdate === "add") {
             util.ajax.post("/dictionary", this.formInline).then(rep => {
               if (rep.code == 0) {
-                this.$Message.info("保存数据成功！");
+                util.success("保存数据成功！");
               }
               this.query();
               this.$refs["form-dict"].resetFields();
@@ -258,7 +256,7 @@ export default {
           } else {
             util.ajax.put("/dictionary", this.formInline).then(rep => {
               if (rep.code == 0) {
-                this.$Message.info("保存数据成功！");
+                util.success("保存数据成功！");
               }
               this.query();
               this.$refs["form-dict"].resetFields();
@@ -268,13 +266,6 @@ export default {
           }
         }
       });
-    },
-    checkPermission(perStr) {
-      let str = this.$store.getters.getPerStr;
-      if (str == undefined || str === "") {
-        return false;
-      }
-      return str.indexOf(perStr) >= 0 ? true : false;
     }
   }
 };

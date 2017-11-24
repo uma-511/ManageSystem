@@ -79,7 +79,7 @@
         <ZTree ref="pers_tree" :treeData="primissData" :options="treeOptions" />
         <div slot="footer">
             <Button type="default" size="large" @click="cancelBtn()">取消</Button>
-            <Button type="primary" size="large" @click="okBtn" v-if="checkPermission('admin:roleperm:update')">确定</Button>
+            <permissionButton type="primary" size="large" v-on:increment="okBtn()" perStr="admin:roleperm:update" text="确定"></permissionButton>
         </div>
     </Modal>
   </div>
@@ -186,12 +186,9 @@ export default {
                 },
                 on: {
                   increment: () => {
-                    this.$Modal.confirm({
-                      title: "操作提示",
-                      content: "确认删除当前数据？",
-                      onOk: () => {
-                        this.delItem(params.row.rid);
-                      }
+                    const _this = this;
+                    util.confirm("确认删除当前数据？",function(){
+                        _this.delItem(params.row.rid);
                     });
                   }
                 }
@@ -210,7 +207,6 @@ export default {
     };
   },
   created() {
-    util.vue = this;
     util.ajax.get("/dictionary/list/model/1").then(rep => {
       if (rep.code === 0) {
         this.sel_status = rep.data;
@@ -238,12 +234,14 @@ export default {
     },
     delItem(id) {
       util.ajax.delete("/role/" + id).then(rep => {
-        this.$Message.info(rep.code == 0 ? "删除数据成功！" : "删除数据失败！");
         if (rep.code === 0) {
+          util.success('删除数据成功！');
           if (this.data.length == 1) {
             this.page = this.page - 1;
           }
           this.query();
+        }else{
+          util.error("删除数据失败！");
         }
       });
     },
@@ -280,7 +278,7 @@ export default {
           if (this.addOrUpdate === "add") {
             util.ajax.post("/role", this.formInline).then(rep => {
               if (rep.code == 0) {
-                this.$Message.info("保存数据成功！");
+                util.success('保存数据成功！');
               }
               this.query();
               this.$refs["form-res"].resetFields();
@@ -290,7 +288,7 @@ export default {
           } else {
             util.ajax.put("/role", this.formInline).then(rep => {
               if (rep.code == 0) {
-                this.$Message.info("保存数据成功！");
+                util.success('保存数据成功！');
               }
               this.query();
               this.$refs["form-res"].resetFields();
@@ -353,19 +351,12 @@ export default {
         })
         .then(rep => {
           if (rep.code === 0) {
-            this.$Message.info("保存数据成功！");
+            util.success('保存数据成功！');
             this.permissionModel = false;
           } else {
-            this.$Message.error("保存数据失败！");
+            util.error('保存数据失败！');
           }
         });
-    },
-    checkPermission(perStr) {
-      let str = this.$store.getters.getPerStr;
-      if (str == undefined || str === "") {
-        return false;
-      }
-      return str.indexOf(perStr) >= 0 ? true : false;
     }
   }
 };

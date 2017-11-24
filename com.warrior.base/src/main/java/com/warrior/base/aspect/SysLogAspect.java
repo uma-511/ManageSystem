@@ -66,8 +66,7 @@ public class SysLogAspect {
         log.setMethod(String.format("%s.%s()",className,methodName));
         Object [] args = point.getArgs();
         if(args != null && args.length >0 && args[0] != null){
-            String params = JSONUtils.toJson(args[0]);
-            log.setParams(params);
+            log.setParams(String.valueOf(args[0]));
         }
         RequestAttributes ra = RequestContextHolder.getRequestAttributes();
         ServletRequestAttributes sra = (ServletRequestAttributes)ra;

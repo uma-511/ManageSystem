@@ -33,6 +33,7 @@ public class WarriorSession implements CacheEventListener {
 
     @Override
     public void notifyElementRemoved(Ehcache ehcache, Element element) throws CacheException {
+        log.info("====Removed");
         cleanToken(element);
     }
 
@@ -48,6 +49,7 @@ public class WarriorSession implements CacheEventListener {
 
     @Override
     public void notifyElementExpired(Ehcache ehcache, Element element) {
+        log.info("====Expired");
         cleanToken(element);
     }
 

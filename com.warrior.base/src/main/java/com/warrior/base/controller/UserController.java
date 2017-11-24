@@ -1,9 +1,9 @@
 package com.warrior.base.controller;
 
-import com.warrior.common.JSONMsg;
-import com.warrior.common.annotation.SysLog;
 import com.warrior.base.entity.User;
 import com.warrior.base.service.UserService;
+import com.warrior.common.JSONMsg;
+import com.warrior.common.annotation.SysLog;
 import com.warrior.common.web.WarriorBaseController;
 import com.warrior.common.web.WarriorSession;
 import io.swagger.annotations.Api;
@@ -13,6 +13,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Api(value = "UserController", tags = "用户管理", description = "用户管理")
@@ -48,11 +49,18 @@ public class UserController extends WarriorBaseController {
     }
 
     @SysLog(value = "修改用户信息")
-    @ApiOperation(value = "修改当前用户信息", httpMethod = "GET", response = JSONMsg.class)
-    @RequestMapping(value = "/updateCurrentUser", method = RequestMethod.PUT)
+    @ApiOperation(value = "修改当前用户信息", httpMethod = "POST", response = JSONMsg.class)
+    @RequestMapping(value = "/updateCurrentUser", method = RequestMethod.POST)
     public JSONMsg updateCurrent(@ModelAttribute User user){
         user.setUpdateTime(new Date());
         return buildMsg(userService.updateById(user));
+    }
+
+    @SysLog(value = "修改用户头像")
+    @RequestMapping(value = "/updateHeadImage",method = RequestMethod.POST)
+    @ApiOperation(value = "修改当前用户头像", httpMethod = "POST", response = JSONMsg.class)
+    public JSONMsg updateHeadImage(HttpServletRequest request){
+        return buildMsg(userService.uploadImg(request),"");
     }
 
     /**

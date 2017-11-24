@@ -202,7 +202,6 @@ export default {
     },
     data () {
         return {
-            user:[],
             toDoList: [
                 {
                     title: '去iView官网学习完整的iView组件'
@@ -231,14 +230,12 @@ export default {
             newToDoItemValue: ''
         };
     },
-    created (){
-        util.vue = this;
-        console.log(this.$store.getters.getUser);
-        this.user = this.$store.getters.getUser;
-    },
     computed: {
         avatorPath () {
-            return localStorage.avatorImgPath;
+            return this.$store.getters.getUser.img;
+        },
+        user(){
+            return this.$store.getters.getUser;
         }
     },
     methods: {
@@ -255,7 +252,7 @@ export default {
                 }, 200);
                 this.showAddNewTodo = false;
             } else {
-                this.$Message.error('请输入待办事项内容');
+                util.error('请输入待办事项内容');
             }
         },
         cancelAdd () {
