@@ -17,7 +17,7 @@ import java.util.Date;
  * The type Dictionary.
  */
 @ApiModel(value = "Dictionary",description = "字典信息")
-@TableName(value = "warrior_dictionary")
+@TableName(value = "sys_dictionary")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Dictionary implements Serializable {

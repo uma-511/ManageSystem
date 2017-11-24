@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @ApiModel(value = "Attachment",description = "附件信息")
-@TableName(value = "warrior_attachment")
+@TableName(value = "sys_attachment")
 public class Attachment implements Serializable{
 
    @ApiModelProperty(value = "编号")

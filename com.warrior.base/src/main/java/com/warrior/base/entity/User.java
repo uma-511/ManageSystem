@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @ApiModel(value = "User",description = "用户信息")
-@TableName(value = "warrior_user")
+@TableName(value = "sys_user")
 public class User implements Serializable{
 
     @ApiModelProperty(value = "用户编号")

@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 
-@TableName("warrior_sys_log")
+@TableName("sys_log")
 public class SysLog implements Serializable{
 
     @TableId

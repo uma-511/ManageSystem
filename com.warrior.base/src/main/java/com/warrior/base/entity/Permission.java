@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@TableName(value="warrior_permissions")
+@TableName(value="sys_permissions")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Permission implements Serializable {

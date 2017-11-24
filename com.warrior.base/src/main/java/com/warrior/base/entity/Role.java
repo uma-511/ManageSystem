@@ -17,7 +17,7 @@ import java.util.Date;
  * The type Role.
  */
 @ApiModel(value = "Role",description = "角色信息")
-@TableName("warrior_role")
+@TableName("sys_role")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role implements Serializable{
