@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @ApiModel(value = "Resources",description = "资源信息")
-@TableName("warrior_resources")
+@TableName("sys_resources")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Resources implements Serializable {

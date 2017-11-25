@@ -3,7 +3,7 @@ package com.warrior.base.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.warrior.base.entity.Role;
-import com.warrior.common.model.RoleModel;
+import com.warrior.base.model.RoleModel;
 
 import java.util.List;
 

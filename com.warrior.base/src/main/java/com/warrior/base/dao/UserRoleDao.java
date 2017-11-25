@@ -9,4 +9,6 @@ public interface UserRoleDao extends BaseMapper<UserRole> {
 
     List<Integer> getRoleByUser(@Param("uid")long uid);
 
+    String getRoleNameByUser(@Param("uid")long uid);
+
 }

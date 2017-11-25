@@ -3,7 +3,7 @@ package com.warrior.base.service.impl;
 import com.warrior.base.dao.UserRoleDao;
 import com.warrior.base.entity.UserRole;
 import com.warrior.base.service.UserRoleService;
-import com.warrior.common.service.impl.WarriorBaseServiceImpl;
+import com.warrior.common.service.WarriorBaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,5 +20,9 @@ public class UserRoleServiceImpl extends WarriorBaseServiceImpl<UserRoleDao,User
             roleStr +=num + "$";
         }
         return roleStr;
+    }
+
+    public String getRoleNameByUser(long uid){
+        return baseMapper.getRoleNameByUser(uid);
     }
 }

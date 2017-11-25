@@ -6,4 +6,7 @@ import com.warrior.base.entity.UserRole;
 public interface UserRoleService extends IService<UserRole>{
 
     String getRoleByUser(long uid);
+
+    String getRoleNameByUser(long uid);
+
 }

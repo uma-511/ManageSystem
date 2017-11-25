@@ -5,10 +5,10 @@ import com.google.common.collect.Lists;
 import com.warrior.base.dao.PermissionDao;
 import com.warrior.base.entity.Permission;
 import com.warrior.base.entity.Resources;
-import com.warrior.common.model.ResourceModel;
 import com.warrior.base.service.PermissionService;
 import com.warrior.base.service.ResourceService;
-import com.warrior.common.service.impl.WarriorBaseServiceImpl;
+import com.warrior.base.model.ResourceModel;
+import com.warrior.common.service.WarriorBaseServiceImpl;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +38,6 @@ public class PermissionServiceImpl extends WarriorBaseServiceImpl<PermissionDao,
             permission += num+"$";
         }
         return resourceService.getResourceModelList(resourceService.selectList(new EntityWrapper<Resources>()),permission);
-    }
-
-    public List<Resources> getPermissionByType(long ownId,int type){
-        if (type == 0){
-            return baseMapper.getResourcesByRole(ownId,-1);
-        }else{
-            return baseMapper.getResourcesByUser(ownId,-1);
-        }
     }
 
     public String getPermissionStr(long uid){

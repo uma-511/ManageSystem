@@ -1,8 +1,9 @@
 package com.warrior.base.controller;
 
-import com.warrior.common.service.UserService;
+import com.warrior.common.Contacts;
 import com.warrior.common.JSONMsg;
 import com.warrior.common.annotation.SysLog;
+import com.warrior.base.service.UserService;
 import com.warrior.common.web.WarriorBaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 
 @Api(value = "LoginController",tags = "用户登录",description = "用户登录")
@@ -30,6 +30,11 @@ public class LoginController extends WarriorBaseController {
             @RequestParam(name = "userName",defaultValue = "") String userName,
             @ApiParam(name="passWord",value = "用户密码",required = true)
             @RequestParam(name = "passWord",defaultValue = "") String passWord, HttpServletRequest request){
+        Object error = request.getAttribute(Contacts.SHIRO_EXCEPTION);
+        if(error != null){
+            int code = Integer.parseInt(error.toString());
+            return buildMsg(code,Contacts.ERROR_MSG.get(code));
+        }
         return buildMsg(userService.login(userName,passWord),"登录成功！");
     }
 

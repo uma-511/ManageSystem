@@ -1,9 +1,9 @@
 package com.warrior.base.controller;
 
 import com.google.common.collect.Maps;
-import com.warrior.common.entity.User;
+import com.warrior.base.entity.User;
 import com.warrior.base.service.PermissionService;
-import com.warrior.common.service.UserService;
+import com.warrior.base.service.UserService;
 import com.warrior.common.JSONMsg;
 import com.warrior.common.annotation.SysLog;
 import com.warrior.common.web.WarriorBaseController;

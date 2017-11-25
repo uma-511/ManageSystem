@@ -3,13 +3,13 @@
 <mapper namespace="com.warrior.base.dao.RoleDao" >
 
     <select id="getRoleListByUser" parameterType="long" resultType="com.warrior.base.entity.Role">
-        select wr.* from warrior_role wr
-        left join warrior_user_role ur on ur.role_id = wr.rid
+        select wr.* from sys_role wr
+        left join sys_user_role ur on ur.role_id = wr.rid
         where ur.user_id = #{uid}
     </select>
 
     <select id="getRoleList" resultType="com.warrior.base.entity.Role">
-        SELECT * from warrior_role
+        SELECT * from sys_role
         <where>
             ${ew.sqlSegment}
         </where>

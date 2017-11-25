@@ -26,4 +26,11 @@ public class MD5 {
     public static String genSalt(){
         return new SecureRandomNumberGenerator().nextBytes().toHex();
     }
+
+    public static void main(String args[]){
+        String salt = MD5.genSalt();
+        String pwd = MD5.genMd5("123456","admin"+salt);
+        System.out.println(salt);
+        System.out.println(pwd);
+    }
 }

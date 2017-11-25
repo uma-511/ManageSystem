@@ -1,24 +1,15 @@
 package com.warrior.common.web;
 
-import com.google.common.collect.Maps;
-import com.warrior.common.entity.User;
+import com.warrior.util.spring.SpringUtil;
 import lombok.extern.log4j.Log4j;
 import net.sf.ehcache.*;
 import net.sf.ehcache.event.CacheEventListener;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.support.DefaultSubjectContext;
-import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-
-import java.util.Collection;
-import java.util.Map;
+import org.joor.Reflect;
 
 @Log4j
 public class WarriorSession implements CacheEventListener {
 
-    private static Map<Long, String> online_user = Maps.newHashMap();
     private static Cache cache;
 
     public WarriorSession() {
@@ -36,29 +27,14 @@ public class WarriorSession implements CacheEventListener {
         return element == null ? null : (T) element.getObjectValue();
     }
 
-    public static void removeUser(long uid) {
-        cache.remove(online_user.get(uid));
-    }
-
-    public static void removeSession(User user) {
-        DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager) SecurityUtils.getSecurityManager();
-        DefaultWebSessionManager sessionManager = (DefaultWebSessionManager) securityManager.getSessionManager();
-        Collection<Session> sessions = sessionManager.getSessionDAO().getActiveSessions();
-        for (Session session : sessions) {
-            if (StringUtils.equals(user.getUserName(), String.valueOf(session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY)))) {
-                sessionManager.getSessionDAO().delete(session);
-                WarriorSession.removeUser(user.getUid());
-            }
-        }
+    public static void removeItem(String key) {
+        cache.remove(key);
     }
 
     @Override
     public void notifyElementRemoved(Ehcache ehcache, Element element) throws CacheException {
-        if (element.getObjectValue() instanceof User) {
-            User user = (User) element.getObjectValue();
-            WarriorSession.removeUser(user.getUid());
-            WarriorSession.removeSession(user);
-        }
+        log.info("====Removed");
+        cleanToken(element);
     }
 
     @Override
@@ -73,31 +49,17 @@ public class WarriorSession implements CacheEventListener {
 
     @Override
     public void notifyElementExpired(Ehcache ehcache, Element element) {
-        if (element.getObjectValue() instanceof User) {
-            User user = (User) element.getObjectValue();
-            WarriorSession.removeUser(user.getUid());
-            WarriorSession.removeSession(user);
-        }
+        log.info("====Expired");
+        cleanToken(element);
     }
 
     @Override
     public void notifyElementEvicted(Ehcache ehcache, Element element) {
-        if (element.getObjectValue() instanceof User) {
-            User user = (User) element.getObjectValue();
-            WarriorSession.removeUser(user.getUid());
-            WarriorSession.removeSession(user);
-        }
+        log.info("====Evicted");
     }
 
     @Override
     public void notifyRemoveAll(Ehcache ehcache) {
-        WarriorSession.online_user.clear();
-        DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager) SecurityUtils.getSecurityManager();
-        DefaultWebSessionManager sessionManager = (DefaultWebSessionManager) securityManager.getSessionManager();
-        Collection<Session> sessions = sessionManager.getSessionDAO().getActiveSessions();
-        for (Session session : sessions) {
-            sessionManager.getSessionDAO().delete(session);
-        }
     }
 
     @Override
@@ -110,4 +72,12 @@ public class WarriorSession implements CacheEventListener {
         return null;
     }
 
+    private void cleanToken(Element element){
+        if (element.getObjectValue() != null && StringUtils.equals(element.getObjectValue().getClass().getSimpleName(),"User")) {
+            Object user = element.getObjectValue();
+            Reflect.on(user).call("setToken","");
+            Object userService = SpringUtil.getBean("userServiceImpl");
+            Reflect.on(userService).call("updateById",user);
+        }
+    }
 }

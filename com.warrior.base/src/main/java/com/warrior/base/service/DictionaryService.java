@@ -3,7 +3,7 @@ package com.warrior.base.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.warrior.base.entity.Dictionary;
-import com.warrior.common.model.DictModel;
+import com.warrior.base.model.DictModel;
 
 import java.util.List;
 

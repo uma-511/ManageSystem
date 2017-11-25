@@ -1,6 +1,5 @@
 package com.warrior.common;
 
-import com.baomidou.mybatisplus.plugins.Page;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,14 +12,9 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class JSONMsg implements Serializable{
 
-    //成功
-    public final static boolean FLAG_SUCCESS = true;
-    //失败
-    public final static boolean FLAG_FAIL = false;
-
-    @ApiModelProperty(value = "接口状态",required = true)
+    @ApiModelProperty(value = "接口状态码",required = true)
     @Getter @Setter
-    private boolean success;     //是否成功
+    private int code;           //是否成功
 
     @ApiModelProperty(value = "接口返回数据")
     @Getter @Setter
@@ -30,30 +24,30 @@ public class JSONMsg implements Serializable{
     @Getter @Setter
     private String msg;         //错误信息
 
-    @ApiModelProperty(value = "用户当前登录状态")
-    @Getter @Setter
-    private boolean isLogin = true;
-
     public JSONMsg() {
     }
 
-    public JSONMsg(boolean success) {
-        this.success = success;
+    public JSONMsg(int code) {
+        this.code = code;
     }
 
-    public JSONMsg(boolean success, Object data, String msg) {
-        this.success = success;
+    public JSONMsg(int code, Object data, String msg) {
+        this.code = code;
         this.data = data;
         this.msg = msg;
     }
 
-    public JSONMsg(boolean success, Page pageInfo, String msg) {
-        this.success = success;
-        this.data = pageInfo;
+    public JSONMsg(int code,String msg){
+        this.code = code;
         this.msg = msg;
     }
-
-    public void setPageInfo(Page pageInfo){
-        this.data = pageInfo;
-    }
+//    public JSONMsg(int code, Page pageInfo, String msg) {
+//        this.code = code;
+//        this.data = pageInfo;
+//        this.msg = msg;
+//    }
+//
+//    public void setPageInfo(Page pageInfo){
+//        this.data = pageInfo;
+//    }
 }

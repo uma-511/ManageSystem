@@ -4,26 +4,26 @@
 
 
     <select id="getListByType" resultType="com.warrior.base.entity.Dictionary" parameterType="int">
-        SELECT * FROM warrior_dictionary
+        SELECT * FROM sys_dictionary
         WHERE dic_type = #{dicType} ORDER BY sort ASC
     </select>
 
     <select id="getByAttribute" resultType="com.warrior.base.entity.Dictionary">
-        SELECT * FROM warrior_dictionary
+        SELECT * FROM sys_dictionary
         <where>
             ${ew.sqlSegment}
         </where>
     </select>
 
     <select id="getList" resultType="com.warrior.base.entity.Dictionary">
-        SELECT * FROM warrior_dictionary
+        SELECT * FROM sys_dictionary
         <where>
             ${ew.sqlSegment}
         </where>
     </select>
 
     <select id="getTypeList" resultType="com.warrior.base.entity.Dictionary">
-        SELECT dic_type,max(type_value) AS type_value FROM warrior_dictionary
+        SELECT dic_type,max(type_value) AS type_value FROM sys_dictionary
         GROUP BY dic_type
     </select>
 </mapper>

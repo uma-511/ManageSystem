@@ -1,10 +1,8 @@
-.idea
-.idea/
-.DS_Store
-node_modules/
-.project
-dist
-dist/*
-src/config/*.tmp
-src/config/env.js
 npm-debug.log
+node_modules
+.project
+.vscode
+.history
+.DS_Store
+\.settings/
+src/config/env.js

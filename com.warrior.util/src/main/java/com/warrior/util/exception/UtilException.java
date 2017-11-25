@@ -1,8 +1,16 @@
 package com.warrior.util.exception;
 
-public class UtilException extends RuntimeException {
+public class UtilException extends BaseException {
 
     public UtilException() {
+    }
+
+    public UtilException(int code, String message) {
+        super(code, message);
+    }
+
+    public UtilException(int code, String message, Throwable cause) {
+        super(code, message, cause);
     }
 
     public UtilException(String message) {

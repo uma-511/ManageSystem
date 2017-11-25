@@ -1,8 +1,7 @@
 package com.warrior.common.web;
 
-import com.baomidou.mybatisplus.plugins.Page;
+import com.warrior.common.Contacts;
 import com.warrior.common.JSONMsg;
-import com.warrior.util.common.JSONUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -23,8 +22,7 @@ public class WarriorBaseController {
     @ExceptionHandler({UnauthenticatedException.class, AuthenticationException.class})
     public JSONMsg authenticationException(HttpServletRequest request, HttpServletResponse response) {
         JSONMsg msg = new JSONMsg();
-        msg.setSuccess(JSONMsg.FLAG_FAIL);
-        msg.setLogin(false);
+        msg.setCode(Contacts.CODE_TOKEN_FAIL);
         msg.setMsg("未登录，请先登录！");
         return msg;
     }
@@ -32,15 +30,8 @@ public class WarriorBaseController {
     @ExceptionHandler({UnauthorizedException.class, AuthorizationException.class})
     public JSONMsg authorizationException(HttpServletRequest request, HttpServletResponse response) {
         JSONMsg msg = new JSONMsg();
-        msg.setSuccess(JSONMsg.FLAG_FAIL);
+        msg.setCode(Contacts.CODE_NO_PERMISSION);
         msg.setMsg("无访问权限！");
-        return msg;
-    }
-
-    protected JSONMsg buildMsg(Page pageInfo) {
-        JSONMsg msg = new JSONMsg();
-        msg.setSuccess(JSONMsg.FLAG_SUCCESS);
-        msg.setPageInfo(pageInfo);
         return msg;
     }
 
@@ -52,17 +43,19 @@ public class WarriorBaseController {
      * @param msg
      * @return
      */
-    protected JSONMsg buildMsg(boolean success, Object data, String msg) {
+    protected JSONMsg buildMsg(int success, Object data, String msg) {
         return new JSONMsg(success, data, msg);
     }
-
+    protected JSONMsg buildMsg(int success, String msg) {
+        return new JSONMsg(success, msg);
+    }
     /**
      * 构建返回信息
      *
      * @param success
      * @return
      */
-    protected JSONMsg buildMsg(boolean success) {
+    protected JSONMsg buildMsg(int success) {
         return new JSONMsg(success);
     }
 
@@ -74,7 +67,7 @@ public class WarriorBaseController {
      * @return
      */
     protected JSONMsg buildMsg(Object data, String msg) {
-        return new JSONMsg(JSONMsg.FLAG_SUCCESS, data, msg);
+        return new JSONMsg(Contacts.CODE_SUCCESS, data, msg);
     }
 
     /**
@@ -84,7 +77,7 @@ public class WarriorBaseController {
      * @return
      */
     protected JSONMsg buildMsg(Object data) {
-        return new JSONMsg(JSONMsg.FLAG_SUCCESS, data, "");
+        return new JSONMsg(Contacts.CODE_SUCCESS, data, "");
     }
 
     /**
@@ -94,9 +87,12 @@ public class WarriorBaseController {
      * @return
      */
     protected JSONMsg buildMsg(String msg) {
-        return new JSONMsg(JSONMsg.FLAG_SUCCESS, null, msg);
+        return new JSONMsg(Contacts.CODE_SUCCESS, null, msg);
     }
 
+    protected JSONMsg buildMsg(Boolean val) {
+        return new JSONMsg(val ? Contacts.CODE_SUCCESS : Contacts.CODE_FAIL, null, val ? "" : "操作失败！");
+    }
     /**
      * 构建失败返回信息
      *
@@ -104,7 +100,7 @@ public class WarriorBaseController {
      * @return
      */
     protected JSONMsg buildFaliMsg(String msg) {
-        return new JSONMsg(JSONMsg.FLAG_FAIL, null, msg);
+        return new JSONMsg(Contacts.CODE_FAIL, null, msg);
     }
 
     @InitBinder

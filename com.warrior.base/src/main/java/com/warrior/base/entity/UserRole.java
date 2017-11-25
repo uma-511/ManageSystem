@@ -13,7 +13,7 @@ import java.io.Serializable;
 /**
  * The type User role.
  */
-@TableName("warrior_user_role")
+@TableName("sys_user_role")
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRole implements Serializable {

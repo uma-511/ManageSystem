@@ -15,8 +15,8 @@
     <cache name="sessionCache"
            maxEntriesLocalHeap="2000"
            eternal="false"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="0"
+           timeToIdleSeconds="600"
+           timeToLiveSeconds="1800"
            overflowToDisk="false"
            statistics="true">
         <cacheEventListenerFactory class="com.warrior.common.cache.SessionCacheEventListenerFactory" />
@@ -26,7 +26,7 @@
            maxEntriesLocalHeap="2000"
            eternal="false"
            timeToIdleSeconds="3600"
-           timeToLiveSeconds="0"
+           timeToLiveSeconds="3600"
            overflowToDisk="false"
            statistics="true">
     </cache>

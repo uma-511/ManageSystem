@@ -4,15 +4,14 @@ import com.google.common.collect.Sets;
 import com.warrior.base.entity.Role;
 import com.warrior.base.service.PermissionService;
 import com.warrior.base.service.RoleService;
-import com.warrior.common.entity.User;
-import com.warrior.common.service.UserService;
+import com.warrior.base.entity.User;
+import com.warrior.base.service.UserService;
 import com.warrior.common.web.WarriorSession;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
@@ -31,8 +30,9 @@ public class CustomSecurityRealm extends AuthorizingRealm {
     @Autowired
     private UserService userService;
 
-    public CustomSecurityRealm(CacheManager cacheManager) {
-        super(cacheManager);
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof UsernamePasswordToken;
     }
 
     @Override
@@ -56,14 +56,18 @@ public class CustomSecurityRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken upat = (UsernamePasswordToken) token;
         User user = userService.getByUserName(upat.getUsername());
-        WarriorSession.removeSession(user);
-
         if (user == null) {
             throw new UnknownAccountException();
         }
         if (user.getStatus() == 1 || user.getStatus() == 2) {
             throw new LockedAccountException();
         }
+        if(!StringUtils.isEmpty(user.getToken())){
+            WarriorSession.removeItem(user.getToken());
+            user.setToken("");
+            userService.updateById(user);
+        }
+
         SimpleAuthenticationInfo ai = new SimpleAuthenticationInfo(user.getUserName(), user.getPassWord(), ByteSource.Util.bytes(user.genCredentialsSalt()), getName());
         return ai;
     }
