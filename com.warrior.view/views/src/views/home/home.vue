@@ -1,6 +1,6 @@
 <style lang="less">
-    @import "./home.less";
-    @import "../../styles/common.less";
+@import "./home.less";
+@import "../../styles/common.less";
 </style>
 <template>
     <div class="home-main">
@@ -47,11 +47,11 @@
                         </a>
                         <Modal
                             v-model="showAddNewTodo"
-                            title="添加新的待办事项"
+                            :title="toDoTitle"
                             @on-ok="addNew"
                             @on-cancel="cancelAdd">
                             <Row type="flex" justify="center">
-                                <Input v-model="newToDoItemValue" icon="compose" placeholder="请输入..." style="width: 300px" />
+                                <Input v-model="newToDoItemValue" icon="compose" placeholder="请输入..." style="width: 100%;" />
                             </Row>
                             <Row slot="footer">
                                 <Button type="text" @click="cancelAdd">取消</Button>
@@ -60,7 +60,18 @@
                         </Modal>
                         <div class="to-do-list-con">
                             <div v-for="(item, index) in toDoList" :key="index" class="to-do-item">
-                                <to-do-list-item :content="item.title"></to-do-list-item>
+                                <Row class="to-do-list-item">
+                                    <Col span="1" class="height-100" style="padding:6px;">
+                                        <Checkbox :value="item.status==1?false:true" v-on:click.native="handleHasDid(item.id,item.status==1?2:1)"></Checkbox>
+                                    </Col>
+                                    <Col span="21" class="height-100" style="padding:6px;">
+                                        <p class="to-do-list-item-text" :class="{hasDid: item.status==1?false:true}">{{ item.note }}</p>
+                                    </Col>
+                                    <Col span="2" class="height-100" style="text-align:right;padding:6px;">
+                                        <Icon type="edit" color="#228EE9" style="cursor: pointer;" v-on:click.native="edit(item.id,item.note)"></Icon>&nbsp;&nbsp;
+                                        <Icon type="trash-a" color="#FF5223" size="18" style="cursor: pointer;" v-on:click.native="del(item.id)"></Icon>
+                                    </Col>
+                                </Row>
                             </div>
                         </div>
                     </Card>
@@ -71,73 +82,102 @@
 </template>
 
 <script>
-import toDoListItem from './components/toDoListItem.vue';
-import util from '../../libs/util';
+import util from "../../libs/util";
 import Cookies from "js-cookie";
 
 export default {
-    name: 'home',
-    components: {
-        toDoListItem
+  name: "home",
+  data() {
+    return {
+      toDoList: [],
+      showAddNewTodo: false,
+      newToDoItemValue: "",
+      toDoTitle: "添加新的待办事项",
+      id: 0
+    };
+  },
+  computed: {
+    avatorPath() {
+      return this.$store.getters.getUser.img;
     },
-    data () {
-        return {
-            toDoList: [
-                {
-                    title: '去iView官网学习完整的iView组件去iView官网学习完整的iView组件去iView官网学习完整的iView组件'
-                },
-                {
-                    title: '去iView官网学习完整的iView组件'
-                },
-                {
-                    title: '去iView官网学习完整的iView组件'
-                },
-                {
-                    title: '去iView官网学习完整的iView组件'
-                },
-                {
-                    title: '去iView官网学习完整的iView组件'
-                }
-            ],
-            count: {
-                createUser: 496,
-                visit: 3264,
-                collection: 24389305,
-                transfer: 39503498
-            },
-            showAddNewTodo: false,
-            newToDoItemValue: ''
-        };
-    },
-    computed: {
-        avatorPath () {
-            return this.$store.getters.getUser.img;
-        },
-        user(){
-            return this.$store.getters.getUser;
-        }
-    },
-    methods: {
-        addNewToDoItem () {
-            this.showAddNewTodo = true;
-        },
-        addNew () {
-            if (this.newToDoItemValue.length !== 0) {
-                this.toDoList.unshift({
-                    title: this.newToDoItemValue
-                });
-                setTimeout(() => {
-                    this.newToDoItemValue = '';
-                }, 200);
-                this.showAddNewTodo = false;
-            } else {
-                util.error('请输入待办事项内容');
-            }
-        },
-        cancelAdd () {
-            this.showAddNewTodo = false;
-            this.newToDoItemValue = '';
-        }
+    user() {
+      return this.$store.getters.getUser;
     }
+  },
+  created() {
+    this.query();
+  },
+  methods: {
+    addNewToDoItem() {
+      this.showAddNewTodo = true;
+      this.toDoTitle = "添加新的待办事项";
+    },
+    query() {
+      util.ajax.get("/notes/list").then(rep => {
+        if (rep.code == 0) {
+          this.toDoList = rep.data;
+        }
+      });
+    },
+    addNew() {
+      if (this.newToDoItemValue.length !== 0) {
+        if(this.newToDoItemValue.length > 100){
+            util.error('内容长度不能超过100个字符！');
+            return;
+        }
+        if (this.id > 0) {
+          util.ajax
+            .put("/notes/"+this.id, { note: this.newToDoItemValue})
+            .then(rep => {
+              if (rep.code == 0) {
+                util.success("修改成功！");
+                this.query();
+                this.cancelAdd();
+              }
+            });
+        } else {
+          util.ajax
+            .post("/notes", { note: this.newToDoItemValue })
+            .then(rep => {
+              if (rep.code == 0) {
+                util.success("添加成功！");
+                this.query();
+                this.cancelAdd();
+              }
+            });
+        }
+      } else {
+        util.error("请输入待办事项内容");
+      }
+    },
+    cancelAdd() {
+      this.showAddNewTodo = false;
+      this.newToDoItemValue = "";
+    },
+    del(id) {
+      const _this = this;
+      util.confirm("确认删除该数据？", function() {
+        util.ajax.delete("/notes/" + id).then(rep => {
+          if (rep.code == 0) {
+            util.success("删除成功！");
+            _this.query();
+          }
+        });
+      });
+    },
+    edit(id, note) {
+      this.toDoTitle = "修改待办事项";
+      this.id = id;
+      this.newToDoItemValue = note;
+      this.showAddNewTodo = true;
+    },
+    handleHasDid(id,status) {
+      util.ajax.put("/notes/" + id + "/" + status).then(rep=>{
+          if(rep.code == 0){
+              this.query();
+          }
+      });
+    }
+  }
 };
 </script>

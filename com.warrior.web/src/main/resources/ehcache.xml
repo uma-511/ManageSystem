@@ -15,7 +15,7 @@
     <cache name="sessionCache"
            maxEntriesLocalHeap="2000"
            eternal="false"
-           timeToIdleSeconds="300"
+           timeToIdleSeconds="600"
            timeToLiveSeconds="1800"
            overflowToDisk="false"
            statistics="true">

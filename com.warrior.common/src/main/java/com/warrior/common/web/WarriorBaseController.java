@@ -90,6 +90,9 @@ public class WarriorBaseController {
         return new JSONMsg(Contacts.CODE_SUCCESS, null, msg);
     }
 
+    protected JSONMsg buildMsg(Boolean val) {
+        return new JSONMsg(val ? Contacts.CODE_SUCCESS : Contacts.CODE_FAIL, null, val ? "" : "操作失败！");
+    }
     /**
      * 构建失败返回信息
      *

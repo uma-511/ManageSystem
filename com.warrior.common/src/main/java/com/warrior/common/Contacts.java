@@ -27,6 +27,11 @@ public class Contacts {
     public final static int CODE_SIGN_ERROR = 8;
     //无访问权限
     public final static int CODE_NO_PERMISSION = 9;
+    //待办事项未完成
+    public final static int NOTE_STATUS_NORMAL = 1;
+    //待办事项已完成
+    public final static int NOTE_STATUS_OVER = 2;
+
 
     public final static String MD5_SALT = "0202040103";
 
