@@ -2,11 +2,16 @@ package com.warrior.web.shiro;
 
 import com.google.common.collect.Sets;
 import com.warrior.base.entity.Role;
+import com.warrior.base.entity.User;
 import com.warrior.base.service.PermissionService;
 import com.warrior.base.service.RoleService;
-import com.warrior.base.entity.User;
 import com.warrior.base.service.UserService;
+import com.warrior.common.Contacts;
+import com.warrior.common.JSONMsg;
+import com.warrior.common.push.EventType;
+import com.warrior.common.push.PushService;
 import com.warrior.common.web.WarriorSession;
+import com.warrior.util.common.JSONUtils;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.*;
@@ -63,6 +68,10 @@ public class CustomSecurityRealm extends AuthorizingRealm {
             throw new LockedAccountException();
         }
         if(!StringUtils.isEmpty(user.getToken())){
+            if(WarriorSession.getItem(user.getToken()) != null){
+                JSONMsg msg = new JSONMsg(Contacts.CODE_OTHER_LOGIN,null,"当前用户已在其他设备登录！");
+                PushService.sendMessageToOneClient(user.getToken(), EventType.NOTICE_INFO, JSONUtils.toJson(msg));
+            }
             WarriorSession.removeItem(user.getToken());
             user.setToken("");
             userService.updateById(user);

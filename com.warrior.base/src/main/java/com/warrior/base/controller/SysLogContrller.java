@@ -3,6 +3,7 @@ package com.warrior.base.controller;
 import com.warrior.common.JSONMsg;
 import com.warrior.common.annotation.SysLog;
 import com.warrior.base.service.SysLogService;
+import com.warrior.common.cache.PushCache;
 import com.warrior.common.web.WarriorBaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,11 @@ public class SysLogContrller extends WarriorBaseController {
 
     @Autowired
     private SysLogService sysLogService;
+
+    @RequestMapping(value = "/client",method = RequestMethod.GET)
+    public JSONMsg getClientList(){
+        return buildMsg(PushCache.getAllClient());
+    }
 
     @RequiresPermissions("admin:log:view")
     @RequestMapping(value = "/list",method = RequestMethod.GET)

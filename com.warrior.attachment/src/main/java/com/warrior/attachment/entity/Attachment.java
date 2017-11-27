@@ -1,6 +1,8 @@
 package com.warrior.attachment.entity;
 
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -14,6 +16,7 @@ import java.util.Date;
 public class Attachment implements Serializable{
 
    @ApiModelProperty(value = "编号")
+   @TableId(value = "aid",type = IdType.NONE)
    @Setter @Getter
    private String aid;
 

@@ -10,6 +10,6 @@ public class SessionCacheEventListenerFactory extends CacheEventListenerFactory 
 
     @Override
     public CacheEventListener createCacheEventListener(Properties properties) {
-        return new WarriorSession();
+        return new SessionCacheEventListener();
     }
 }
