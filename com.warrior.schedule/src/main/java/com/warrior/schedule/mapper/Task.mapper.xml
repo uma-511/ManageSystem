@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.warrior.schedule.dao.TaskDao" >
+
+    <select id="getPageList" resultType="com.warrior.schedule.entity.Task">
+        select * from sys_task
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+</mapper>

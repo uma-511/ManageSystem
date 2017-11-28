@@ -20,7 +20,6 @@ public class SessionCacheEventListener implements CacheEventListener {
 
     @Override
     public void notifyElementPut(Ehcache ehcache, Element element) throws CacheException {
-
     }
 
     @Override
