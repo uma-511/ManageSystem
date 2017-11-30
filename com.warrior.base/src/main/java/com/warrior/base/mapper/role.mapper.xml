@@ -2,12 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.warrior.base.dao.RoleDao" >
 
-    <select id="getRoleListByUser" parameterType="long" resultType="com.warrior.base.entity.Role">
-        select wr.* from sys_role wr
-        left join sys_user_role ur on ur.role_id = wr.rid
-        where ur.user_id = #{uid}
-    </select>
-
     <select id="getRoleList" resultType="com.warrior.base.entity.Role">
         SELECT * from sys_role
         <where>
