@@ -1,5 +1,8 @@
 package com.warrior.common;
 
+import com.warrior.util.common.PropUtils;
+import org.apache.commons.lang.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,11 +43,17 @@ public class Contacts {
 
     public final static String SHIRO_EXCEPTION = "shiroException";
 
-    public final static String URL_NO_CHECK [] = {"/admin/doLogin","/admin/doLogOut","/admin/attachment/file","/syslog/client","/schedule-ui","/swagger-resources","/v2/api-docs"};
+    public static String URL_NO_CHECK [] = {};
 
     public static Map<Integer,String> ERROR_MSG = new HashMap<>();
 
     static {
+        PropUtils.loadProp("classpath:sysconfig.properties");
+        String url = PropUtils.getPropValue("noLoginCheck");
+        if(StringUtils.isNotEmpty(url)){
+            URL_NO_CHECK = url.split(",");
+        }
+
         ERROR_MSG.put(CODE_FAIL,"操作失败！");
         ERROR_MSG.put(CODE_SUCCESS,"操作成功！");
         ERROR_MSG.put(CODE_NO_ACCOUNT,"账户不存在！");
