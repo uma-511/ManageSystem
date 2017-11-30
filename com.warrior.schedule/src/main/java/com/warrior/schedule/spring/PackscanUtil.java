@@ -72,9 +72,7 @@ public class PackscanUtil {
         }
         Set<String> packages = Sets.newHashSet();
         Collections.addAll(packages, scanPackages.split(","));
-        Iterator<String> packageIte;
         boolean needAdd;
-        String pack;
         for (String pInArr : packages.toArray(new String[packages.size()])) {
             if (StringUtils.isBlank(pInArr) || pInArr.equals(".") || pInArr.startsWith(".")) {
                 continue;
@@ -82,14 +80,12 @@ public class PackscanUtil {
             if (pInArr.endsWith(".")) {
                 pInArr = pInArr.substring(0, pInArr.length() - 1);
             }
-            packageIte = packages.iterator();
             needAdd = true;
-            while (packageIte.hasNext()) {
-                pack = packageIte.next();
+            for(String pack : packages){
                 if (pInArr.startsWith(pack + ".")) {
                     needAdd = false;
                 } else if (pack.startsWith(pInArr + ".")) {
-                    packageIte.remove();
+                    packages.remove(pack);
                 }
                 if (needAdd) {
                     packages.add(pInArr);

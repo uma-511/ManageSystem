@@ -15,7 +15,7 @@
    
 **二、前端开发**
 1. 安装Node.js，安装iview 执行 npm install iview --save
-2. 在com.warrior.web/src/main/webapp/WEB-INF/views目录下执行 npm install
+2. 在com.warrior.view/views目录下执行 npm install
 3. 安装 axios、qs 插件 npm install axios --save  npm install qs --save
 4. 启动服务(开发环境) npm run dev 服务启动后 打开 http://127.0.0.1:8080
 5. 编译打包(生成环境) npm run build
