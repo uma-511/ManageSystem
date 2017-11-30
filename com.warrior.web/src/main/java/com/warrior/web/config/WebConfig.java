@@ -2,12 +2,16 @@ package com.warrior.web.config;
 
 import com.thetransactioncompany.cors.CORSConfiguration;
 import com.thetransactioncompany.cors.CORSConfigurationException;
+import com.warrior.common.cache.PushCache;
+import com.warrior.common.spring.CustomApplicationListener;
 import com.warrior.common.spring.CustomDateConverter;
 import com.warrior.common.spring.GlobalExceptionHandler;
 import com.warrior.common.web.WarriorSession;
+import com.warrior.schedule.spring.ScheduleConfig;
 import com.warrior.web.filter.CorsSpringFilter;
 import com.warrior.web.interceptor.SpringInterceptor;
 import com.warrior.web.shiro.ShiroConfig;
+import net.sf.ehcache.CacheManager;
 import org.springframework.context.annotation.*;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.support.FormattingConversionServiceFactoryBean;
@@ -33,7 +37,7 @@ import java.util.*;
 @EnableWebMvc
 @EnableAspectJAutoProxy
 @ImportResource(value = {"classpath:spring-mybatis.xml"})
-@Import(value = {SwaggerConfig.class,ShiroConfig.class})
+@Import(value = {SwaggerConfig.class,ShiroConfig.class, ScheduleConfig.class})
 @ComponentScan(basePackages = {"com.warrior"})
 public class WebConfig extends WebMvcConfigurerAdapter{
 
@@ -115,6 +119,11 @@ public class WebConfig extends WebMvcConfigurerAdapter{
         converters.add(converter);
     }
 
+    @Bean
+    public CustomApplicationListener customApplicationListener(){
+        return new CustomApplicationListener();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SpringInterceptor());
@@ -139,7 +148,18 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     }
 
     @Bean
+    public CacheManager cacheManager(){
+        CacheManager manager = CacheManager.create(this.getClass().getClassLoader().getResourceAsStream("ehcache.xml"));
+        return manager;
+    }
+
+    @Bean
+    public PushCache pushCache(){
+        return new PushCache(cacheManager());
+    }
+
+    @Bean
     public WarriorSession warriorSession(){
-        return new WarriorSession();
+        return new WarriorSession(cacheManager());
     }
 }

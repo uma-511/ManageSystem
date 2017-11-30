@@ -27,6 +27,9 @@ public class Contacts {
     public final static int CODE_SIGN_ERROR = 8;
     //无访问权限
     public final static int CODE_NO_PERMISSION = 9;
+    //提出用户(同一账号在其他地方登陆时会踢出当前会话)
+    public final static int CODE_OTHER_LOGIN = 10;
+
     //待办事项未完成
     public final static int NOTE_STATUS_NORMAL = 1;
     //待办事项已完成
@@ -37,7 +40,7 @@ public class Contacts {
 
     public final static String SHIRO_EXCEPTION = "shiroException";
 
-    public final static String URL_NO_CHECK [] = {"/admin/doLogin","/admin/doLogOut","/admin/attachment/file","/swagger-resources","/v2/api-docs"};
+    public final static String URL_NO_CHECK [] = {"/admin/doLogin","/admin/doLogOut","/admin/attachment/file","/syslog/client","/schedule-ui","/swagger-resources","/v2/api-docs"};
 
     public static Map<Integer,String> ERROR_MSG = new HashMap<>();
 

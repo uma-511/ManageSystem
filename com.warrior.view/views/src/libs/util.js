@@ -58,6 +58,7 @@ util.ajax.interceptors.response.use((res) => {
         if (res.data.code != 0) {
             if (res.data.code == 6) {
                 Cookies.remove('token');
+                Cookies.remove('isConnected');
                 util.error('登录已失效，请重新登录！', function() { location.reload(); });
             } else {
                 let data = res.data instanceof Object ? res.data : JSON.parse(res.data);

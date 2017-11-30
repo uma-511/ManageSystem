@@ -4,6 +4,7 @@ import com.warrior.common.Contacts;
 import com.warrior.base.entity.User;
 import com.warrior.base.service.UserService;
 import com.warrior.common.web.WarriorSession;
+import com.warrior.common.cache.PushCache;
 import com.warrior.util.spring.SpringUtil;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
@@ -41,6 +42,7 @@ public class NoSessionHttpMethodPermissionFilter extends HttpMethodPermissionFil
                     UserService userService = SpringUtil.getBean("userServiceImpl");
                     String token = userService.login(request.getParameter("userName"),request.getParameter("passWord"));
                     res.setAttribute("token",token);
+                    PushCache.replaceToken(res.getParameter("token"),token);
                 }
             }
         }

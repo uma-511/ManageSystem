@@ -319,7 +319,6 @@ new Vue({
     mounted() {
         this.currentPageName = this.$route.name;
         this.$store.commit('initCachepage');
-
         // 全屏相关
         document.addEventListener('fullscreenchange', () => {
             this.$store.commit('changeFullScreenState');

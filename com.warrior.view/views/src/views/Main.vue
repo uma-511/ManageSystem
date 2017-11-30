@@ -84,6 +84,7 @@ import themeDropdownMenu from "./main_components/themeDropdownMenu.vue";
 import sidebarMenuShrink from "./main_components/sidebarMenuShrink.vue";
 import Cookies from "js-cookie";
 import util from "@/libs/util.js";
+import ioClient from "../libs/socketioClient";
 
 export default {
   components: {
@@ -130,13 +131,12 @@ export default {
     isFullScreen() {
       return this.$store.state.isFullScreen;
     },
-    user(){
+    user() {
       return this.$store.getters.getUser;
     }
   },
   methods: {
     init() {
-      util.vue = this;
       util.ajax.get("/user/getBaseInfo").then(rep => {
         if (rep.code === 0) {
           let user = rep.data;
@@ -144,11 +144,24 @@ export default {
             new Date(user.lastTime),
             "yyyy-MM-dd hh:mm:ss"
           );
-          user.img = util.ajaxUrl+((user.img && user.img!='' && user.img != null)
-          ? '/admin/attachment/file/'+user.img : '/images/avatar.png');
+          user.img =
+            util.ajaxUrl +
+            (user.img && user.img != "" && user.img != null
+              ? "/admin/attachment/file/" + user.img
+              : "/images/avatar.png");
           this.$store.commit("initUserInfo", user);
           // 权限菜单过滤相关
           this.$store.commit("updateMenulist");
+          if (
+            Cookies.get("isConnected") == undefined ||
+            Cookies.get("isConnected") == "0"
+          ) {
+            let client = ioClient.createNew();
+            const _this = this;
+            client.receive("notice_info", function(data) {
+              _this.notice(data);
+            });
+          }
         }
       });
       this.$store.commit("setCurrentPageName", this.$route.name);
@@ -174,28 +187,32 @@ export default {
         // 退出登录
         util.ajax.get("/doLogOut").then(rep => {
           if (rep.code === 0) {
-            Cookies.remove("token");
-            Cookies.remove("hasGreet");
-            this.$Notice.close("greeting");
-            this.$store.commit("clearOpenedSubmenu");
-            // 回复默认样式
-            let themeLink = document.querySelector('link[name="theme"]');
-            themeLink.setAttribute("href", "");
-            // 清空打开的页面等数据，但是保存主题数据
-            let theme = "";
-            if (localStorage.theme) {
-              theme = localStorage.theme;
-            }
-            localStorage.clear();
-            if (theme) {
-              localStorage.theme = theme;
-            }
-            this.$router.push({
-              name: "login"
-            });
+            this.loginout();
           }
         });
       }
+    },
+    loginout() {
+      Cookies.remove("token");
+      Cookies.remove("hasGreet");
+      Cookies.remove("isConnected");
+      this.$Notice.close("greeting");
+      this.$store.commit("clearOpenedSubmenu");
+      // 回复默认样式
+      let themeLink = document.querySelector('link[name="theme"]');
+      themeLink.setAttribute("href", "");
+      // 清空打开的页面等数据，但是保存主题数据
+      let theme = "";
+      if (localStorage.theme) {
+        theme = localStorage.theme;
+      }
+      localStorage.clear();
+      if (theme) {
+        localStorage.theme = theme;
+      }
+      this.$router.push({
+        name: "login"
+      });
     },
     handleFullScreen() {
       this.$store.commit("handleFullScreen");
@@ -238,6 +255,18 @@ export default {
           this.$route.query || {}
         );
       }
+    },
+    notice(rep) {
+      let data = JSON.parse(rep);
+      if (data.code === 10) {
+        const _this = this;
+        util.error(data.msg,function(){
+          _this.loginout();
+        });
+      }
+    },
+    beforeunloadHandler(e){
+      Cookies.remove("isConnected");
     }
   },
   watch: {
@@ -254,6 +283,7 @@ export default {
     }
   },
   mounted() {
+    window.addEventListener('beforeunload',e=>this.beforeunloadHandler(e));
     this.init();
     // 锁屏相关
     let lockScreenBack = document.getElementById("lock_screen_back");
@@ -339,6 +369,9 @@ export default {
     }
     // 显示打开的页面的列表
     this.$store.commit("setOpenedList");
+  },
+  destroyed(){
+    window.removeEventListener('beforeunload',e=>this.beforeunloadHandler(e));
   }
 };
 </script>

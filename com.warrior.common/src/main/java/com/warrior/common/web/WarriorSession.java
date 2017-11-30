@@ -1,19 +1,16 @@
 package com.warrior.common.web;
 
-import com.warrior.util.spring.SpringUtil;
 import lombok.extern.log4j.Log4j;
-import net.sf.ehcache.*;
-import net.sf.ehcache.event.CacheEventListener;
-import org.apache.commons.lang.StringUtils;
-import org.joor.Reflect;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 @Log4j
-public class WarriorSession implements CacheEventListener {
+public class WarriorSession {
 
     private static Cache cache;
 
-    public WarriorSession() {
-        CacheManager manager = CacheManager.create(getClass().getClassLoader().getResource("ehcache.xml"));
+    public WarriorSession(CacheManager manager) {
         WarriorSession.cache = manager.getCache("sessionCache");
     }
 
@@ -29,55 +26,5 @@ public class WarriorSession implements CacheEventListener {
 
     public static void removeItem(String key) {
         cache.remove(key);
-    }
-
-    @Override
-    public void notifyElementRemoved(Ehcache ehcache, Element element) throws CacheException {
-        log.info("====Removed");
-        cleanToken(element);
-    }
-
-    @Override
-    public void notifyElementPut(Ehcache ehcache, Element element) throws CacheException {
-
-    }
-
-    @Override
-    public void notifyElementUpdated(Ehcache ehcache, Element element) throws CacheException {
-
-    }
-
-    @Override
-    public void notifyElementExpired(Ehcache ehcache, Element element) {
-        log.info("====Expired");
-        cleanToken(element);
-    }
-
-    @Override
-    public void notifyElementEvicted(Ehcache ehcache, Element element) {
-        log.info("====Evicted");
-    }
-
-    @Override
-    public void notifyRemoveAll(Ehcache ehcache) {
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return null;
-    }
-
-    private void cleanToken(Element element){
-        if (element.getObjectValue() != null && StringUtils.equals(element.getObjectValue().getClass().getSimpleName(),"User")) {
-            Object user = element.getObjectValue();
-            Reflect.on(user).call("setToken","");
-            Object userService = SpringUtil.getBean("userServiceImpl");
-            Reflect.on(userService).call("updateById",user);
-        }
     }
 }
