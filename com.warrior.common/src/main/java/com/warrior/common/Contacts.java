@@ -48,7 +48,6 @@ public class Contacts {
     public static Map<Integer,String> ERROR_MSG = new HashMap<>();
 
     static {
-        PropUtils.loadProp("classpath:sysconfig.properties");
         String url = PropUtils.getPropValue("noLoginCheck");
         if(StringUtils.isNotEmpty(url)){
             URL_NO_CHECK = url.split(",");

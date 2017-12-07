@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -24,12 +25,7 @@ public class TokenUtil {
         String sign = "";
         try {
             List<Map.Entry<String,String>> infoIds = Lists.newArrayList(paraMap.entrySet());
-            Collections.sort(infoIds, new Comparator<Map.Entry<String, String>>() {
-                @Override
-                public int compare(Map.Entry<String, String> o1, Map.Entry<String, String> o2) {
-                    return o1.getKey().toString().compareTo(o2.getKey());
-                }
-            });
+            Collections.sort(infoIds,(o1,o2)-> o1.getKey().toString().compareTo(o2.getKey()));
             StringBuilder buf = new StringBuilder();
             String key,val="";
             for (Map.Entry<String,String> item : infoIds){
@@ -39,7 +35,7 @@ public class TokenUtil {
                 key = item.getKey();
                 val = item.getValue();
                 if (urlEncode){
-                    val = URLEncoder.encode(val,"utf-8");
+                    val = URLEncoder.encode(val,"utf-8").replace("+","%20");
                 }
                 buf.append(key).append("=").append(val);
                 buf.append("&");

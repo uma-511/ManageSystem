@@ -1,14 +1,11 @@
 package com.warrior.common.push;
 
-import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.corundumstudio.socketio.listener.ConnectListener;
-import com.corundumstudio.socketio.listener.DataListener;
-import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.warrior.common.cache.PushCache;
 import com.warrior.common.web.WarriorSession;
+import com.warrior.util.common.PropUtils;
 import lombok.extern.java.Log;
 import org.apache.commons.lang.StringUtils;
 
@@ -23,47 +20,36 @@ public class PushService {
     public static void startSevice(){
         try {
             Configuration config = new Configuration();
-            config.setHostname("localhost");
-            config.setPort(9092);
+            config.setHostname(PropUtils.getPropValue("push.host"));
+            config.setPort(Integer.parseInt(PropUtils.getPropValue("push.port")));
             config.setMaxFramePayloadLength(1024*1024);
             config.setMaxHttpContentLength(1024*1024);
             server = new SocketIOServer(config);
 
-            server.addConnectListener(new ConnectListener() {
-                @Override
-                public void onConnect(SocketIOClient client) {
-                    String uuid = client.getSessionId().toString();
-                    String token = client.getHandshakeData().getSingleUrlParam("token");
-                    if(WarriorSession.getItem(token) != null){
-                        PushCache.addClient(uuid,token,client);
-                    }
+            server.addConnectListener((client)->{
+                String uuid = client.getSessionId().toString();
+                String token = client.getHandshakeData().getSingleUrlParam("token");
+                if(WarriorSession.getItem(token) != null){
+                    PushCache.addClient(uuid,token,client);
                 }
             });
 
-            server.addDisconnectListener(new DisconnectListener() {
-                @Override
-                public void onDisconnect(SocketIOClient client) {
-                    String sa = client.getRemoteAddress().toString();
-                    log.info("disconnect: "+sa);
-                    //获取客户端IP
-                    String clientIp = sa.substring(1,sa.indexOf(":"));
-                    String uuid = client.getSessionId().toString();
-                    PushCache.removeClient(uuid);
-
-                }
+            server.addDisconnectListener((client)->{
+                String sa = client.getRemoteAddress().toString();
+                log.info("disconnect: "+sa);
+                //获取客户端IP
+                String clientIp = sa.substring(1,sa.indexOf(":"));
+                String uuid = client.getSessionId().toString();
+                PushCache.removeClient(uuid);
             });
 
-            server.addEventListener(EventType.NOTICE_INFO.getValue(), String.class, new DataListener<String>() {
-                @Override
-                public void onData(SocketIOClient client, String data, AckRequest ackRequest) throws Exception {
-                    String sa = client.getRemoteAddress().toString();
-                    log.info("Notice_info: "+sa);
-                    //获取客户端IP
-                    String clientIp = sa.substring(1,sa.indexOf(":"));
-                    //获取客户端url参数
-                    Map params = client.getHandshakeData().getUrlParams();
-
-                }
+            server.addEventListener(EventType.NOTICE_INFO.getValue(), String.class,(client,data,ackRequest)->{
+                String sa = client.getRemoteAddress().toString();
+                log.info("Notice_info: "+sa);
+                //获取客户端IP
+                String clientIp = sa.substring(1,sa.indexOf(":"));
+                //获取客户端url参数
+                Map params = client.getHandshakeData().getUrlParams();
             });
             server.start();
         } catch (Exception e) {
@@ -86,9 +72,7 @@ public class PushService {
      */
     public static void sendMessageToAllClient(EventType eventType,String message){
         Collection<SocketIOClient> clients = server.getAllClients();
-        for (SocketIOClient client : clients){
-            client.sendEvent(eventType.getValue(),message);
-        }
+        clients.forEach(client-> client.sendEvent(eventType.getValue(),message));
     }
 
     /**

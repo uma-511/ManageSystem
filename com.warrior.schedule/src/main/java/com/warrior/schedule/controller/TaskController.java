@@ -49,7 +49,6 @@ public class TaskController extends WarriorBaseController {
     @RequestMapping(value = {""}, method = {RequestMethod.POST})
     @ApiOperation(value = "新增定时作业",httpMethod = "POST",response = JSONMsg.class)
     public JSONMsg addTask(@ModelAttribute Task task) {
-        task.setCreateTime(new Date());
         return buildMsg(taskService.insert(task));
     }
 
@@ -80,7 +79,6 @@ public class TaskController extends WarriorBaseController {
     @RequestMapping(value = "", method = {RequestMethod.PUT})
     @ApiOperation(value = "修改定时作业",httpMethod = "PUT",response = JSONMsg.class)
     public JSONMsg modifiedTask(@ModelAttribute Task task) {
-        task.setUpdateTime(new Date());
         return buildMsg(taskService.insertOrUpdate(task));
     }
 
@@ -115,5 +113,13 @@ public class TaskController extends WarriorBaseController {
     @ApiOperation(value = "获取所有的定时作业执行类信息",httpMethod = "GET",response = JSONMsg.class)
     public JSONMsg getJobClassList(){
         return buildMsg(taskService.scanPackage());
+    }
+
+    @RequiresPermissions("admin:task:update")
+    @RequestMapping(value = "/{id}/{status}",method = RequestMethod.PUT)
+    @ApiOperation(value = "修改定时作业状态",httpMethod = "PUT",response = JSONMsg.class)
+    public JSONMsg updateStatus(@PathVariable(value = "id") int id,
+                                @PathVariable(value = "status")int status){
+        return buildMsg(taskService.pauseOrResume(id,status));
     }
 }

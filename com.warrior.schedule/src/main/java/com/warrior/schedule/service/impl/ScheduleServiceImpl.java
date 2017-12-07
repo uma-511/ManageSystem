@@ -6,12 +6,14 @@ import com.warrior.schedule.service.ScheduleService;
 import com.warrior.schedule.task.ScriptTaskRun;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.List;
 
+@Log4j
 public class ScheduleServiceImpl implements ScheduleService {
 
     @Setter
@@ -101,7 +103,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder
                 .cronSchedule(job.getCronExpression());
         CronTrigger trigger = TriggerBuilder.newTrigger()
-                .withIdentity(job.getJobName(), job.getJobGroup())
+                .withIdentity(job.getJobName(), jobGroup)
                 .withSchedule(scheduleBuilder).build();
         scheduler.scheduleJob(jobDetail, trigger);
     }
@@ -119,7 +121,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @throws SchedulerException
      */
     public void pauseJob(String jobName,String jobGroup) throws SchedulerException {
-        JobKey jobKey = JobKey.jobKey(jobName,jobGroup);
+        JobKey jobKey = JobKey.jobKey(jobName,StringUtils.isNotBlank(jobGroup) ? jobGroup : QUARTZ_DEFAULT_GROUP);
         scheduler.pauseJob(jobKey);
     }
 
@@ -131,7 +133,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @throws SchedulerException
      */
     public void resumeJob(String jobName,String jobGroup) throws SchedulerException {
-        JobKey jobKey = JobKey.jobKey(jobName,jobGroup);
+        JobKey jobKey = JobKey.jobKey(jobName,StringUtils.isNotBlank(jobGroup) ? jobGroup : QUARTZ_DEFAULT_GROUP);
         scheduler.resumeJob(jobKey);
     }
 
@@ -144,7 +146,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @throws SchedulerException
      */
     public void deleteJob(String jobName,String jobGroup) throws SchedulerException {
-        JobKey jobKey = JobKey.jobKey(jobName,jobGroup);
+        JobKey jobKey = JobKey.jobKey(jobName,StringUtils.isNotBlank(jobGroup) ? jobGroup : QUARTZ_DEFAULT_GROUP);
         scheduler.deleteJob(jobKey);
     }
 

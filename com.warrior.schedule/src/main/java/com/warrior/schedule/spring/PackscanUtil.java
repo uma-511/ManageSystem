@@ -59,7 +59,8 @@ public class PackscanUtil {
             MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(resource);
             if (metadataReader != null && metadataReader.getClassMetadata().getInterfaceNames() != null
                     && metadataReader.getClassMetadata().getInterfaceNames().length > 0
-                    && StringUtils.equals(metadataReader.getClassMetadata().getInterfaceNames()[0], "org.quartz.Job")) {
+                    && StringUtils.equals(metadataReader.getClassMetadata().getInterfaceNames()[0], "org.quartz.Job")
+                    && metadataReader.getAnnotationMetadata().hasAnnotation("com.warrior.schedule.task.JobTarget")) {
                 return metadataReader.getClassMetadata().getClassName();
             }
         }

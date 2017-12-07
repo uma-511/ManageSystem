@@ -172,7 +172,7 @@ export default {
           { required: true, message: "请填写名称", trigger: "blur" },
           { type: "string", max: 30, message: "名称长度不能超过30个字符", trigger: "blur" }
         ],
-        passWord: [{ required: true, message: "请填写URL", trigger: "blur" }]
+        passWord: [{ required: true, message: "请填写密码", trigger: "blur" }]
       },
       columns: [
         { title: "编号", key: "index", type: "index", align: "center" },

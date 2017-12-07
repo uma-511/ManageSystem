@@ -87,7 +87,8 @@ export const appRouter = [{
         children: [
             { path: 'resources', title: '资源管理', name: 'resources', icon: 'ios-folder', access: 'admin:resource:view', component: resolve => { require(['./views/resource/index.vue'], resolve); } },
             { path: 'dict', title: '字典管理', name: 'dict', icon: 'briefcase', access: 'admin:dict:view', component: resolve => { require(['./views/dict/index.vue'], resolve); } },
-            { path: 'log', title: '系统日志', name: 'log', icon: 'ios-list-outline', access: 'admin:log:view', component: resolve => { require(['./views/log/index.vue'], resolve); } }
+            { path: 'log', title: '系统日志', name: 'log', icon: 'ios-list-outline', access: 'admin:log:view', component: resolve => { require(['./views/log/index.vue'], resolve); } },
+            { path: 'task', title: '定时作业', name: 'task', icon: 'clock', access: 'admin:task:view', component: resolve => { require(['./views/task/index.vue'], resolve); } }
         ]
     }
 ];

@@ -3,6 +3,7 @@ package com.warrior.util.common;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.warrior.util.exception.UtilException;
+import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
@@ -15,7 +16,9 @@ import java.util.Properties;
 
 /***
  * 配置文件工具类
+ *
  */
+@Log4j
 public class PropUtils {
 
     private static List<String> propFileList = Lists.newArrayList();
@@ -38,6 +41,7 @@ public class PropUtils {
                     name = names.nextElement().toString();
                     propValueMap.put(name,properties.get(name));
                 }
+                log.info("===="+propFilePath+" is loaded!");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,8 +49,8 @@ public class PropUtils {
         }
     }
 
-    public static <T> T getPropValue(String key){
-        return (T)propValueMap.get(key);
+    public static String getPropValue(String key){
+        return String.valueOf(propValueMap.get(key));
     }
 
 }

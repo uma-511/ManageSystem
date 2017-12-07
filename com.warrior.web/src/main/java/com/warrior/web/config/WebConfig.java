@@ -8,6 +8,7 @@ import com.warrior.common.spring.CustomDateConverter;
 import com.warrior.common.spring.GlobalExceptionHandler;
 import com.warrior.common.web.WarriorSession;
 import com.warrior.schedule.spring.ScheduleConfig;
+import com.warrior.util.common.PropUtils;
 import com.warrior.web.filter.CorsSpringFilter;
 import com.warrior.web.interceptor.SpringInterceptor;
 import com.warrior.web.shiro.ShiroConfig;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.*;
@@ -40,6 +42,11 @@ import java.util.*;
 @Import(value = {SwaggerConfig.class,ShiroConfig.class, ScheduleConfig.class})
 @ComponentScan(basePackages = {"com.warrior"})
 public class WebConfig extends WebMvcConfigurerAdapter{
+
+    @PostConstruct
+    public void init(){
+        PropUtils.loadProp("classpath:sysconfig.properties");
+    }
 
     @Bean("exceptionHandler")
     public GlobalExceptionHandler globalExceptionHandler(){

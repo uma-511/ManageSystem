@@ -55,6 +55,13 @@
                     <include>schedule-ui/**</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${basedir}/src/main/java/com/warrior/schedule/mapper</directory>
+                <targetPath>com/warrior/schedule/mapper</targetPath>
+                <includes>
+                    <include>*.mapper.xml</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 </project>

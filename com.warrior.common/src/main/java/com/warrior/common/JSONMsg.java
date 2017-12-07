@@ -41,13 +41,4 @@ public class JSONMsg implements Serializable{
         this.code = code;
         this.msg = msg;
     }
-//    public JSONMsg(int code, Page pageInfo, String msg) {
-//        this.code = code;
-//        this.data = pageInfo;
-//        this.msg = msg;
-//    }
-//
-//    public void setPageInfo(Page pageInfo){
-//        this.data = pageInfo;
-//    }
 }
