@@ -3,7 +3,7 @@
 </style>
 
 <template>
-    <div class="login" @keydown.enter="handleSubmit">
+    <div class="login" v-bind:style="{backgroundImage:'url('+backgroudImg+')'}" @keydown.enter="handleSubmit">
         <div class="login-con">
             <Card :bordered="false">
                 <p slot="title">
@@ -48,6 +48,7 @@ export default {
   data() {
     return {
       logining: false,
+      backgroudImg:util.ajaxUrl+'/images/bg.jpeg',
       form: {
         userName: "",
         password: ""
