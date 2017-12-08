@@ -837,8 +837,6 @@ export default {
                 this.year.cron = '';
             }
 
-        }else{
-            util.error('表达式错误！');
         }
     }
   },

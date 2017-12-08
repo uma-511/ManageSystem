@@ -14,7 +14,6 @@ import org.springframework.util.SystemPropertyUtils;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Set;
 
 @Log4j
@@ -60,7 +59,7 @@ public class PackscanUtil {
             if (metadataReader != null && metadataReader.getClassMetadata().getInterfaceNames() != null
                     && metadataReader.getClassMetadata().getInterfaceNames().length > 0
                     && StringUtils.equals(metadataReader.getClassMetadata().getInterfaceNames()[0], "org.quartz.Job")
-                    && metadataReader.getAnnotationMetadata().hasAnnotation("com.warrior.schedule.task.JobTarget")) {
+                    && metadataReader.getAnnotationMetadata().hasAnnotation("com.warrior.schedule.task.Job")) {
                 return metadataReader.getClassMetadata().getClassName();
             }
         }

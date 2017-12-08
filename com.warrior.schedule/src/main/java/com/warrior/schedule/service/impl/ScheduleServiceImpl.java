@@ -74,6 +74,10 @@ public class ScheduleServiceImpl implements ScheduleService {
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(job.getCronExpression());
             trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
             trigger.getJobDataMap().put(QUARTZ_REMARK, job.getRemark());
+            final CronTrigger tmp_trigger = trigger;
+            if(job.getParams().size() > 0){
+                job.getParams().forEach((key,value)->tmp_trigger.getJobDataMap().put(key,value));
+            }
             scheduler.rescheduleJob(triggerKey, trigger);
         }
     }
@@ -100,12 +104,19 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         jobDetail.getJobDataMap().put(QUARTZ_REMARK, job.getRemark());
+        if(job.getParams().size() > 0){
+            job.getParams().forEach((key,value)->jobDetail.getJobDataMap().put(key,value));
+        }
+
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder
                 .cronSchedule(job.getCronExpression());
         CronTrigger trigger = TriggerBuilder.newTrigger()
                 .withIdentity(job.getJobName(), jobGroup)
                 .withSchedule(scheduleBuilder).build();
         scheduler.scheduleJob(jobDetail, trigger);
+        if(job.getStatus() == ScheduleJob.TASK_STATUS_PAUSE){
+            scheduler.pauseTrigger(trigger.getKey());
+        }
     }
 
     /**

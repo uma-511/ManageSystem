@@ -9,9 +9,6 @@ import java.util.Map;
 
 public interface TaskService extends IService<Task>{
 
-    int TASK_STATUS_NORMAL = 0;
-    int TASK_STATUS_PAUSE = 1;
-
     Page<Task> getPageList(Page<Task> page,String taskName,String taskGroup,int status);
 
     List<Map<String,String>> scanPackage();

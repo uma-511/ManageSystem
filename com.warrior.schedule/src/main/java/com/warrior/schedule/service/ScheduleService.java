@@ -11,6 +11,8 @@ public interface ScheduleService {
     String QUARTZ_REMARK = "remark";
     String QUARTZ_DEFAULT_GROUP = "defalut_group";
     String QUARTZ_SCRIPT = "script";
+    String QUARTZ_CLASS = "quartz_class";
+    String QUARTZ_METHOD = "quartz_method";
 
     void addJobList(List<ScheduleJob> jobList) throws SchedulerException;
 
