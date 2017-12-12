@@ -46,6 +46,7 @@ public class WebConfig extends WebMvcConfigurerAdapter{
     @PostConstruct
     public void init(){
         PropUtils.loadProp("classpath:sysconfig.properties");
+        PropUtils.loadProp("classpath:upload.properties");
     }
 
     @Bean("exceptionHandler")

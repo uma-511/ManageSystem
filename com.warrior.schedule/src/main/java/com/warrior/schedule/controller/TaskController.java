@@ -115,6 +115,7 @@ public class TaskController extends WarriorBaseController {
         return buildMsg(taskService.scanPackage());
     }
 
+    @SysLog("修改定时作业状态")
     @RequiresPermissions("admin:task:update")
     @RequestMapping(value = "/{id}/{status}",method = RequestMethod.PUT)
     @ApiOperation(value = "修改定时作业状态",httpMethod = "PUT",response = JSONMsg.class)

@@ -11,16 +11,16 @@ import com.warrior.common.service.WarriorBaseServiceImpl;
 import com.warrior.util.common.DateUtils;
 import com.warrior.util.common.PropUtils;
 import com.warrior.util.common.TokenUtil;
+import com.warrior.util.poi.ExcelWorkBook;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -34,16 +34,28 @@ import java.util.Iterator;
 @Service
 public class AttachmentServiceImpl extends WarriorBaseServiceImpl<AttachmentDao, Attachment> implements AttachmentService {
 
-    @PostConstruct
-    public void init(){
-        PropUtils.loadProp("classpath:upload.properties");
-    }
-
     public Page<Attachment> getPageList(Page<Attachment> page ) {
         EntityWrapper<Attachment> ew = new EntityWrapper<>();
         page.setRecords(baseMapper.getPageList(page, ew));
         return page;
    }
+
+    public ExcelWorkBook importExcel(HttpServletRequest request,String paramName){
+        ExcelWorkBook wb = new ExcelWorkBook();
+        try {
+            CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getServletContext());
+            if (multipartResolver.isMultipart(request)){
+                MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest)request;
+                MultipartFile file = multiRequest.getFile(paramName);
+                wb.readExcel(file.getInputStream());
+            }
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return wb;
+    }
 
     @Transactional
     public String uploadFile(HttpServletRequest request, int type) {
@@ -58,7 +70,7 @@ public class AttachmentServiceImpl extends WarriorBaseServiceImpl<AttachmentDao,
                 }
                 MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest)request;
                 Iterator<String> iterator = multiRequest.getFileNames();
-                Attachment attachment = null;
+                Attachment attachment;
                 while(iterator.hasNext()){
                     MultipartFile file = multiRequest.getFile(iterator.next());
                     if (file != null){
