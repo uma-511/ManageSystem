@@ -10,7 +10,7 @@ import com.warrior.common.exception.WarriorException;
 import com.warrior.common.service.WarriorBaseServiceImpl;
 import com.warrior.util.common.DateUtils;
 import com.warrior.util.common.PropUtils;
-import com.warrior.util.common.TokenUtil;
+import com.warrior.util.common.RandomCode;
 import com.warrior.util.poi.ExcelWorkBook;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.io.FileUtils;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -75,9 +76,8 @@ public class AttachmentServiceImpl extends WarriorBaseServiceImpl<AttachmentDao,
                     MultipartFile file = multiRequest.getFile(iterator.next());
                     if (file != null){
                         attachment = new Attachment();
-                        attachment.setAid(TokenUtil.getToken());
                         attachment.setCreateTime(new Date());
-                        attachment.setFileName("file_"+DateUtils.formartDate(new Date(),"yyyyMMdd_hhmmsss")+file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."),file.getOriginalFilename().length()));
+                        attachment.setFileName("file_"+DateUtils.formartDate(new Date(),"yyyyMMdd_hhmmss")+"_"+ RandomCode.genIntCode(4)+file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."),file.getOriginalFilename().length()));
                         attachment.setSize(file.getSize());
                         attachment.setFilePath(filePath.getPath());
                         attachment.setFileType(type);
@@ -139,4 +139,5 @@ public class AttachmentServiceImpl extends WarriorBaseServiceImpl<AttachmentDao,
         dir = path.endsWith("/") ? path + dir : path + File.separator + dir;
         return dir;
     }
+
 }

@@ -48,7 +48,7 @@ public class SessionCacheEventListener implements CacheEventListener {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone(){
         return null;
     }
 

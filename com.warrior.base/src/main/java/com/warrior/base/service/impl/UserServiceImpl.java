@@ -148,6 +148,7 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
     public Map<String,Object> getUserSimpleInfo(){
         User user = WarriorSession.getItem(getToken());
         Map<String,Object> data = Maps.newHashMap();
+        data.put("uid",user.getUid());
         data.put("userName",user.getUserName());
         data.put("img",user.getImg());
         SysLog log = sysLogService.getLastLogin(user.getUid());
@@ -155,7 +156,7 @@ public class UserServiceImpl extends WarriorBaseServiceImpl<UserDao,User> implem
         data.put("ip",log == null ? "" : log.getIp());
         data.put("perStr",permissionService.getPermissionStr(user.getUid()));
         data.put("roleName",userRoleService.getRoleNameByUser(user.getUid()));
-
+        data.put("userType",user.getUserType());
         return data;
     }
 

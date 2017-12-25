@@ -9,12 +9,15 @@ import com.warrior.base.entity.UserRole;
 import com.warrior.base.service.RoleService;
 import com.warrior.base.service.UserRoleService;
 import com.warrior.base.model.RoleModel;
+import com.warrior.common.Contacts;
+import com.warrior.common.exception.WarriorException;
 import com.warrior.common.service.WarriorBaseServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -82,5 +85,14 @@ public class RoleServiceImpl extends WarriorBaseServiceImpl<RoleDao, Role> imple
         EntityWrapper<Role> ew = new EntityWrapper<>();
         ew.eq("status", 0);
         return baseMapper.selectList(ew);
+    }
+
+    @Override
+    public boolean deleteById(Serializable id) {
+        Role role = selectById(id);
+        if(role != null && StringUtils.equals("超级管理员",role.getRoleName())){
+            throw new WarriorException(Contacts.CODE_FAIL,"超级管理员不能删除！");
+        }
+        return super.deleteById(id);
     }
 }

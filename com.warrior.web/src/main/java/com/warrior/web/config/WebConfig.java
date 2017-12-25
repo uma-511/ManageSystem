@@ -7,11 +7,9 @@ import com.warrior.common.spring.CustomApplicationListener;
 import com.warrior.common.spring.CustomDateConverter;
 import com.warrior.common.spring.GlobalExceptionHandler;
 import com.warrior.common.web.WarriorSession;
-import com.warrior.schedule.spring.ScheduleConfig;
 import com.warrior.util.common.PropUtils;
 import com.warrior.web.filter.CorsSpringFilter;
 import com.warrior.web.interceptor.SpringInterceptor;
-import com.warrior.web.shiro.ShiroConfig;
 import net.sf.ehcache.CacheManager;
 import org.springframework.context.annotation.*;
 import org.springframework.core.convert.converter.Converter;
@@ -39,7 +37,6 @@ import java.util.*;
 @EnableWebMvc
 @EnableAspectJAutoProxy
 @ImportResource(value = {"classpath:spring-mybatis.xml"})
-@Import(value = {SwaggerConfig.class,ShiroConfig.class, ScheduleConfig.class})
 @ComponentScan(basePackages = {"com.warrior"})
 public class WebConfig extends WebMvcConfigurerAdapter{
 

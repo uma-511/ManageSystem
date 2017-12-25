@@ -30,6 +30,7 @@ public class GlobalExceptionHandler implements HandlerExceptionResolver{
             model.addObject("code", Contacts.CODE_FAIL);
             model.addObject("msg",StringUtils.isBlank(e.getMessage()) ? DEFAULT_ERROR_MESSAGE : e.getMessage());
         }
+        e.printStackTrace();
         return model;
     }
 }

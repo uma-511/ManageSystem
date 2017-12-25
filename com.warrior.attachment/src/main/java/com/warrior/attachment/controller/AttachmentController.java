@@ -42,7 +42,6 @@ public class AttachmentController extends WarriorBaseController {
     * @param aid 
     * @return
     */
-    @RequiresPermissions("admin:attachment:view")
     @RequestMapping(value = "/{aid}", method = {RequestMethod.GET})
     @ApiOperation(value = "获取附件信息",httpMethod = "GET",response = JSONMsg.class)
     public JSONMsg queryAttachment(
@@ -72,7 +71,6 @@ public class AttachmentController extends WarriorBaseController {
     * @return
     */
     @SysLog("删除附件信息")
-    @RequiresPermissions("admin:attachment:del")
     @RequestMapping(value = "/{aid}", method = {RequestMethod.DELETE})
     @ApiOperation(value = "删除attachment",httpMethod = "DELETE",response = JSONMsg.class)
     public JSONMsg delAttachment(
@@ -85,7 +83,6 @@ public class AttachmentController extends WarriorBaseController {
     * 查询附件信息列表
     *
     */
-    @RequiresPermissions("admin:attachment:view")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ApiOperation(value = "获取附件信息列表",httpMethod = "GET",response = JSONMsg.class)
     public JSONMsg getAttachmentList(

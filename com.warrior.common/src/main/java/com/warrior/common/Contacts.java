@@ -20,6 +20,8 @@ public class Contacts {
     public final static int CODE_PASSWORD_ERROR = 3;
     //密码错误5次
     public final static int CODE_PASSWORD_ERROR_5 =4;
+    //用户类型错误
+    public final static int CODE_USERTYPE_ERROR = 11;
     //登录失败
     public final static int CODE_LOGIN_FAIL = 5;
     //token失效
@@ -64,5 +66,6 @@ public class Contacts {
         ERROR_MSG.put(CODE_REQUEST_TIMEOUT,"请求超时！");
         ERROR_MSG.put(CODE_SIGN_ERROR,"签名错误！");
         ERROR_MSG.put(CODE_NO_PERMISSION,"无访问权限！");
+        ERROR_MSG.put(CODE_USERTYPE_ERROR,"用户类型错误");
     }
 }

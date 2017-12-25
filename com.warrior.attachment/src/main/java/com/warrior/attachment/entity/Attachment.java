@@ -16,7 +16,7 @@ import java.util.Date;
 public class Attachment implements Serializable{
 
    @ApiModelProperty(value = "编号")
-   @TableId(value = "aid",type = IdType.NONE)
+   @TableId(value = "aid",type = IdType.UUID)
    @Setter @Getter
    private String aid;
 

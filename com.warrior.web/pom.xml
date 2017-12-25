@@ -34,6 +34,11 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.warrior.supplier</groupId>
+            <artifactId>com.warrior.supplier</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.warrior.schedule</groupId>
             <artifactId>com.warrior.schedule</artifactId>
             <version>1.0-SNAPSHOT</version>
