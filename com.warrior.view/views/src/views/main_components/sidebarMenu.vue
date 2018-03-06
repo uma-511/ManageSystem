@@ -6,19 +6,19 @@
     <Menu ref="sideMenu" :active-name="$route.name" :open-names="openedSubmenuArr" :theme="$store.state.menuTheme" width="auto" @on-select="changeMenu">
         <template v-for="item in menuList">
             <MenuItem v-if="item.children.length<=1" :name="item.children[0].name" :key="item.path">
-                <Icon :type="item.icon" :size="iconSize" :key="item.path"></Icon>
+                <Icon :type="item.icon" :size="iconSize" :key="item.path+'_icon'"></Icon>
                 <span class="layout-text" :key="item.path">{{ itemTitle(item) }}</span>
             </MenuItem>
 
-            <Submenu v-if="item.children.length>1" :name="item.name" :key="item.path">
+            <Submenu v-if="item.children.length>1" :name="item.name" :key="item.name+'_submenu'">
                 <template slot="title">
                     <Icon :type="item.icon" :size="iconSize"></Icon>
                     <span class="layout-text">{{ itemTitle(item) }}</span>
                 </template>
                 <template v-for="child in item.children">
                     <MenuItem :name="child.name" :key="child.name">
-                        <Icon :type="child.icon" :size="iconSize" :key="child.name"></Icon>
-                        <span class="layout-text" :key="child.name">{{ child.title }}</span>
+                        <Icon :type="child.icon" :size="iconSize" :key="child.name+'_icon'"></Icon>
+                        <span class="layout-text" :key="child.name+'_title'">{{ child.title }}</span>
                     </MenuItem>
                 </template>
             </Submenu>

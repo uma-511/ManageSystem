@@ -90,7 +90,17 @@ export const appRouter = [{
             { path: 'log', title: '系统日志', name: 'log', icon: 'ios-list-outline', access: 'admin:log:view', component: resolve => { require(['./views/log/index.vue'], resolve); } },
             { path: 'task', title: '定时作业', name: 'task', icon: 'clock', access: 'admin:task:view', component: resolve => { require(['./views/task/index.vue'], resolve); } }
         ]
-    }
+    },
+{
+    path: '/article',
+        icon: 'ios-folder',
+    name: 'article',
+    title: '文章管理',
+    component: Main,
+    children: [
+    { path: 'index', title: '文章管理', name: 'artIndex', icon: 'clock', access: 'admin:article:view', component: resolve => { require(['./views/article/index.vue'], resolve); } }
+]
+}
 ];
 
 // 所有上面定义的路由都要写在下面的routers里

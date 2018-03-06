@@ -75,17 +75,17 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 
     @Bean
     public FreeMarkerConfigurer freeMarkerConfigurer(){
-        FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
+    FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
         configurer.setTemplateLoaderPath("/");
         configurer.setDefaultEncoding("UTF-8");
-        Map<String,Object> setting = new HashMap<>();
+    Map<String,Object> setting = new HashMap<>();
         setting.put("template_update_delay",10);
         setting.put("locale","zh_CN");
         setting.put("datetime_format","yyyy-MM-dd HH:mm:ss");
         setting.put("date_format","yyyy-MM-dd");
         configurer.setFreemarkerVariables(setting);
         return configurer;
-    }
+}
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

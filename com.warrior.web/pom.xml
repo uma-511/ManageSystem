@@ -33,14 +33,20 @@
             <artifactId>com.warrior.attachment</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.warrior.supplier</groupId>
-            <artifactId>com.warrior.supplier</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.warrior.supplier</groupId>-->
+            <!--<artifactId>com.warrior.supplier</artifactId>-->
+            <!--<version>1.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.warrior.schedule</groupId>
             <artifactId>com.warrior.schedule</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.warrior.meiwang</groupId>
+            <artifactId>com.warrior.meiwang</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
