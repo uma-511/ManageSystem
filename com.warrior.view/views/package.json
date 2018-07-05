@@ -41,6 +41,7 @@
     "vue": "^2.5.2",
     "vue-i18n": "^5.0.3",
     "vue-router": "^2.8.1",
+    "vue-table-with-tree-grid": "^0.2.4",
     "vue-video-player": "^5.0.2",
     "vuex": "^2.5.0"
   },

@@ -1,80 +1,116 @@
 <style lang="less">
-@import "./main.less";
+@import './main.less';
 </style>
 <template>
-    <div class="main" :class="{'main-hide-text': hideMenuText}">
-        <div class="sidebar-menu-con" :style="{width: hideMenuText?'60px':'200px', overflow: hideMenuText ? 'visible' : 'auto', background: $store.state.menuTheme === 'dark'?'#495060':'white'}">
-            <div class="logo-con">
-                <img v-show="!hideMenuText"  src="../images/logo.png" key="max-logo" />
-                <img v-show="hideMenuText" src="../images/logo-min.png" key="min-logo"/>
-            </div>
-            <sidebar-menu v-if="!hideMenuText" :menuList="menuList" :iconSize="14"/>
-            <sidebar-menu-shrink :icon-color="menuIconColor" v-else :menuList="menuList"/>
-        </div>
-        <div class="main-header-con" :style="{paddingLeft: hideMenuText?'60px':'200px'}">
-            <div class="main-header">
-                <div class="navicon-con">
-                    <Button :style="{transform: 'rotateZ(' + (this.hideMenuText ? '-90' : '0') + 'deg)'}" type="text" @click="toggleClick">
-                        <Icon type="navicon" size="32"></Icon>
-                    </Button>
-                </div>
-                <div class="header-middle-con">
-                    <div class="main-breadcrumb">
-                        <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
-                    </div>
-                </div>
-                <div class="header-avator-con">
-                    <div @click="handleFullScreen" v-if="showFullScreenBtn" class="full-screen-btn-con">
-                        <Tooltip :content="isFullScreen ? '退出全屏' : '全屏'" placement="bottom">
-                            <Icon :type="isFullScreen ? 'arrow-shrink' : 'arrow-expand'" :size="23"></Icon>
-                        </Tooltip>
-                    </div>
-                    <div @click="lockScreen" class="lock-screen-btn-con">
-                        <Tooltip content="锁屏" placement="bottom">
-                            <Icon type="locked" :size="20"></Icon>
-                        </Tooltip>
-                    </div>
-                    <div @click="showMessage" class="message-con">
-                        <Tooltip :content="messageCount > 0 ? '有' + messageCount + '条未读消息' : '无未读消息'" placement="bottom">
-                            <Badge :count="messageCount" dot>
-                                <Icon type="ios-bell" :size="22"></Icon>
-                            </Badge>
-                        </Tooltip>
-                    </div>
-                    <div class="switch-theme-con">
-                        <Row class="switch-theme" type="flex" justify="center" align="middle">
-                            <theme-dropdown-menu></theme-dropdown-menu>
-                        </Row>
-                    </div>
-                    <div class="user-dropdown-menu-con">
-                        <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
-                            <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
-                                <a href="javascript:void(0)">
-                                    <span class="main-user-name">{{ userName }}</span>
-                                    <Icon type="arrow-down-b"></Icon>
-                                </a>
-                                <DropdownMenu slot="list">
-                                    <DropdownItem name="ownSpace">个人中心</DropdownItem>
-                                    <DropdownItem name="loginout" divided>退出登录</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                            <Avatar :src="user.img" style="background: #619fe7;margin-left: 10px;"></Avatar>
-                        </Row>
-                    </div>
-                </div>
-            </div>
-            <div class="tags-con">
-                <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
-            </div>
-        </div>
-        <div class="single-page-con" :style="{left: hideMenuText?'60px':'200px'}">
-            <div class="single-page">
-                <keep-alive :include="cachePage">
-                    <router-view></router-view>
-                </keep-alive>
-            </div>
-        </div>
+  <div class="main"
+       :class="{'main-hide-text': hideMenuText}">
+    <div class="sidebar-menu-con"
+         :style="{width: hideMenuText?'60px':'200px', overflow: hideMenuText ? 'visible' : 'auto', background: $store.state.menuTheme === 'dark'?'#495060':'white'}">
+      <div class="logo-con">
+        <img v-show="!hideMenuText"
+             src="../images/logo.png"
+             key="max-logo" />
+        <img v-show="hideMenuText"
+             src="../images/logo-min.png"
+             key="min-logo" />
+      </div>
+      <sidebar-menu v-if="!hideMenuText"
+                    :menuList="menuList"
+                    :iconSize="14" />
+      <sidebar-menu-shrink :icon-color="menuIconColor"
+                           v-else
+                           :menuList="menuList" />
     </div>
+    <div class="main-header-con"
+         :style="{paddingLeft: hideMenuText?'60px':'200px'}">
+      <div class="main-header">
+        <div class="navicon-con">
+          <Button :style="{transform: 'rotateZ(' + (this.hideMenuText ? '-90' : '0') + 'deg)'}"
+                  type="text"
+                  @click="toggleClick">
+            <Icon type="navicon"
+                  size="32"></Icon>
+          </Button>
+        </div>
+        <div class="header-middle-con">
+          <div class="main-breadcrumb">
+            <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
+          </div>
+        </div>
+        <div class="header-avator-con">
+          <div @click="handleFullScreen"
+               v-if="showFullScreenBtn"
+               class="full-screen-btn-con">
+            <Tooltip :content="isFullScreen ? '退出全屏' : '全屏'"
+                     placement="bottom">
+              <Icon :type="isFullScreen ? 'arrow-shrink' : 'arrow-expand'"
+                    :size="23"></Icon>
+            </Tooltip>
+          </div>
+          <div @click="lockScreen"
+               class="lock-screen-btn-con">
+            <Tooltip content="锁屏"
+                     placement="bottom">
+              <Icon type="locked"
+                    :size="20"></Icon>
+            </Tooltip>
+          </div>
+          <div @click="showMessage"
+               class="message-con">
+            <Tooltip :content="messageCount > 0 ? '有' + messageCount + '条未读消息' : '无未读消息'"
+                     placement="bottom">
+              <Badge :count="messageCount"
+                     dot>
+                <Icon type="ios-bell"
+                      :size="22"></Icon>
+              </Badge>
+            </Tooltip>
+          </div>
+          <div class="switch-theme-con">
+            <Row class="switch-theme"
+                 type="flex"
+                 justify="center"
+                 align="middle">
+              <theme-dropdown-menu></theme-dropdown-menu>
+            </Row>
+          </div>
+          <div class="user-dropdown-menu-con">
+            <Row type="flex"
+                 justify="end"
+                 align="middle"
+                 class="user-dropdown-innercon">
+              <Dropdown transfer
+                        trigger="click"
+                        @on-click="handleClickUserDropdown">
+                <a href="javascript:void(0)">
+                  <span class="main-user-name">{{ userName }}</span>
+                  <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem name="ownSpace">个人中心</DropdownItem>
+                  <DropdownItem name="loginout"
+                                divided>退出登录</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              <Avatar :src="user.img"
+                      style="background: #619fe7;margin-left: 10px;"></Avatar>
+            </Row>
+          </div>
+        </div>
+      </div>
+      <div class="tags-con">
+        <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
+      </div>
+    </div>
+    <div class="single-page-con"
+         :style="{left: hideMenuText?'60px':'200px'}">
+      <div class="single-page">
+        <keep-alive :include="cachePage">
+          <router-view></router-view>
+        </keep-alive>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import sidebarMenu from "./main_components/sidebarMenu.vue";
@@ -84,7 +120,7 @@ import themeDropdownMenu from "./main_components/themeDropdownMenu.vue";
 import sidebarMenuShrink from "./main_components/sidebarMenuShrink.vue";
 import Cookies from "js-cookie";
 import util from "@/libs/util.js";
-import ioClient from "../libs/socketioClient";
+// import ioClient from "../libs/socketioClient";
 
 export default {
   components: {
@@ -94,7 +130,7 @@ export default {
     themeDropdownMenu,
     sidebarMenuShrink
   },
-  data() {
+  data () {
     return {
       spanLeft: 4,
       spanRight: 20,
@@ -107,36 +143,36 @@ export default {
     };
   },
   computed: {
-    menuList() {
+    menuList () {
       return this.$store.state.menuList;
     },
-    tagsList() {
+    tagsList () {
       return this.$store.state.tagsList; // 所有页面的页面对象
     },
-    pageTagsList() {
+    pageTagsList () {
       return this.$store.state.pageOpenedList; // 打开的页面的页面对象
     },
-    currentPath() {
+    currentPath () {
       return this.$store.state.currentPath; // 当前面包屑数组
     },
-    menuIconColor() {
+    menuIconColor () {
       return this.$store.state.menuTheme === "dark" ? "white" : "#495060";
     },
-    cachePage() {
+    cachePage () {
       return this.$store.state.cachePage;
     },
-    lang() {
+    lang () {
       return this.$store.state.lang;
     },
-    isFullScreen() {
+    isFullScreen () {
       return this.$store.state.isFullScreen;
     },
-    user() {
+    user () {
       return this.$store.getters.getUser;
     }
   },
   methods: {
-    init() {
+    init () {
       util.ajax.get("/user/getBaseInfo").then(rep => {
         if (rep.code === 0) {
           let user = rep.data;
@@ -156,11 +192,11 @@ export default {
             Cookies.get("isConnected") == undefined ||
             Cookies.get("isConnected") == "0"
           ) {
-            let client = ioClient.createNew();
-            const _this = this;
-            client.receive("notice_info", function(data) {
-              _this.notice(data);
-            });
+            // let client = ioClient.createNew();
+            // const _this = this;
+            // client.receive("notice_info", function(data) {
+            //   _this.notice(data);
+            // });
           }
         }
       });
@@ -174,10 +210,10 @@ export default {
       this.messageCount = messageCount.toString();
       this.checkTag(this.$route.name);
     },
-    toggleClick() {
+    toggleClick () {
       this.hideMenuText = !this.hideMenuText;
     },
-    handleClickUserDropdown(name) {
+    handleClickUserDropdown (name) {
       if (name === "ownSpace") {
         util.openNewPage(this, "ownspace_index");
         this.$router.push({
@@ -192,7 +228,7 @@ export default {
         });
       }
     },
-    loginout() {
+    loginout () {
       Cookies.remove("token");
       Cookies.remove("hasGreet");
       Cookies.remove("isConnected");
@@ -214,17 +250,17 @@ export default {
         name: "login"
       });
     },
-    handleFullScreen() {
+    handleFullScreen () {
       this.$store.commit("handleFullScreen");
       // this.$store.commit('changeFullScreenState');
     },
-    showMessage() {
+    showMessage () {
       util.openNewPage(this, "message_index");
       this.$router.push({
         name: "message_index"
       });
     },
-    lockScreen() {
+    lockScreen () {
       let lockScreenBack = document.getElementById("lock_screen_back");
       lockScreenBack.style.transition = "all 3s";
       lockScreenBack.style.zIndex = 10000;
@@ -240,7 +276,7 @@ export default {
         });
       }, 800);
     },
-    checkTag(name) {
+    checkTag (name) {
       let openpageHasTag = this.pageTagsList.some(item => {
         if (item.name === name) {
           return true;
@@ -256,21 +292,21 @@ export default {
         );
       }
     },
-    notice(rep) {
+    notice (rep) {
       let data = JSON.parse(rep);
       if (data.code === 10) {
         const _this = this;
-        util.error(data.msg,function(){
+        util.error(data.msg, function () {
           _this.loginout();
         });
       }
     },
-    beforeunloadHandler(e){
+    beforeunloadHandler (e) {
       Cookies.remove("isConnected");
     }
   },
   watch: {
-    $route(to) {
+    $route (to) {
       this.$store.commit("setCurrentPageName", to.name);
       let pathArr = util.setCurrentPath(this, to.name);
       if (pathArr.length > 2) {
@@ -278,12 +314,12 @@ export default {
       }
       this.checkTag(to.name);
     },
-    lang() {
+    lang () {
       util.setCurrentPath(this, this.$route.name); // 在切换语言时用于刷新面包屑
     }
   },
-  mounted() {
-    window.addEventListener('beforeunload',e=>this.beforeunloadHandler(e));
+  mounted () {
+    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e));
     this.init();
     // 锁屏相关
     let lockScreenBack = document.getElementById("lock_screen_back");
@@ -340,7 +376,7 @@ export default {
       Cookies.set("hasGreet", 1);
     }
   },
-  created() {
+  created () {
     // 查找当前用户之前登录时设置的主题
     let name = Cookies.get("user");
     if (localStorage.theme) {
@@ -370,8 +406,8 @@ export default {
     // 显示打开的页面的列表
     this.$store.commit("setOpenedList");
   },
-  destroyed(){
-    window.removeEventListener('beforeunload',e=>this.beforeunloadHandler(e));
+  destroyed () {
+    window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e));
   }
 };
 </script>

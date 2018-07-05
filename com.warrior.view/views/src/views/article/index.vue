@@ -10,13 +10,13 @@
           <span>创建时间：</span>
           <DatePicker size="small"
                       type="datetime"
-                      format="yyyy-MM-dd HH:mm"
+                      format="yyyy-MM-dd"
                       v-model="createTime_start"
                       placeholder="选择开始日期"
                       style="width:136px;"></DatePicker>
           <DatePicker size="small"
                       type="datetime"
-                      format="yyyy-MM-dd HH:mm"
+                      format="yyyy-MM-dd"
                       v-model="createTime_end"
                       placeholder="选择结束日期"
                       style="width:136px;"></DatePicker>
@@ -27,11 +27,22 @@
                  v-model="typeId"
                  style="width:120px;"></Input>
         </div>
-        <div style="display:inline;">
+        <!-- <div style="display:inline;">
           <span>热门：</span>
-          <Input size="small"
-                 v-model="isHot"
-                 style="width:120px;"></Input>
+          <Checkbox v-model="isHot"
+                    true-value=1
+                    false-value=0></Checkbox>
+        </div> -->
+
+        <div style="display:inline;">
+          <span>是否热门:</span>
+          <Select v-model="isHot"
+                  size="small"
+                  style="width:120px">
+            <Option v-for="item in hotList"
+                    :value="item.value"
+                    :key="item.value">{{ item.label }}</Option>
+          </Select>
         </div>
         <div style="display:inline;">
           <Button type="primary"
@@ -39,16 +50,6 @@
                   icon="ios-search"
                   @click="query">查询</Button>
         </div>
-        <Row style="margin-top: 10px;">
-          <Col span="24">
-          <permissionButton type="primary"
-                            size="small"
-                            icon="plus"
-                            v-on:increment="addItem()"
-                            perStr="admin:article:add"
-                            text="新增"></permissionButton>
-          </Col>
-        </Row>
       </div>
       <Table stripe
              :columns="columns"
@@ -74,7 +75,7 @@
               :rules="ruleInline"
               inline
               style="padding-right:30px;">
-          <div style="width:50%;float: left;">
+          <!-- <div style="width:50%;float: left;">
             <FormItem prop="likes"
                       label="点赞数："
                       :label-width="80">
@@ -82,7 +83,7 @@
                            v-model="formInline.likes"
                            placeholder="请输入"></InputNumber>
             </FormItem>
-          </div>
+          </div> -->
           <div style="width:50%;float: left;">
             <FormItem prop="reads"
                       label="浏览次数："
@@ -92,15 +93,15 @@
                            placeholder="请输入"></InputNumber>
             </FormItem>
           </div>
-          <div style="width:50%;float: left;">
+          <!-- <div style="width:50%;float: left;">
             <FormItem prop="video"
                       label="视频地址："
                       :label-width="80">
               <Input v-model="formInline.video"
                      placeholder="请输入"></Input>
             </FormItem>
-          </div>
-          <div style="width:50%;float: left;">
+          </div> -->
+          <!-- <div style="width:50%;float: left;">
             <FormItem prop="typeId"
                       label="类别id："
                       :label-width="80">
@@ -108,13 +109,12 @@
                            v-model="formInline.typeId"
                            placeholder="请输入"></InputNumber>
             </FormItem>
-          </div>
+          </div> -->
           <div style="width:50%;float: left;">
-            <FormItem prop="isHot"
-                      label="是否热门：热门：1，非热门：0："
+            <FormItem prop="hot"
+                      label="是否热门"
                       :label-width="80">
-              <Input v-model="formInline.isHot"
-                     placeholder="请输入"></Input>
+              <Checkbox v-model="formInline.hot"></Checkbox>
             </FormItem>
           </div>
           <div style="clear: both;"></div>
@@ -160,13 +160,24 @@ export default {
       isSaveing: false,
       modelTitle: '新增文章管理',
       formInline: {
-        likes: 0,
+        // likes: 0,
         reads: 0,
-        video: '',
-        typeId: 0,
-        isHot: '',
+        // video: '',
+        // typeId: 0,
+        hot: 0,
+        uid: 0,
         id: 0
       },
+      hotList: [{
+        value: 'all',
+        label: '全部'
+      }, {
+        value: 'true',
+        label: '是'
+      }, {
+        value: 'false',
+        label: '否'
+      }],
       ruleInline: {
 
       },
@@ -185,19 +196,17 @@ export default {
           }
         },
         { title: '编号', key: 'index', type: 'index', align: 'center' },
-        { title: '', key: 'id', align: 'center' },
-        { title: '用户id', key: 'uid', align: 'center' },
-        { title: '', key: 'content', align: 'center' },
-        { title: '纬度', key: 'lat', align: 'center' },
-        { title: '经度', key: 'lng', align: 'center' },
+        { title: '用户名', key: 'nick_name', align: 'center' },
         { title: '价格', key: 'price', align: 'center' },
-        {          title: '创建时间', key: 'createTime', align: 'center', render: (h, params) => {
-            return h('Span', {}, util.formatDate(new Date(params.row.createTime), 'yyyy-MM-dd hh:mm:ss'));
+        {          title: '发布时间', key: 'create_time', align: 'center', render: (h, params) => {
+            return h('Span', {}, util.formatDate(new Date(params.row.create_time), 'yyyy-MM-dd hh:mm:ss'));
           }        },
         { title: '点赞数', key: 'likes', align: 'center' },
         { title: '浏览次数', key: 'reads', align: 'center' },
-        { title: '类别id', key: 'typeId', align: 'center' },
-        { title: '是否热门：热门：1，非热门：0', key: 'isHot', align: 'center' },
+        { title: '类别', key: 'typeName', align: 'center' },
+        {          title: '是否热门', key: 'is_hot', align: 'center', render: (h, params) => {
+            return h('Span', {}, this.hot_convert(params.row.is_hot));
+          }        },
         {          title: '操作', key: 'id', align: 'center', width: 180, render: (h, params) => {
             return h('div', [
               h(permissionButton, {
@@ -215,7 +224,8 @@ export default {
                           this.formInline.reads = rep.data.reads;
                           this.formInline.video = rep.data.video;
                           this.formInline.typeId = rep.data.typeId;
-                          this.formInline.isHot = rep.data.isHot;
+                          this.formInline.uid = rep.data.uid;
+                          this.formInline.hot = rep.data.hot;
                         }
                       });
                   }                }
@@ -232,7 +242,7 @@ export default {
       createTime_start: '',
       createTime_end: '',
       typeId: -1,
-      isHot: '',
+      isHot: 'all',
       data: [],
       total: 0,
       pageSize: 10,
@@ -246,8 +256,8 @@ export default {
     query () {
       util.ajax.get('/article/list', {
         params: {
-          createTime_start: util.formatDate(this.createTime_start, 'yyyy-MM-dd hh:mm'),
-          createTime_end: util.formatDate(this.createTime_end, 'yyyy-MM-dd hh:mm'),
+          createTime_start: util.formatDate(this.createTime_start, 'yyyy-MM-dd 00:00:00'),
+          createTime_end: util.formatDate(this.createTime_end, 'yyyy-MM-dd 23:59:59'),
           typeId: this.typeId,
           isHot: this.isHot,
           page: this.page,
@@ -272,15 +282,18 @@ export default {
         util.ajax.delete('/article/' + id).then(rep => {
           if (rep.code == 0) {
             util.success('删除数据成功！');
-            if (this.data.length == 1) {
-              this.page = this.page - 1;
+            if (_this.data.length == 1) {
+              _this.page = _this.page - 1;
             }
-            this.query();
+            _this.query();
           } else {
             util.error('删除数据失败！');
           }
         });
       });
+    },
+    hot_convert (isHot) {
+      return isHot ? '是' : '否';
     },
     pageChange (page) {
       this.page = page;
@@ -310,6 +323,7 @@ export default {
           } else {
             util.ajax.put('/article', this.formInline).then(rep => {
               if (rep.code == 0) { util.success('保存数据成功！'); }
+              debugger;
               this.query();
               this.$refs['form-article'].resetFields();
               this.isSaveing = false;

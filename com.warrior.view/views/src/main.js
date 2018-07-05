@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import iView from 'iview'
 import VueRouter from 'vue-router'
-import { routers, otherRouter, appRouter } from './router'
+import {
+  routers,
+  otherRouter,
+  appRouter
+} from './router'
 import Vuex from 'vuex'
 import Util from './libs/util'
 import App from './app.vue'
@@ -15,7 +19,9 @@ import Locales from './locale'
 import zhLocale from 'iview/src/locale/lang/zh-CN'
 import enLocale from 'iview/src/locale/lang/en-US'
 import zhTLocale from 'iview/src/locale/lang/zh-TW'
+import ZkTable from 'vue-table-with-tree-grid'
 
+Vue.use(ZkTable)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(VueI18n)
@@ -90,21 +96,17 @@ const store = new Vuex.Store({
     routers: [otherRouter, ...appRouter],
     menuList: [],
     tagsList: [...otherRouter.children],
-    pageOpenedList: [
-      {
-        title: '首页',
-        path: '',
-        name: 'home_index'
-      }
-    ],
+    pageOpenedList: [{
+      title: '首页',
+      path: '',
+      name: 'home_index'
+    }],
     currentPageName: '',
-    currentPath: [
-      {
-        title: '首页',
-        path: '',
-        name: 'home_index'
-      }
-    ], // 面包屑数组
+    currentPath: [{
+      title: '首页',
+      path: '',
+      name: 'home_index'
+    }], // 面包屑数组
     openedSubmenuArr: [], // 要展开的菜单数组
     menuTheme: '', // 主题
     theme: '',
@@ -195,9 +197,9 @@ const store = new Vuex.Store({
       localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList)
     },
     setOpenedList(state) {
-      state.pageOpenedList = localStorage.pageOpenedList
-        ? JSON.parse(localStorage.pageOpenedList)
-        : [otherRouter.children[0]]
+      state.pageOpenedList = localStorage.pageOpenedList ?
+        JSON.parse(localStorage.pageOpenedList) :
+        [otherRouter.children[0]]
     },
     setCurrentPath(state, pathArr) {
       state.currentPath = pathArr
