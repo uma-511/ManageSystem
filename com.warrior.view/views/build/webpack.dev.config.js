@@ -6,9 +6,9 @@ const webpackBaseConfig = require('./webpack.base.config.js');
 const fs = require('fs');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-fs.open('./src/config/env.js', 'w', function(err, fd) {
+fs.open('./src/config/env.js', 'w', function (err, fd) {
     const buf = 'export default "development";';
-    fs.write(fd, buf, 0, buf.length, 0, function(err, written, buffer) {});
+    fs.write(fd, buf, 0, buf.length, 0, function (err, written, buffer) {});
 });
 
 module.exports = merge(webpackBaseConfig, {
@@ -20,7 +20,7 @@ module.exports = merge(webpackBaseConfig, {
     },
     plugins: [
         new CleanWebpackPlugin(['dist/*.chunk.js', 'dist/*.eot', 'dist/*.woff', 'dist/*.svg', 'dist/*.jpg', 'dist/*.ttf', 'dist/main.*', 'dist/vendors.*'], {
-            root: '/Users/rookie/Workspace/CodeRepository/ManageSystem/com.warrior.view/views',
+            root: 'D:/develop/gitReps/ManageSystem/com.warrior.view/views',
             verbose: true
         }),
         new ExtractTextPlugin({
