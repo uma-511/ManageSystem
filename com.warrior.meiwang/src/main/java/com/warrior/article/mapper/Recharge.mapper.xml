@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.warrior.article.dao.RechargeDao" >
+
+    <select id="getPageList" resultType="map">
+        select sr.*,sau.nick_name from sys_recharge sr LEFT JOIN sys_app_user sau on sr.uid=sau.id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+</mapper>

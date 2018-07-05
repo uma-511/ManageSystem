@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.warrior.article.dao.AppUserDao" >
+
+    <select id="getPageList" resultType="com.warrior.article.entity.AppUser">
+        select * from sys_app_user
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <update id="cancelUserById">
+        update sys_app_user set status='cancel'
+        where id=#{id}
+    </update>
+
+    <update id="disableUserById">
+        update sys_app_user set status='disable'
+        where id=#{id}
+    </update>
+
+    <update id="enableUserById">
+        update sys_app_user set status='normal'
+        where id=#{id}
+    </update>
+</mapper>

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.warrior.article.dao.ArticleDao" >
-
     <select id="getPageList" resultType="com.warrior.article.entity.Article">
         select * from sys_article
         <where>
             ${ew.sqlSegment}
         </where>
+    </select>
+    <select id="getArtUserPageList" resultType="map">
+        select sa.*,sau.nick_name,sc.`name` as typeName from sys_article sa left join sys_app_user sau on sa.uid = sau.id left join sys_classify sc on sa.type_id=sc.id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+        order by create_time desc
     </select>
 </mapper>

@@ -15,7 +15,7 @@ import java.util.Date;
 @TableName(value = "sys_article")
 public class Article implements Serializable{
 
-   @ApiModelProperty(value = "")
+   @ApiModelProperty(value = "id")
    @TableId
    @Setter @Getter
    private int id;
@@ -24,7 +24,7 @@ public class Article implements Serializable{
    @Setter @Getter
    private int uid;
 
-   @ApiModelProperty(value = "")
+   @ApiModelProperty(value = "内容")
    @Setter @Getter
    private String content;
 
@@ -110,7 +110,7 @@ public class Article implements Serializable{
    @ApiModelProperty(value = "是否热门：热门：1，非热门：0")
    @TableField(value = "is_hot")
    @Setter @Getter
-   private String isHot;
+   private boolean isHot;
 
    @ApiModelProperty(value = "是否删除")
    @TableField(value = "is_deleted")

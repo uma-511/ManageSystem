@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.warrior.article.dao.ReportDao" >
+
+    <select id="getPageList" resultType="map">
+        select sr.id,sr.reporter,sr.defendant,sr.content,sr.report_time,sr.artid,sr.status,sr.processing_mode,sr.result,
+        sau_reporter.nick_name as reporterName,IFNULL(sau_defendant.nick_name,'平台') as defendantName from sys_report sr
+        LEFT JOIN sys_app_user sau_reporter on sr.reporter=sau_reporter.id
+        LEFT JOIN sys_app_user sau_defendant on sr.defendant=sau_defendant.id
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="getDetail" resultType="map">
+    select sr.id,sr.reporter,sr.defendant,sr.content,sr.report_time,sr.artid,sr.status,sr.processing_mode,sr.result,
+            sau_reporter.nick_name as reporterName,IFNULL(sau_defendant.nick_name,'平台') as defendantName,sa.content,
+            sa.img_1,sa.img_2,sa.img_3,sa.img_4,sa.img_5,sa.img_6,sa.img_7,sa.img_8,sa.img_9,sa.video,sa.content as artContent
+            from sys_report sr
+            LEFT JOIN sys_app_user sau_reporter on sr.reporter=sau_reporter.id
+            LEFT JOIN sys_app_user sau_defendant on sr.defendant=sau_defendant.id
+                    LEFT JOIN sys_article sa on sr.artid=sa.id
+    where sr.id=#{id}
+    </select>
+
+    <update id="updateStatus">
+        update sys_report set status=#{status}
+        <trim prefix="set" suffixOverrides=",">
+            <if test="status!=null">
+                status= #{status,jdbcType=INTEGER},
+            </if>
+            <if test="processing_mode!=null">
+                processing_mode = #{processing_mode,jdbcType=VARCHAR},
+            </if>
+            <if test="result!=null">
+                result = #{result,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+</mapper>

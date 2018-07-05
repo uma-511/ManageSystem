@@ -35,13 +35,15 @@ import java.util.Iterator;
 @Service
 public class AttachmentServiceImpl extends WarriorBaseServiceImpl<AttachmentDao, Attachment> implements AttachmentService {
 
+    @Override
     public Page<Attachment> getPageList(Page<Attachment> page ) {
         EntityWrapper<Attachment> ew = new EntityWrapper<>();
         page.setRecords(baseMapper.getPageList(page, ew));
         return page;
    }
 
-    public ExcelWorkBook importExcel(HttpServletRequest request,String paramName){
+    @Override
+    public ExcelWorkBook importExcel(HttpServletRequest request, String paramName){
         ExcelWorkBook wb = new ExcelWorkBook();
         try {
             CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getServletContext());
@@ -58,6 +60,7 @@ public class AttachmentServiceImpl extends WarriorBaseServiceImpl<AttachmentDao,
         return wb;
     }
 
+    @Override
     @Transactional
     public String uploadFile(HttpServletRequest request, int type) {
         String ids = "";
@@ -96,6 +99,7 @@ public class AttachmentServiceImpl extends WarriorBaseServiceImpl<AttachmentDao,
         return ids;
     }
 
+    @Override
     public void downloadFile(String id, HttpServletResponse response){
         Attachment attachment = baseMapper.selectById(id);
         if(attachment == null){

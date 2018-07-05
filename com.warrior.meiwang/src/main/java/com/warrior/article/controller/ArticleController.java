@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.Date;
+import java.util.HashMap;
 
 @Api(value="ArticleController",tags = "文章管理",description = "文章管理")
 @RestController
@@ -102,6 +103,6 @@ public class ArticleController extends WarriorBaseController {
         @ApiParam(name="rows",value = "分页大小")
         @RequestParam(name="rows",defaultValue = "10")int rows) {
 
-        return buildMsg(articleService.getPageList(new Page<Article>(page,rows),createTime_start,createTime_end,typeId,isHot));
+        return buildMsg(articleService.getArtUserPageList(new Page<HashMap>(page,rows),createTime_start,createTime_end,typeId,isHot));
     }
 }

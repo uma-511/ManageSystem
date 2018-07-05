@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.warrior.article.dao.ClassifyDao" >
+
+    <select id="getPageList" resultType="com.warrior.article.entity.Classify">
+        select * from sys_classify
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="getList" resultType="com.warrior.article.entity.Classify">
+        select * from sys_classify
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+</mapper>
